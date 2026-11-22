@@ -6,305 +6,994 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta name="theme-color" content="#11110f">
+
     <meta name="description"
-        content="DO — DESI OFFICIALS. Independent fashion, distinctive streetwear, limited editions and creative expression.">
+        content="DO Desi Officials — Independent fashion, distinctive streetwear, limited editions and creative expression.">
+
+    <meta name="keywords"
+        content="DO Desi Officials, premium streetwear, independent fashion, limited edition fashion">
+
+    <meta name="author" content="DO Desi Officials">
+
+    <meta name="robots" content="index, follow">
 
     <title>DO — DESI OFFICIALS | Till Infinite</title>
+
+    <!-- FONTS -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800&display=swap"
         rel="stylesheet">
 
+    <!-- MAIN STYLESHEET -->
+
     <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- ADDITIONAL HEADER, DRAWER AND LOGO STYLES -->
+
+    <style>
+
+        /* =====================================
+           ORIGINAL DO LOGO
+        ===================================== */
+
+        .brand-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--cream);
+        }
+
+        .do-logo-mark {
+            display: block;
+            width: 112px;
+            height: auto;
+            color: currentColor;
+            overflow: visible;
+        }
+
+        .brand-name {
+            font-family: "DM Sans", sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-top: 5px;
+        }
+
+        .brand-tagline {
+            font-size: 9px;
+            letter-spacing: 4px;
+            margin-top: 5px;
+            color: var(--gold-light);
+        }
+
+
+        /* =====================================
+           HEADER STRUCTURE
+        ===================================== */
+
+        .site-header {
+            position: relative;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            min-height: 125px;
+        }
+
+        .header-logo {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .header-left {
+            grid-column: 1;
+            grid-row: 1;
+            justify-self: start;
+        }
+
+        .header-right {
+            grid-column: 3;
+            grid-row: 1;
+            justify-self: end;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-menu-button {
+            background: transparent;
+            border: 0;
+            color: var(--cream);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 7px;
+            padding: 12px;
+        }
+
+        .hamburger-icon span {
+            display: block;
+            width: 29px;
+            height: 1.5px;
+            background: currentColor;
+        }
+
+        .dots-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .dots-icon span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .header-menu-button:focus-visible,
+        .drawer-close:focus-visible {
+            outline: 2px solid var(--gold-light);
+            outline-offset: 5px;
+        }
+
+
+        /* =====================================
+           DESKTOP NAVIGATION
+        ===================================== */
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+
+        /* =====================================
+           SLIDING DRAWERS
+        ===================================== */
+
+        .drawer-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.72);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .drawer-backdrop.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .site-drawer {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: min(390px, 88vw);
+            background: #151512;
+            color: var(--cream);
+            z-index: 2001;
+            overflow-y: auto;
+            padding: 30px;
+            transition: transform 0.4s cubic-bezier(.77, 0, .18, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .left-drawer {
+            left: 0;
+            transform: translateX(-105%);
+        }
+
+        .right-drawer {
+            right: 0;
+            transform: translateX(105%);
+        }
+
+        .left-drawer.active,
+        .right-drawer.active {
+            transform: translateX(0);
+        }
+
+        .drawer-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .drawer-close {
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: var(--cream);
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .drawer-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 7px;
+        }
+
+        .drawer-logo-mark {
+            width: 115px;
+        }
+
+        .drawer-brand-name {
+            font-size: 12px;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+
+        .drawer-tagline {
+            font-size: 9px;
+            letter-spacing: 3px;
+            color: var(--gold-light);
+        }
+
+        .drawer-section {
+            padding: 27px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .drawer-heading {
+            display: block;
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: var(--gold-light);
+            margin-bottom: 18px;
+        }
+
+        .drawer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 17px;
+        }
+
+        .drawer-links a {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 15px;
+            letter-spacing: 1px;
+            transition: color 0.25s ease;
+        }
+
+        .drawer-links a:hover {
+            color: var(--gold-light);
+        }
+
+        .drawer-bottom {
+            margin-top: auto;
+            padding-top: 30px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: #99958b;
+            line-height: 1.8;
+        }
+
+        body.drawer-open {
+            overflow: hidden;
+        }
+
+
+        /* =====================================
+           CODE-GENERATED HERO FABRIC
+        ===================================== */
+
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .hero-fabric {
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            background:
+                radial-gradient(ellipse at 70% 25%, #383630 0%, transparent 40%),
+                linear-gradient(125deg, #050505, #171713 48%, #050505);
+        }
+
+        .hero-fabric svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            inset: 0;
+        }
+
+        .hero-fabric path {
+            fill: none;
+            stroke-linecap: round;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(
+                90deg,
+                rgba(0,0,0,0.82),
+                rgba(0,0,0,0.18)
+            );
+        }
+
+
+        /* =====================================
+           PRODUCT GALLERY PREPARATION
+        ===================================== */
+
+        .product-image {
+            position: relative;
+            display: block;
+            overflow: hidden;
+        }
+
+        .product-gallery {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            touch-action: pan-y;
+        }
+
+        .product-gallery img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-controls {
+            position: absolute;
+            inset: 50% 10px auto;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .gallery-arrow {
+            pointer-events: auto;
+            width: 34px;
+            height: 34px;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 50%;
+            background: rgba(0,0,0,0.55);
+            color: white;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .product-image:hover .gallery-arrow,
+        .product-image:focus-within .gallery-arrow {
+            opacity: 1;
+        }
+
+        .gallery-arrow:disabled {
+            display: none;
+        }
+
+
+        /* =====================================
+           MOBILE RESPONSIVENESS
+        ===================================== */
+
+        @media (max-width: 768px) {
+
+            .header-inner {
+                min-height: 135px;
+                padding: 10px 15px;
+            }
+
+            .desktop-nav,
+            .header-shop {
+                display: none;
+            }
+
+            .do-logo-mark {
+                width: 94px;
+            }
+
+            .brand-name {
+                font-size: 12px;
+                letter-spacing: 3px;
+            }
+
+            .brand-tagline {
+                font-size: 8px;
+                letter-spacing: 3px;
+            }
+
+            .header-left,
+            .header-right {
+                display: flex;
+            }
+
+            .site-drawer {
+                padding: 25px 22px;
+            }
+
+            .gallery-arrow {
+                opacity: 1;
+            }
+
+        }
+
+
+        @media (max-width: 380px) {
+
+            .header-inner {
+                min-height: 115px;
+            }
+
+            .do-logo-mark {
+                width: 82px;
+            }
+
+            .brand-name {
+                font-size: 10px;
+                letter-spacing: 2px;
+            }
+
+            .brand-tagline {
+                font-size: 7px;
+            }
+
+        }
+
+    </style>
+
 </head>
 
-<body>
 
-    <!-- ANNOUNCEMENT BAR -->
+<body id="top">
+
+    <!-- =====================================
+         ANNOUNCEMENT BAR
+    ====================================== -->
+
     <div class="announcement-bar">
-        <p>DO — DESI OFFICIALS <span>•</span> TILL INFINITE</p>
+        <p>INDEPENDENT THINKING. DISTINCTIVE WEARING.</p>
     </div>
 
 
-    <!-- HEADER -->
+    <!-- =====================================
+         HEADER
+    ====================================== -->
+
     <header class="site-header">
 
-        <!-- MOBILE LEFT MENU BUTTON -->
-        <button class="menu-button mobile-only"
-            id="leftMenuButton"
-            aria-label="Open shopping menu"
-            aria-expanded="false"
-            aria-controls="leftDrawer">
+        <div class="header-inner">
 
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+            <!-- LEFT MENU -->
 
+            <div class="header-left">
 
-        <!-- BRAND LOGO -->
-        <a href="#home" class="brand-logo" aria-label="DO Desi Officials home">
+                <button
+                    class="header-menu-button"
+                    id="openLeftDrawer"
+                    aria-label="Open shopping navigation"
+                    aria-controls="leftDrawer"
+                    aria-expanded="false">
 
-            <svg class="do-symbol" viewBox="0 0 460 165"
-                xmlns="http://www.w3.org/2000/svg"
-                role="img"
-                aria-label="DO">
+                    <span class="hamburger-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
 
-                <!-- Connected D and O brand symbol -->
-                <path
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                    d="
-                    M20 18
-                    H145
-                    C188 18 216 39 235 69
-                    L205 101
-                    C193 80 174 68 148 68
-                    H76
-                    V116
-                    H148
-                    C173 116 192 104 205 84
-                    L235 53
-                    C258 25 286 17 326 17
-                    H345
-                    C414 17 450 49 450 91
-                    C450 137 413 159 345 159
-                    H326
-                    C267 159 232 134 221 99
-                    L251 68
-                    C261 91 280 108 326 108
-                    H345
-                    C381 108 398 101 398 88
-                    C398 75 381 68 345 68
-                    H326
-                    C302 68 285 78 269 96
-                    L233 135
-                    C212 156 184 162 148 162
-                    H20
-                    Z
+                </button>
 
-                    M76 68
-                    V116
-                    H148
-                    C173 116 192 104 205 84
-                    L235 53
-                    C216 39 188 18 145 18
-                    H76
-                    Z
-                    " />
-
-            </svg>
-
-            <span class="brand-name">DESI OFFICIALS</span>
-            <span class="brand-tagline">TILL INFINITE</span>
-
-        </a>
+            </div>
 
 
-        <!-- DESKTOP NAVIGATION -->
-        <nav class="desktop-navigation" aria-label="Main navigation">
+            <!-- CENTER BRAND LOGO -->
 
-            <a href="#collection">Collection</a>
-            <a href="#unique-dos">UNIQUE DOs</a>
-            <a href="#membership">Membership</a>
+            <a href="#top"
+                class="brand-logo header-logo"
+                aria-label="DO Desi Officials Home">
 
-        </nav>
+                <svg class="do-logo-mark"
+                    viewBox="0 0 220 90"
+                    xmlns="http://www.w3.org/2000/svg"
+                    role="img"
+                    aria-label="DO monogram">
+
+                    <path
+                        d="M12 16 H66
+                           C90 16 102 28 102 45
+                           C102 62 90 74 66 74
+                           H12"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+
+                    <path
+                        d="M12 16 V74"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="8"
+                        stroke-linecap="round"/>
+
+                    <ellipse
+                        cx="151"
+                        cy="45"
+                        rx="45"
+                        ry="29"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="8"/>
+
+                    <path
+                        d="M75 45 C100 45 112 45 130 45"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="7"
+                        stroke-linecap="round"/>
+
+                </svg>
+
+                <span class="brand-name">
+                    DESI OFFICIALS
+                </span>
+
+                <span class="brand-tagline">
+                    TILL INFINITE
+                </span>
+
+            </a>
 
 
-        <!-- MOBILE RIGHT MENU BUTTON -->
-        <button class="more-button mobile-only"
-            id="rightMenuButton"
-            aria-label="Open brand information menu"
-            aria-expanded="false"
-            aria-controls="rightDrawer">
+            <!-- RIGHT MENU -->
 
-            <span></span>
-            <span></span>
-            <span></span>
+            <div class="header-right">
 
-        </button>
+                <button
+                    class="header-menu-button"
+                    id="openRightDrawer"
+                    aria-label="Open brand navigation"
+                    aria-controls="rightDrawer"
+                    aria-expanded="false">
+
+                    <span class="dots-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+
+                </button>
+
+            </div>
 
 
-        <!-- DESKTOP ACCOUNT -->
-        <a href="#membership" class="header-account desktop-only">
-            ACCOUNT <span>↗</span>
-        </a>
+            <!-- DESKTOP NAVIGATION -->
+
+            <nav class="desktop-nav">
+
+                <a href="#discover">DISCOVER</a>
+                <a href="#collection">COLLECTION</a>
+                <a href="#edition">THE EDITION</a>
+                <a href="#about">OUR WORLD</a>
+
+            </nav>
+
+        </div>
 
     </header>
 
 
-    <!-- DRAWER BACKDROP -->
+    <!-- =====================================
+         DRAWER BACKDROP
+    ====================================== -->
+
     <div class="drawer-backdrop" id="drawerBackdrop"></div>
 
 
-    <!-- LEFT SHOPPING DRAWER -->
-    <aside class="side-drawer left-drawer"
+    <!-- =====================================
+         LEFT DRAWER — SHOPPING
+    ====================================== -->
+
+    <aside class="site-drawer left-drawer"
         id="leftDrawer"
         aria-label="Shopping navigation"
         aria-hidden="true">
 
-        <div class="drawer-header">
+        <div class="drawer-top">
 
-            <span class="drawer-label">EXPLORE DO</span>
+            <div class="drawer-brand">
 
-            <button class="drawer-close" id="closeLeftDrawer"
-                aria-label="Close shopping menu">×</button>
+                <svg class="do-logo-mark drawer-logo-mark"
+                    viewBox="0 0 220 90"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-label="DO">
+
+                    <path
+                        d="M12 16 H66
+                           C90 16 102 28 102 45
+                           C102 62 90 74 66 74
+                           H12"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+
+                    <path
+                        d="M12 16 V74"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="8"
+                        stroke-linecap="round"/>
+
+                    <ellipse
+                        cx="151"
+                        cy="45"
+                        rx="45"
+                        ry="29"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="8"/>
+
+                    <path
+                        d="M75 45 C100 45 112 45 130 45"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="7"
+                        stroke-linecap="round"/>
+
+                </svg>
+
+                <span class="drawer-brand-name">
+                    DESI OFFICIALS
+                </span>
+
+                <span class="drawer-tagline">
+                    TILL INFINITE
+                </span>
+
+            </div>
+
+
+            <button class="drawer-close"
+                data-close-drawer
+                aria-label="Close shopping navigation">
+
+                ×
+
+            </button>
 
         </div>
 
-        <div class="drawer-links">
 
-            <a href="#home">Home <span>01</span></a>
-            <a href="#collection">Collection <span>02</span></a>
-            <a href="#unique-dos">UNIQUE DOs <span>03</span></a>
-            <a href="#membership">Membership <span>04</span></a>
+        <div class="drawer-section">
 
-            <div class="drawer-divider"></div>
+            <span class="drawer-heading">
+                DISCOVER
+            </span>
 
-            <a href="#new-arrivals">New Arrivals <span>05</span></a>
-            <a href="#collection">Streetwear <span>06</span></a>
-            <a href="#collection">Limited Edition <span>07</span></a>
+            <nav class="drawer-links">
 
-            <div class="drawer-divider"></div>
+                <a href="#top">Home</a>
+                <a href="#discover">Discover</a>
+                <a href="#collection">All Collection</a>
+                <a href="#edition">Limited Edition</a>
 
-            <a href="#membership">My Account <span>08</span></a>
-            <a href="#membership">Wishlist <span>09</span></a>
-            <a href="#membership">Shopping Bag <span>10</span></a>
+            </nav>
 
         </div>
 
-        <div class="drawer-footer">
-            <span>DO — DESI OFFICIALS</span>
-            <span>TILL INFINITE.</span>
+
+        <div class="drawer-section">
+
+            <span class="drawer-heading">
+                SHOP BY CATEGORY
+            </span>
+
+            <nav class="drawer-links">
+
+                <a href="#collection">New Arrivals</a>
+                <a href="#collection">Men</a>
+                <a href="#collection">Women</a>
+                <a href="#collection">Streetwear</a>
+                <a href="#edition">Limited Releases</a>
+
+            </nav>
+
+        </div>
+
+
+        <div class="drawer-section">
+
+            <span class="drawer-heading">
+                YOUR DO ACCOUNT
+            </span>
+
+            <nav class="drawer-links">
+
+                <a href="#account-notice">My Account</a>
+                <a href="#account-notice">My Orders</a>
+                <a href="#account-notice">Wishlist</a>
+                <a href="#account-notice">Shopping Bag</a>
+
+            </nav>
+
+        </div>
+
+
+        <div class="drawer-bottom">
+
+            INDEPENDENT THINKING.<br>
+            DISTINCTIVE WEARING.<br><br>
+
+            DO — DESI OFFICIALS<br>
+            TILL INFINITE.
+
         </div>
 
     </aside>
 
 
-    <!-- RIGHT BRAND INFORMATION DRAWER -->
-    <aside class="side-drawer right-drawer"
+    <!-- =====================================
+         RIGHT DRAWER — BRAND WORLD
+    ====================================== -->
+
+    <aside class="site-drawer right-drawer"
         id="rightDrawer"
-        aria-label="Brand information"
+        aria-label="DO brand navigation"
         aria-hidden="true">
 
-        <div class="drawer-header">
+        <div class="drawer-top">
 
-            <span class="drawer-label">BEYOND THE LABEL</span>
+            <div class="drawer-brand">
 
-            <button class="drawer-close" id="closeRightDrawer"
-                aria-label="Close brand menu">×</button>
+                <svg class="do-logo-mark drawer-logo-mark"
+                    viewBox="0 0 220 90"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-label="DO">
+
+                    <path
+                        d="M12 16 H66
+                           C90 16 102 28 102 45
+                           C102 62 90 74 66 74
+                           H12"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+
+                    <path
+                        d="M12 16 V74"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="8"
+                        stroke-linecap="round"/>
+
+                    <ellipse
+                        cx="151"
+                        cy="45"
+                        rx="45"
+                        ry="29"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="8"/>
+
+                    <path
+                        d="M75 45 C100 45 112 45 130 45"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="7"
+                        stroke-linecap="round"/>
+
+                </svg>
+
+                <span class="drawer-brand-name">
+                    DESI OFFICIALS
+                </span>
+
+                <span class="drawer-tagline">
+                    TILL INFINITE
+                </span>
+
+            </div>
+
+
+            <button class="drawer-close"
+                data-close-drawer
+                aria-label="Close brand navigation">
+
+                ×
+
+            </button>
 
         </div>
 
-        <div class="drawer-links">
 
-            <a href="#about">About DO <span>01</span></a>
-            <a href="#philosophy">Our Philosophy <span>02</span></a>
-            <a href="#journal">DO Journal <span>03</span></a>
-            <a href="#behind-the-brand">Behind The Brand <span>04</span></a>
+        <div class="drawer-section">
 
-            <div class="drawer-divider"></div>
+            <span class="drawer-heading">
+                THE DO WORLD
+            </span>
 
-            <a href="#contact">Contact <span>05</span></a>
-            <a href="#contact">Customer Support <span>06</span></a>
-            <a href="#contact">FAQs <span>07</span></a>
+            <nav class="drawer-links">
 
-            <div class="drawer-divider"></div>
+                <a href="#about">About DO</a>
+                <a href="#about">Our Philosophy</a>
+                <a href="#edition">DO Follow-ups</a>
+                <a href="#archive">DO Archive</a>
+                <a href="#final-statement">DO Journal</a>
 
-            <a href="#social">Instagram <span>↗</span></a>
-            <a href="#social">Facebook <span>↗</span></a>
-            <a href="#social">YouTube <span>↗</span></a>
-            <a href="#social">Pinterest <span>↗</span></a>
+            </nav>
 
         </div>
 
-        <div class="drawer-footer">
-            <span>INDEPENDENT EXPRESSION.</span>
-            <span>INFINITE POSSIBILITIES.</span>
+
+        <div class="drawer-section">
+
+            <span class="drawer-heading">
+                INFORMATION
+            </span>
+
+            <nav class="drawer-links">
+
+                <a href="#contact">Contact</a>
+                <a href="#contact">Customer Support</a>
+                <a href="#contact">FAQs</a>
+
+            </nav>
+
+        </div>
+
+
+        <div class="drawer-section">
+
+            <span class="drawer-heading">
+                FOLLOW DO
+            </span>
+
+            <nav class="drawer-links">
+
+                <a href="https://www.instagram.com/desi_officials/"
+                    target="_blank"
+                    rel="noopener noreferrer">
+
+                    Instagram ↗
+
+                </a>
+
+                <a href="mailto:desioficials@gmail.com">
+                    Email DO ↗
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <div class="drawer-bottom">
+
+            DISTINCTIVE BY DESIGN.<br>
+            INDEPENDENT BY NATURE.<br><br>
+
+            © 2026 DO — DESI OFFICIALS.
+
         </div>
 
     </aside>
 
 
+
+    <!-- =====================================
+         MAIN WEBSITE
+    ====================================== -->
 
     <main>
 
+
         <!-- HERO SECTION -->
-        <section class="hero-section" id="home">
 
-            <!-- CODE-GENERATED FABRIC BACKGROUND -->
-            <div class="fabric-background" aria-hidden="true">
+        <section class="hero-section" id="discover">
 
-                <svg viewBox="0 0 1600 1000"
-                    preserveAspectRatio="xMidYMid slice"
-                    xmlns="http://www.w3.org/2000/svg">
+            <!-- CODE GENERATED FABRIC -->
+
+            <div class="hero-fabric" aria-hidden="true">
+
+                <svg viewBox="0 0 1600 1100"
+                    preserveAspectRatio="xMidYMid slice">
 
                     <defs>
 
-                        <linearGradient id="fabricBase"
-                            x1="0%" y1="0%" x2="100%" y2="100%">
+                        <linearGradient id="fabricGradient"
+                            x1="0" y1="0" x2="1" y2="1">
 
-                            <stop offset="0%" stop-color="#080808" />
-                            <stop offset="45%" stop-color="#242321" />
-                            <stop offset="100%" stop-color="#050505" />
-
-                        </linearGradient>
-
-                        <linearGradient id="fabricFold"
-                            x1="0%" y1="0%" x2="100%" y2="100%">
-
-                            <stop offset="0%" stop-color="#77736d" stop-opacity=".05" />
-                            <stop offset="40%" stop-color="#d5d0c7" stop-opacity=".25" />
-                            <stop offset="65%" stop-color="#171614" stop-opacity=".1" />
-                            <stop offset="100%" stop-color="#000000" stop-opacity=".8" />
+                            <stop offset="0%" stop-color="#080807"/>
+                            <stop offset="40%" stop-color="#292822"/>
+                            <stop offset="65%" stop-color="#0c0c0a"/>
+                            <stop offset="100%" stop-color="#030303"/>
 
                         </linearGradient>
 
-                        <filter id="softBlur">
-                            <feGaussianBlur stdDeviation="35" />
-                        </filter>
+                        <linearGradient id="fabricHighlight"
+                            x1="0" y1="0" x2="1" y2="0">
+
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+                            <stop offset="50%" stop-color="#b9b2a3" stop-opacity=".16"/>
+                            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+
+                        </linearGradient>
 
                     </defs>
 
-                    <rect width="1600" height="1000" fill="url(#fabricBase)" />
 
                     <path
-                        d="M-100 100 C300 350 500 -100 900 150 S1300 350 1750 50"
-                        stroke="#aaa49a"
-                        stroke-width="170"
-                        fill="none"
-                        opacity=".17"
-                        filter="url(#softBlur)" />
+                        d="M-100 100
+                           C300 280 500 180 800 100
+                           C1100 20 1300 50 1700 200
+                           L1700 440
+                           C1300 300 1050 380 800 480
+                           C500 580 200 540 -100 400 Z"
+                        fill="url(#fabricGradient)"/>
 
                     <path
-                        d="M-100 650 C300 350 650 900 1050 500 S1400 250 1750 650"
-                        stroke="#d5d0c7"
-                        stroke-width="130"
-                        fill="none"
-                        opacity=".16"
-                        filter="url(#softBlur)" />
+                        d="M-100 390
+                           C250 550 520 600 820 470
+                           C1120 340 1360 240 1700 300
+                           L1700 560
+                           C1300 500 1100 650 800 770
+                           C500 880 150 750 -100 680 Z"
+                        fill="url(#fabricHighlight)"/>
 
                     <path
-                        d="M-100 800 C250 450 600 1000 950 700 S1350 450 1750 850"
-                        stroke="url(#fabricFold)"
-                        stroke-width="180"
-                        fill="none" />
+                        d="M-100 700
+                           C250 850 500 900 800 780
+                           C1100 660 1300 580 1700 650
+                           L1700 1100
+                           L-100 1100 Z"
+                        fill="url(#fabricGradient)"/>
+
 
                     <path
-                        d="M-100 200 C300 450 550 0 900 250 S1300 500 1750 200"
-                        stroke="url(#fabricFold)"
-                        stroke-width="120"
-                        fill="none" />
+                        d="M-100 400 C350 570 550 550 900 400
+                           C1200 270 1450 180 1700 220"
+                        stroke="#ffffff"
+                        stroke-opacity=".13"
+                        stroke-width="3"/>
 
                     <path
-                        d="M-100 950 C300 650 600 1100 1000 800 S1400 600 1750 950"
-                        stroke="#d2ccc1"
-                        stroke-width="3"
-                        fill="none"
-                        opacity=".18" />
+                        d="M-100 720 C300 900 570 880 900 720
+                           C1200 570 1450 510 1700 560"
+                        stroke="#ffffff"
+                        stroke-opacity=".08"
+                        stroke-width="2"/>
+
+                    <path
+                        d="M-100 920 C300 1080 580 1060 900 900
+                           C1200 750 1450 690 1700 740"
+                        stroke="#ffffff"
+                        stroke-opacity=".05"
+                        stroke-width="2"/>
 
                 </svg>
 
@@ -313,33 +1002,31 @@
 
             <div class="hero-overlay"></div>
 
+
             <div class="hero-content">
 
                 <span class="hero-eyebrow">
-                    INDEPENDENT FASHION • DISTINCTIVE EXPRESSION
+                    THE NEW EXPRESSION OF INDEPENDENCE
                 </span>
 
                 <h1>
                     NOT MADE<br>
-                    TO <em>BLEND.</em>
+                    TO BLEND.
                 </h1>
 
                 <p>
-                    Beyond trends. Beyond limits.<br>
-                    A different expression of identity.
+                    Independent fashion.<br>
+                    Unapologetic identity.<br>
+                    A different point of view.
                 </p>
 
-                <div class="hero-actions">
+                <a href="#collection" class="primary-button">
 
-                    <a href="#collection" class="button button-light">
-                        EXPLORE COLLECTION
-                    </a>
+                    EXPLORE THE COLLECTION
 
-                    <a href="#unique-dos" class="button button-outline">
-                        DISCOVER UNIQUE DOs
-                    </a>
+                    <span>↗</span>
 
-                </div>
+                </a>
 
             </div>
 
@@ -347,7 +1034,8 @@
             <div class="hero-bottom">
 
                 <span>DO — DESI OFFICIALS</span>
-                <span>01 / EXPRESSION</span>
+
+                <span>EST. 2026</span>
 
             </div>
 
@@ -356,137 +1044,289 @@
 
 
         <!-- BRAND STATEMENT -->
-        <section class="statement-section" id="philosophy">
 
-            <span class="section-eyebrow">THE DO PHILOSOPHY</span>
+        <section class="statement-section" id="about">
 
-            <h2>
-                Not everyone is meant<br>
-                to follow the <em>same direction.</em>
-            </h2>
+            <div class="section-label">
+                <span>01 / THE PHILOSOPHY</span>
+            </div>
 
-            <p>
-                DO is an expression of individuality.
-                A space where independent thought meets
-                distinctive design and personal identity.
-            </p>
 
-            <span class="statement-signature">TILL INFINITE.</span>
+            <div class="statement-content">
+
+                <p class="statement-small">
+                    FASHION IS PERSONAL.
+                    IDENTITY IS EVERYTHING.
+                </p>
+
+                <h2>
+                    If you can afford luxury,
+                    <span>why settle with a crowd?</span>
+                </h2>
+
+                <p class="statement-description">
+
+                    DO — DESI OFFICIALS is an independent
+                    fashion identity built around individuality,
+                    expression and distinctive design.
+
+                    We don't believe in dressing for everyone.
+                    We believe in wearing what represents you.
+
+                </p>
+
+                <span class="statement-signature">
+                    — THE DO PHILOSOPHY
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- DISCOVER SECTION -->
+
+        <section class="discover-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        02 / EXPLORE
+                    </span>
+
+                    <h2>
+                        FIND YOUR<br>
+                        EXPRESSION.
+                    </h2>
+
+                </div>
+
+                <p>
+                    Discover a world where
+                    individuality comes first.
+                </p>
+
+            </div>
+
+
+            <div class="discover-grid">
+
+                <a href="#collection" class="discover-card">
+
+                    <div class="discover-card-image">
+
+                        <img
+                            src="assets/images/3.png"
+                            alt="DO clothing collection"
+                            loading="lazy">
+
+                    </div>
+
+                    <div class="discover-card-content">
+
+                        <span>01 — THE COLLECTION</span>
+
+                        <h3>EVERYDAY<br>IDENTITY.</h3>
+
+                        <span class="discover-arrow">↗</span>
+
+                    </div>
+
+                </a>
+
+
+                <a href="#edition" class="discover-card">
+
+                    <div class="discover-card-image">
+
+                        <img
+                            src="assets/images/4.png"
+                            alt="DO distinctive streetwear"
+                            loading="lazy">
+
+                    </div>
+
+                    <div class="discover-card-content">
+
+                        <span>02 — LIMITED RELEASES</span>
+
+                        <h3>RARE BY<br>DESIGN.</h3>
+
+                        <span class="discover-arrow">↗</span>
+
+                    </div>
+
+                </a>
+
+            </div>
 
         </section>
 
 
 
         <!-- COLLECTION -->
+
         <section class="collection-section" id="collection">
 
             <div class="section-heading">
 
                 <div>
-                    <span class="section-eyebrow">THE EVERYDAY EDIT</span>
-                    <h2>DO <em>Collection.</em></h2>
+
+                    <span class="section-label">
+                        03 / THE COLLECTION
+                    </span>
+
+                    <h2>
+                        LESS ORDINARY.<br>
+                        MORE YOU.
+                    </h2>
+
                 </div>
 
-                <a href="#new-arrivals" class="text-link">
-                    EXPLORE ALL ↗
-                </a>
+                <p>
+                    Selected expressions
+                    from the DO universe.
+                </p>
 
             </div>
 
 
-            <div class="collection-grid" id="new-arrivals">
+            <div class="product-grid">
+
 
                 <!-- PRODUCT 1 -->
+
                 <article class="product-card">
 
                     <a href="#contact" class="product-image">
 
-                        <img src="assets/images/3.png"
-                            alt="DO full sleeve T-shirt"
-                            loading="lazy">
+                        <div class="product-gallery">
 
-                        <span class="product-label">DO ESSENTIALS</span>
+                            <img
+                                src="assets/images/3.png"
+                                alt="DO full sleeve T-shirt"
+                                loading="lazy">
+
+                        </div>
+
+                        <span class="product-badge">
+                            DO ORIGINAL
+                        </span>
 
                     </a>
 
-                    <div class="product-information">
+
+                    <div class="product-info">
 
                         <div>
-                            <span class="product-category">FULL SLEEVE</span>
-                            <h3>DO Signature Tee</h3>
+
+                            <span class="product-category">
+                                ESSENTIAL COLLECTION
+                            </span>
+
+                            <h3>
+                                FULL SLEEVE T-SHIRT
+                            </h3>
+
                         </div>
 
-                        <span class="product-price">VIEW</span>
+                        <span class="product-arrow">↗</span>
 
                     </div>
 
-                    <a href="#contact" class="product-action">
-                        BUY NOW <span>↗</span>
-                    </a>
-
                 </article>
+
 
 
                 <!-- PRODUCT 2 -->
+
                 <article class="product-card">
 
                     <a href="#contact" class="product-image">
 
-                        <img src="assets/images/4.png"
-                            alt="DO joggers"
-                            loading="lazy">
+                        <div class="product-gallery">
 
-                        <span class="product-label">DO ESSENTIALS</span>
+                            <img
+                                src="assets/images/4.png"
+                                alt="DO cargo joggers"
+                                loading="lazy">
+
+                        </div>
+
+                        <span class="product-badge">
+                            SIGNATURE PIECE
+                        </span>
 
                     </a>
 
-                    <div class="product-information">
+
+                    <div class="product-info">
 
                         <div>
-                            <span class="product-category">BOTTOMWEAR</span>
-                            <h3>DO Signature Joggers</h3>
+
+                            <span class="product-category">
+                                STREETWEAR COLLECTION
+                            </span>
+
+                            <h3>
+                                CARGO JOGGERS
+                            </h3>
+
                         </div>
 
-                        <span class="product-price">VIEW</span>
+                        <span class="product-arrow">↗</span>
 
                     </div>
 
-                    <a href="#contact" class="product-action">
-                        BUY NOW <span>↗</span>
-                    </a>
-
                 </article>
+
 
 
                 <!-- PRODUCT 3 -->
+
                 <article class="product-card">
 
                     <a href="#contact" class="product-image">
 
-                        <img src="assets/images/6.jpg"
-                            alt="DO hoodie"
-                            loading="lazy">
+                        <div class="product-gallery">
 
-                        <span class="product-label">DO ESSENTIALS</span>
+                            <img
+                                src="assets/images/5.png"
+                                alt="DO premium hoodie"
+                                loading="lazy">
+
+                        </div>
+
+                        <span class="product-badge">
+                            DO ORIGINAL
+                        </span>
 
                     </a>
 
-                    <div class="product-information">
+
+                    <div class="product-info">
 
                         <div>
-                            <span class="product-category">HOODIE</span>
-                            <h3>DO Signature Hoodie</h3>
+
+                            <span class="product-category">
+                                PREMIUM COLLECTION
+                            </span>
+
+                            <h3>
+                                SIGNATURE HOODIE
+                            </h3>
+
                         </div>
 
-                        <span class="product-price">VIEW</span>
+                        <span class="product-arrow">↗</span>
 
                     </div>
 
-                    <a href="#contact" class="product-action">
-                        BUY NOW <span>↗</span>
-                    </a>
-
                 </article>
+
 
             </div>
 
@@ -494,86 +1334,251 @@
 
 
 
-        <!-- UNIQUE DOs -->
-        <section class="unique-section" id="unique-dos">
+        <!-- LIMITED EDITION -->
 
-            <div class="unique-content">
+        <section class="edition-section" id="edition">
 
-                <span class="section-eyebrow">BEYOND THE COLLECTION</span>
+            <div class="edition-image">
+
+                <img
+                    src="assets/images/4.png"
+                    alt="DO limited edition collection"
+                    loading="lazy">
+
+            </div>
+
+
+            <div class="edition-content">
+
+                <span class="section-label">
+                    04 / THE DO EDITION
+                </span>
+
+                <span class="edition-number">
+                    EDITION Nº 001
+                </span>
 
                 <h2>
-                    UNIQUE<br>
-                    <em>DOs.</em>
+                    NOT EVERY<br>
+                    PIECE IS<br>
+                    FOR EVERYONE.
                 </h2>
 
                 <p>
-                    Not ordinary releases.
-                    A separate world of exclusive pieces,
-                    limited creations and member-only bidding.
+
+                    Introducing a different approach
+                    to exclusivity.
+
+                    Four individual pieces.
+                    One active release at a time.
+
+                    When one edition is sold,
+                    the next becomes available.
+
                 </p>
 
-                <div class="unique-details">
+
+                <div class="edition-details">
 
                     <div>
-                        <strong>01</strong>
-                        <span>EXCLUSIVE RELEASES</span>
+
+                        <span>RELEASE FORMAT</span>
+
+                        <strong>LIMITED</strong>
+
                     </div>
 
                     <div>
-                        <strong>02</strong>
-                        <span>MEMBER BIDDING</span>
+
+                        <span>PIECES PER CYCLE</span>
+
+                        <strong>04</strong>
+
                     </div>
 
                     <div>
-                        <strong>03</strong>
-                        <span>LIMITED CREATIONS</span>
+
+                        <span>OPENING BID</span>
+
+                        <strong>₹9,999</strong>
+
                     </div>
 
                 </div>
 
-                <a href="#membership" class="button button-light">
-                    ENTER UNIQUE DOs
+
+                <a href="#collector" class="primary-button">
+
+                    DISCOVER THE EDITION
+
+                    <span>↗</span>
+
                 </a>
 
-                <small>
-                    Bidding access is reserved for eligible DO members.
-                    Auction availability and rules will be displayed
-                    on each active release.
-                </small>
+            </div>
+
+        </section>
+
+
+
+        <!-- COLLECTOR -->
+
+        <section class="collector-section" id="collector">
+
+            <div class="collector-header">
+
+                <span class="section-label">
+                    05 / THE COLLECTOR EXPERIENCE
+                </span>
+
+                <h2>
+                    OWN SOMETHING<br>
+                    DISTINCTIVE.
+                </h2>
+
+                <p>
+
+                    The DO Edition introduces a
+                    limited-release collector concept.
+
+                    Each piece carries its own identity.
+
+                </p>
 
             </div>
 
 
-            <div class="unique-visual">
+            <div class="collector-box">
 
-                <div class="unique-frame">
+                <div class="collector-top">
 
-                    <span class="unique-frame-top">DO / SPECIAL PROJECTS</span>
+                    <span>DO — PRIVATE EDITION</span>
 
-                    <svg viewBox="0 0 460 165"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-label="DO symbol">
+                    <span>001 / 004</span>
 
-                        <path
-                            fill="currentColor"
-                            fill-rule="evenodd"
-                            d="
-                            M20 18 H145 C188 18 216 39 235 69
-                            L205 101 C193 80 174 68 148 68
-                            H76 V116 H148 C173 116 192 104 205 84
-                            L235 53 C258 25 286 17 326 17
-                            H345 C414 17 450 49 450 91
-                            C450 137 413 159 345 159 H326
-                            C267 159 232 134 221 99
-                            L251 68 C261 91 280 108 326 108
-                            H345 C381 108 398 101 398 88
-                            C398 75 381 68 345 68 H326
-                            C302 68 285 78 269 96 L233 135
-                            C212 156 184 162 148 162 H20 Z" />
+                </div>
 
-                    </svg>
 
-                    <span class="unique-frame-bottom">TILL INFINITE.</span>
+                <div class="collector-main">
+
+                    <span class="collector-label">
+                        CURRENT EDITION
+                    </span>
+
+                    <h3>
+                        THE FIRST<br>
+                        COLLECTOR PIECE.
+                    </h3>
+
+                    <p>
+                        A limited expression
+                        of the DO identity.
+                    </p>
+
+
+                    <div class="collector-price">
+
+                        <span>OPENING BID</span>
+
+                        <strong>₹9,999</strong>
+
+                    </div>
+
+
+                    <div class="collector-note">
+
+                        FOUR PIECES PER CYCLE.<br>
+                        ONE RELEASED AT A TIME.
+
+                    </div>
+
+                </div>
+
+
+                <div class="collector-bottom">
+
+                    <span>DO DESI OFFICIALS</span>
+
+                    <span>INDEPENDENT BY NATURE.</span>
+
+                </div>
+
+            </div>
+
+
+            <div class="collector-disclaimer">
+
+                <p>
+
+                    Collector registration and bidding
+                    will be activated when the official
+                    release system is connected.
+
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ARCHIVE -->
+
+        <section class="archive-section" id="archive">
+
+            <div class="archive-heading">
+
+                <span class="section-label">
+                    06 / THE ARCHIVE
+                </span>
+
+                <h2>
+                    EVERY PIECE.<br>
+                    ITS OWN STORY.
+                </h2>
+
+                <p>
+                    A growing record of
+                    distinctive DO expressions.
+                </p>
+
+            </div>
+
+
+            <div class="archive-grid">
+
+                <div class="archive-card">
+
+                    <img
+                        src="assets/images/3.png"
+                        alt="DO collection archive"
+                        loading="lazy">
+
+                    <span>DO / 001</span>
+
+                </div>
+
+
+                <div class="archive-card">
+
+                    <img
+                        src="assets/images/4.png"
+                        alt="DO streetwear archive"
+                        loading="lazy">
+
+                    <span>DO / 002</span>
+
+                </div>
+
+
+                <div class="archive-card">
+
+                    <img
+                        src="assets/images/5.png"
+                        alt="DO premium archive"
+                        loading="lazy">
+
+                    <span>DO / 003</span>
 
                 </div>
 
@@ -583,313 +1588,453 @@
 
 
 
-        <!-- MEMBERSHIP -->
-        <section class="membership-section" id="membership">
+        <!-- FINAL STATEMENT -->
 
-            <span class="section-eyebrow">THE INNER CIRCLE</span>
+        <section class="final-statement" id="final-statement">
+
+            <span class="section-label">
+                THE DO MINDSET
+            </span>
 
             <h2>
-                Become part of<br>
-                <em>DO Membership.</em>
+                STAND APART.<br>
+                STAY YOURSELF.
             </h2>
 
             <p>
-                More than access. A closer connection to the world of DO.
-                Explore member privileges, exclusive releases
-                and UNIQUE DOs bidding access.
+                DON'T FOLLOW THE CROWD.
+                DEFINE YOUR OWN DIRECTION.
             </p>
 
+            <a href="#collection" class="primary-button">
 
-            <div class="membership-grid">
+                EXPLORE DO
 
-                <article class="membership-card">
+                <span>↗</span>
 
-                    <span class="membership-number">01</span>
-
-                    <h3>Standard</h3>
-
-                    <p>
-                        Your entry into the DO community.
-                        Discover member updates and eligible
-                        exclusive experiences.
-                    </p>
-
-                    <span class="membership-type">STANDARD MEMBERSHIP</span>
-
-                </article>
-
-
-                <article class="membership-card premium-card">
-
-                    <span class="membership-number">02</span>
-
-                    <span class="premium-label">PREMIUM ACCESS</span>
-
-                    <h3>Premium</h3>
-
-                    <p>
-                        An elevated membership experience
-                        with additional privileges and
-                        enhanced UNIQUE DOs bidding options.
-                    </p>
-
-                    <span class="membership-type">PREMIUM MEMBERSHIP</span>
-
-                </article>
-
-            </div>
-
-
-            <a href="#contact" class="button button-dark">
-                EXPLORE MEMBERSHIP
             </a>
-
-            <p class="membership-note">
-                Membership registration, benefits and bidding
-                will be activated after the account and backend
-                systems are implemented.
-            </p>
 
         </section>
 
 
+        <!-- ACCOUNT NOTICE -->
 
-        <!-- ABOUT -->
-        <section class="about-section" id="about">
+        <section id="account-notice" class="statement-section">
 
-            <div class="about-heading">
-                <span class="section-eyebrow">A DIFFERENT POINT OF VIEW</span>
-                <h2>More than<br><em>what you wear.</em></h2>
-            </div>
+            <div class="statement-content">
 
-            <div class="about-copy">
+                <span class="section-label">
+                    THE DO ACCOUNT
+                </span>
 
-                <p>
-                    DO — DESI OFFICIALS is built around the idea
-                    that expression has no final boundary.
+                <h2>
+                    YOUR DO EXPERIENCE.
+                    <span>COMING SOON.</span>
+                </h2>
+
+                <p class="statement-description">
+
+                    Customer accounts, order tracking,
+                    wishlist and secure OTP verification
+                    are part of our upcoming store system.
+
                 </p>
 
-                <p>
-                    We believe design should carry an identity.
-                    Every detail should have a reason.
-                    Every creation should mean something.
-                </p>
-
-                <span>DO. THINK BEYOND.</span>
-
             </div>
 
         </section>
 
-
-
-        <!-- JOURNAL / BEHIND THE BRAND -->
-        <section class="journal-section" id="journal">
-
-            <span class="section-eyebrow">THOUGHTS WITHOUT END</span>
-
-            <h2>DO <em>Journal.</em></h2>
-
-            <p>
-                Ideas, creative directions, brand stories
-                and the thinking behind every DO creation.
-            </p>
-
-            <a href="#contact" class="text-link">
-                DISCOVER THE JOURNAL ↗
-            </a>
-
-        </section>
-
-
-
-        <!-- CONTACT -->
-        <section class="contact-section" id="contact">
-
-            <span class="section-eyebrow">CONNECT WITH DO</span>
-
-            <h2>Let's start<br><em>a conversation.</em></h2>
-
-            <a href="mailto:desiofficials@gmail.com"
-                class="contact-email">
-                desiofficials@gmail.com
-            </a>
-
-            <p>
-                For questions, collaborations and customer support.
-            </p>
-
-        </section>
 
     </main>
 
 
 
-    <!-- FOOTER -->
-    <footer class="site-footer">
+    <!-- =====================================
+         FOOTER
+    ====================================== -->
 
-        <a href="#home" class="footer-brand">
+    <footer class="site-footer" id="contact">
 
-            <svg viewBox="0 0 460 165"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-label="DO">
-
-                <path
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                    d="
-                    M20 18 H145 C188 18 216 39 235 69
-                    L205 101 C193 80 174 68 148 68
-                    H76 V116 H148 C173 116 192 104 205 84
-                    L235 53 C258 25 286 17 326 17
-                    H345 C414 17 450 49 450 91
-                    C450 137 413 159 345 159 H326
-                    C267 159 232 134 221 99
-                    L251 68 C261 91 280 108 326 108
-                    H345 C381 108 398 101 398 88
-                    C398 75 381 68 345 68 H326
-                    C302 68 285 78 269 96 L233 135
-                    C212 156 184 162 148 162 H20 Z" />
-
-            </svg>
-
-            <span>DESI OFFICIALS</span>
-            <small>TILL INFINITE</small>
-
-        </a>
+        <div class="footer-main">
 
 
-        <div class="footer-links">
+            <!-- FOOTER BRAND -->
 
-            <a href="#collection">Collection</a>
-            <a href="#unique-dos">UNIQUE DOs</a>
-            <a href="#membership">Membership</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
+            <div class="footer-brand">
+
+                <a href="#top" class="brand-logo">
+
+                    <svg class="do-logo-mark"
+                        viewBox="0 0 220 90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-label="DO">
+
+                        <path
+                            d="M12 16 H66
+                               C90 16 102 28 102 45
+                               C102 62 90 74 66 74
+                               H12"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"/>
+
+                        <path
+                            d="M12 16 V74"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="8"
+                            stroke-linecap="round"/>
+
+                        <ellipse
+                            cx="151"
+                            cy="45"
+                            rx="45"
+                            ry="29"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="8"/>
+
+                        <path
+                            d="M75 45 C100 45 112 45 130 45"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="7"
+                            stroke-linecap="round"/>
+
+                    </svg>
+
+                    <span class="brand-name">
+                        DESI OFFICIALS
+                    </span>
+
+                    <span class="brand-tagline">
+                        TILL INFINITE
+                    </span>
+
+                </a>
+
+
+                <p>
+
+                    Independent fashion.
+                    Distinctive identity.
+                    A world of your own.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- EXPLORE -->
+
+            <div class="footer-column">
+
+                <h4>EXPLORE</h4>
+
+                <a href="#discover">Discover</a>
+                <a href="#collection">Collection</a>
+                <a href="#edition">The Edition</a>
+                <a href="#about">Our World</a>
+
+            </div>
+
+
+
+            <!-- CONNECT -->
+
+            <div class="footer-column">
+
+                <h4>CONNECT</h4>
+
+                <a href="mailto:desioficials@gmail.com">
+                    Email
+                </a>
+
+                <a href="https://www.instagram.com/desi_officials/"
+                    target="_blank"
+                    rel="noopener noreferrer">
+
+                    Instagram ↗
+
+                </a>
+
+                <a href="#contact">
+                    Customer Support
+                </a>
+
+            </div>
+
+
+
+            <!-- BRAND -->
+
+            <div class="footer-column">
+
+                <h4>THE BRAND</h4>
+
+                <span>Independent Fashion</span>
+                <span>Limited Editions</span>
+                <span>Distinctive Streetwear</span>
+
+            </div>
+
 
         </div>
 
-
-        <div class="footer-social" id="social">
-
-            <span>FOLLOW THE DO WORLD</span>
-
-            <a href="https://www.instagram.com/desi_officials/"
-                target="_blank"
-                rel="noopener noreferrer">
-                INSTAGRAM ↗
-            </a>
-
-        </div>
 
 
         <div class="footer-bottom">
 
-            <span>© <span id="currentYear"></span> DO — DESI OFFICIALS</span>
+            <span>
+                © 2026 DO — DESI OFFICIALS.
+                ALL RIGHTS RESERVED.
+            </span>
 
-            <span>MADE TO THINK BEYOND.</span>
+            <span>
+                TILL INFINITE.
+            </span>
 
         </div>
+
 
     </footer>
 
 
 
-    <!-- JAVASCRIPT -->
-    <script src="assets/js/script.js"></script>
+    <!-- =====================================
+         JAVASCRIPT
+         DRAWERS + GALLERY
+    ====================================== -->
 
     <script>
-        /* Independent mobile drawers */
 
-        const leftDrawer = document.getElementById("leftDrawer");
-        const rightDrawer = document.getElementById("rightDrawer");
-        const backdrop = document.getElementById("drawerBackdrop");
+        document.addEventListener("DOMContentLoaded", function () {
 
-        const leftButton = document.getElementById("leftMenuButton");
-        const rightButton = document.getElementById("rightMenuButton");
+            const leftDrawer = document.getElementById("leftDrawer");
+            const rightDrawer = document.getElementById("rightDrawer");
 
-        const closeLeft = document.getElementById("closeLeftDrawer");
-        const closeRight = document.getElementById("closeRightDrawer");
+            const backdrop = document.getElementById("drawerBackdrop");
 
+            const openLeft = document.getElementById("openLeftDrawer");
+            const openRight = document.getElementById("openRightDrawer");
 
-        function closeDrawers() {
+            const closeButtons = document.querySelectorAll("[data-close-drawer]");
 
-            leftDrawer.classList.remove("drawer-open");
-            rightDrawer.classList.remove("drawer-open");
-
-            backdrop.classList.remove("backdrop-visible");
-
-            leftDrawer.setAttribute("aria-hidden", "true");
-            rightDrawer.setAttribute("aria-hidden", "true");
-
-            leftButton.setAttribute("aria-expanded", "false");
-            rightButton.setAttribute("aria-expanded", "false");
-
-            document.body.classList.remove("drawer-active");
-
-        }
+            let activeDrawer = null;
 
 
-        function openDrawer(drawer) {
+            /* OPEN DRAWER */
 
-            closeDrawers();
+            function openDrawer(drawer, button) {
 
-            drawer.classList.add("drawer-open");
-            backdrop.classList.add("backdrop-visible");
+                closeDrawer();
 
-            drawer.setAttribute("aria-hidden", "false");
+                activeDrawer = drawer;
 
-            document.body.classList.add("drawer-active");
+                drawer.classList.add("active");
+                backdrop.classList.add("active");
 
-            if (drawer === leftDrawer) {
-                leftButton.setAttribute("aria-expanded", "true");
+                drawer.setAttribute("aria-hidden", "false");
+
+                document.body.classList.add("drawer-open");
+
+                if (button) {
+                    button.setAttribute("aria-expanded", "true");
+                }
+
             }
 
-            if (drawer === rightDrawer) {
-                rightButton.setAttribute("aria-expanded", "true");
+
+            /* CLOSE DRAWER */
+
+            function closeDrawer() {
+
+                leftDrawer.classList.remove("active");
+                rightDrawer.classList.remove("active");
+
+                leftDrawer.setAttribute("aria-hidden", "true");
+                rightDrawer.setAttribute("aria-hidden", "true");
+
+                backdrop.classList.remove("active");
+
+                document.body.classList.remove("drawer-open");
+
+                openLeft.setAttribute("aria-expanded", "false");
+                openRight.setAttribute("aria-expanded", "false");
+
+                activeDrawer = null;
+
             }
 
-        }
+
+            /* LEFT MENU */
+
+            openLeft.addEventListener("click", function () {
+
+                openDrawer(leftDrawer, openLeft);
+
+            });
 
 
-        leftButton.addEventListener("click", function () {
-            openDrawer(leftDrawer);
+            /* RIGHT MENU */
+
+            openRight.addEventListener("click", function () {
+
+                openDrawer(rightDrawer, openRight);
+
+            });
+
+
+            /* CLOSE BUTTONS */
+
+            closeButtons.forEach(function (button) {
+
+                button.addEventListener("click", closeDrawer);
+
+            });
+
+
+            /* BACKDROP */
+
+            backdrop.addEventListener("click", closeDrawer);
+
+
+            /* CLOSE ON ESCAPE */
+
+            document.addEventListener("keydown", function (event) {
+
+                if (event.key === "Escape") {
+                    closeDrawer();
+                }
+
+            });
+
+
+            /* CLOSE AFTER NAVIGATION */
+
+            document.querySelectorAll(".site-drawer a").forEach(function (link) {
+
+                link.addEventListener("click", function () {
+
+                    closeDrawer();
+
+                });
+
+            });
+
+
+            /* =================================
+               PRODUCT GALLERY
+            ================================= */
+
+            document.querySelectorAll(".product-gallery").forEach(function (gallery) {
+
+                const images = gallery.querySelectorAll("img");
+
+                if (images.length <= 1) {
+                    return;
+                }
+
+                let currentIndex = 0;
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+
+                const previousButton = document.createElement("button");
+
+                previousButton.className = "gallery-arrow gallery-previous";
+                previousButton.innerHTML = "&#10094;";
+                previousButton.type = "button";
+                previousButton.setAttribute("aria-label", "Previous product image");
+
+
+                const nextButton = document.createElement("button");
+
+                nextButton.className = "gallery-arrow gallery-next";
+                nextButton.innerHTML = "&#10095;";
+                nextButton.type = "button";
+                nextButton.setAttribute("aria-label", "Next product image");
+
+
+                const controls = document.createElement("div");
+
+                controls.className = "gallery-controls";
+
+                controls.appendChild(previousButton);
+                controls.appendChild(nextButton);
+
+                gallery.appendChild(controls);
+
+
+                function showImage(index) {
+
+                    currentIndex = (index + images.length) % images.length;
+
+                    images.forEach(function (image, i) {
+
+                        image.style.display = i === currentIndex ? "block" : "none";
+
+                    });
+
+                }
+
+
+                previousButton.addEventListener("click", function (event) {
+
+                    event.preventDefault();
+
+                    showImage(currentIndex - 1);
+
+                });
+
+
+                nextButton.addEventListener("click", function (event) {
+
+                    event.preventDefault();
+
+                    showImage(currentIndex + 1);
+
+                });
+
+
+                gallery.addEventListener("touchstart", function (event) {
+
+                    touchStartX = event.changedTouches[0].screenX;
+
+                }, { passive: true });
+
+
+                gallery.addEventListener("touchend", function (event) {
+
+                    touchEndX = event.changedTouches[0].screenX;
+
+                    const difference = touchStartX - touchEndX;
+
+                    if (Math.abs(difference) < 45) {
+                        return;
+                    }
+
+                    if (difference > 0) {
+                        showImage(currentIndex + 1);
+                    } else {
+                        showImage(currentIndex - 1);
+                    }
+
+                }, { passive: true });
+
+
+                showImage(0);
+
+            });
+
         });
-
-
-        rightButton.addEventListener("click", function () {
-            openDrawer(rightDrawer);
-        });
-
-
-        closeLeft.addEventListener("click", closeDrawers);
-        closeRight.addEventListener("click", closeDrawers);
-        backdrop.addEventListener("click", closeDrawers);
-
-
-        document.querySelectorAll(".side-drawer a").forEach(function (link) {
-
-            link.addEventListener("click", closeDrawers);
-
-        });
-
-
-        document.addEventListener("keydown", function (event) {
-
-            if (event.key === "Escape") {
-                closeDrawers();
-            }
-
-        });
-
-
-        /* Automatic copyright year */
-
-        document.getElementById("currentYear").textContent =
-            new Date().getFullYear();
 
     </script>
 
+
 </body>
 
-    </html>
+                    </html>
