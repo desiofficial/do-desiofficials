@@ -5,12 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="theme-color" content="#f5f2eb">
+    <meta name="theme-color" content="#11110f">
 
     <meta name="description"
-        content="DO — DESI OFFICIALS. Independent fashion. Limited editions. Designed to stand apart.">
+        content="DO Desi Officials — Independent fashion, distinctive streetwear, limited editions and creative expression.">
 
-    <title>DO — DESI OFFICIALS | Made To Stand Apart</title>
+    <title>DO — DESI OFFICIALS | The Art Of Being Different</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/style.css">
 
@@ -18,10 +24,12 @@
 
 <body>
 
-    <!-- ANNOUNCEMENT BAR -->
+    <!-- ANNOUNCEMENT -->
 
     <div class="announcement-bar">
-        INDEPENDENT FASHION · LIMITED EDITIONS · MADE TO STAND APART
+        <span>INDEPENDENT THINKING.</span>
+        <span>INDIVIDUAL STYLE.</span>
+        <span>MADE TO STAND APART.</span>
     </div>
 
 
@@ -31,39 +39,60 @@
 
         <div class="header-inner">
 
-            <!-- DO BRAND LOGO -->
-
             <a href="#home" class="do-logo">
 
-                <span class="do-logo-symbol">DO</span>
+                <span class="do-logo-symbol">D<span>O</span></span>
 
-                <span class="do-logo-name">
-                    DESI OFFICIALS
-                </span>
+                <span class="do-logo-name">DESI OFFICIALS</span>
 
             </a>
 
 
-            <!-- NAVIGATION -->
-
-            <nav class="main-navigation">
+            <nav class="main-navigation" id="main-navigation">
 
                 <a href="#home">Home</a>
 
-                <a href="#collection">Collection</a>
+                <a href="#collection">Shop</a>
 
-                <a href="#edition">Limited Edition</a>
+                <a href="#edition">Collections</a>
+
+                <a href="#journal">Journal</a>
 
                 <a href="#about">Our Story</a>
 
             </nav>
 
 
-            <!-- HEADER ACTIONS -->
-
             <div class="header-actions">
 
-                <a href="#collection">Discover DO ↗</a>
+                <button class="icon-button search-trigger"
+                    aria-label="Open search"
+                    id="search-trigger">
+
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <path d="m16 16 5 5"></path>
+                    </svg>
+
+                </button>
+
+
+                <a href="/auth/google" class="account-link">
+
+                    ACCOUNT <span>↗</span>
+
+                </a>
+
+
+                <button class="menu-toggle"
+                    id="menu-toggle"
+                    aria-label="Open navigation"
+                    aria-expanded="false">
+
+                    <span></span>
+                    <span></span>
+
+                </button>
 
             </div>
 
@@ -72,52 +101,212 @@
     </header>
 
 
-    <!-- HERO SECTION -->
+
+    <!-- SEARCH PANEL -->
+
+    <div class="search-panel" id="search-panel">
+
+        <div class="search-panel-inner">
+
+            <input
+                type="search"
+                id="site-search"
+                placeholder="Search products and stories..."
+                aria-label="Search website">
+
+            <button id="close-search" aria-label="Close search">
+                ✕
+            </button>
+
+        </div>
+
+        <p class="search-hint">
+            EXPLORE THE WORLD OF DO
+        </p>
+
+    </div>
+
+
 
     <main>
+
+
+        <!-- HERO -->
 
         <section class="hero-section" id="home">
 
             <img
                 src="assets/images/1000308476_2.jpg"
                 alt="DO Desi Officials fashion campaign"
-                class="hero-image"
-            >
+                class="hero-image">
 
             <div class="hero-overlay"></div>
 
 
             <div class="hero-content">
 
-                <p class="hero-label">
+                <div class="hero-label">
+                    <span class="hero-line"></span>
                     THE ART OF BEING DIFFERENT
-                </p>
+                </div>
 
 
                 <h1 class="hero-title">
 
                     NOT MADE<br>
 
-                    TO FOLLOW.<br>
+                    TO FOLLOW<span>.</span>
 
-                    <span>Made to stand apart.</span>
+                    <br>
+
+                    <em>Made to stand apart.</em>
 
                 </h1>
 
 
                 <p class="hero-description">
 
-                    Fashion is more than what you wear.
-                    It is an expression of who you are.
-                    Discover a different approach to style
-                    with DO — DESI OFFICIALS.
+                    An expression of individuality.
+                    A different perspective on fashion.
+                    A world beyond the ordinary.
 
                 </p>
 
 
-                <a href="#collection" class="hero-button">
+                <div class="hero-actions">
 
-                    EXPLORE THE COLLECTION ↗
+                    <a href="#collection" class="primary-button">
+
+                        EXPLORE THE COLLECTION
+
+                        <span>↗</span>
+
+                    </a>
+
+
+                    <a href="#about" class="text-button">
+
+                        DISCOVER OUR WORLD
+
+                    </a>
+
+                </div>
+
+
+                <div class="hero-bottom">
+
+                    <span>INDEPENDENT FASHION BRAND</span>
+
+                    <span>EST. DO — DESI OFFICIALS</span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- BRAND INTRODUCTION -->
+
+        <section class="intro-section">
+
+            <div class="intro-number">
+                001 / THE DO PHILOSOPHY
+            </div>
+
+
+            <h2>
+
+                Style is personal.<br>
+
+                <span>Individuality is everything.</span>
+
+            </h2>
+
+
+            <p>
+
+                We believe fashion should express who you are,
+                not who the world expects you to be.
+
+                Discover a different approach to clothing,
+                creativity and self-expression.
+
+            </p>
+
+        </section>
+
+
+
+        <!-- CATEGORY DISCOVERY -->
+
+        <section class="category-section">
+
+            <div class="section-topline">
+
+                <span>EXPLORE YOUR EXPRESSION</span>
+
+                <span>002 / CATEGORIES</span>
+
+            </div>
+
+
+            <div class="category-grid">
+
+                <a href="#collection" class="category-card">
+
+                    <img
+                        src="assets/images/1000308476.jpg"
+                        alt="DO signature fashion">
+
+                    <div class="category-overlay">
+
+                        <span>01 / THE ESSENTIALS</span>
+
+                        <h3>Everyday<br>Expression.</h3>
+
+                        <span class="category-arrow">↗</span>
+
+                    </div>
+
+                </a>
+
+
+                <a href="#edition" class="category-card">
+
+                    <img
+                        src="assets/images/1000308472.jpg"
+                        alt="DO limited edition designs">
+
+                    <div class="category-overlay">
+
+                        <span>02 / THE EXCLUSIVES</span>
+
+                        <h3>Beyond<br>Ordinary.</h3>
+
+                        <span class="category-arrow">↗</span>
+
+                    </div>
+
+                </a>
+
+
+                <a href="#journal" class="category-card">
+
+                    <img
+                        src="assets/images/1000308474.jpg"
+                        alt="DO creative fashion">
+
+                    <div class="category-overlay">
+
+                        <span>03 / THE CULTURE</span>
+
+                        <h3>Wear Your<br>Perspective.</h3>
+
+                        <span class="category-arrow">↗</span>
+
+                    </div>
 
                 </a>
 
@@ -127,40 +316,46 @@
 
 
 
-        <!-- COLLECTION SECTION -->
+        <!-- PRODUCTS -->
 
-        <section class="section" id="collection">
+        <section class="collection-section section" id="collection">
 
-            <div class="section-inner">
+            <div class="section-heading">
 
-                <div class="section-heading">
+                <div>
 
-                    <p class="section-eyebrow">
-                        THE DO COLLECTION
-                    </p>
+                    <span class="section-eyebrow">
+                        003 / THE COLLECTION
+                    </span>
 
-                    <h2 class="section-title">
-                        Designed to be different.
+                    <h2>
+                        Objects of <em>expression.</em>
                     </h2>
-
-                    <p class="section-description">
-
-                        Not another ordinary wardrobe.
-                        Discover distinctive pieces created
-                        for people who appreciate individuality.
-
-                    </p>
 
                 </div>
 
 
+                <a href="#edition" class="section-link">
+                    DISCOVER MORE ↗
+                </a>
 
-                <div class="product-grid">
+            </div>
 
 
-                    <!-- PRODUCT 1 -->
+            <p class="section-subtitle">
 
-                    <article class="product-card">
+                Pieces with personality.
+                Designs with a point of view.
+
+            </p>
+
+
+            <div class="product-grid">
+
+
+                <article class="product-card searchable-item">
+
+                    <div class="product-image-wrap">
 
                         <span class="product-tag">
                             DO ORIGINAL
@@ -168,29 +363,37 @@
 
                         <img
                             src="assets/images/1000308476.jpg"
-                            alt="DO original fashion design"
-                            class="product-image"
-                        >
+                            alt="The Original DO design"
+                            class="product-image">
 
-                        <div class="product-info">
+                        <a href="#edition" class="product-discover">
+                            DISCOVER ↗
+                        </a>
 
-                            <h3 class="product-name">
-                                THE ORIGINAL
-                            </h3>
+                    </div>
 
-                            <p class="product-category">
-                                DO Signature Collection
-                            </p>
+
+                    <div class="product-info">
+
+                        <div>
+
+                            <h3>THE ORIGINAL</h3>
+
+                            <p>DO Signature Collection</p>
 
                         </div>
 
-                    </article>
+                        <span class="product-index">01</span>
+
+                    </div>
+
+                </article>
 
 
 
-                    <!-- PRODUCT 2 -->
+                <article class="product-card searchable-item">
 
-                    <article class="product-card">
+                    <div class="product-image-wrap">
 
                         <span class="product-tag">
                             LIMITED DESIGN
@@ -198,29 +401,37 @@
 
                         <img
                             src="assets/images/1000308472.jpg"
-                            alt="DO limited fashion design"
-                            class="product-image"
-                        >
+                            alt="The Distinct DO design"
+                            class="product-image">
 
-                        <div class="product-info">
+                        <a href="#edition" class="product-discover">
+                            DISCOVER ↗
+                        </a>
 
-                            <h3 class="product-name">
-                                THE DISTINCT
-                            </h3>
+                    </div>
 
-                            <p class="product-category">
-                                Limited Edition
-                            </p>
+
+                    <div class="product-info">
+
+                        <div>
+
+                            <h3>THE DISTINCT</h3>
+
+                            <p>Limited Edition</p>
 
                         </div>
 
-                    </article>
+                        <span class="product-index">02</span>
+
+                    </div>
+
+                </article>
 
 
 
-                    <!-- PRODUCT 3 -->
+                <article class="product-card searchable-item">
 
-                    <article class="product-card">
+                    <div class="product-image-wrap">
 
                         <span class="product-tag">
                             EXCLUSIVE
@@ -228,26 +439,32 @@
 
                         <img
                             src="assets/images/1000308474.jpg"
-                            alt="DO exclusive fashion design"
-                            class="product-image"
-                        >
+                            alt="The Statement DO design"
+                            class="product-image">
 
-                        <div class="product-info">
+                        <a href="#edition" class="product-discover">
+                            DISCOVER ↗
+                        </a>
 
-                            <h3 class="product-name">
-                                THE STATEMENT
-                            </h3>
+                    </div>
 
-                            <p class="product-category">
-                                DO Exclusive Collection
-                            </p>
+
+                    <div class="product-info">
+
+                        <div>
+
+                            <h3>THE STATEMENT</h3>
+
+                            <p>DO Exclusive Collection</p>
 
                         </div>
 
-                    </article>
+                        <span class="product-index">03</span>
 
+                    </div>
 
-                </div>
+                </article>
+
 
             </div>
 
@@ -255,62 +472,62 @@
 
 
 
-        <!-- LIMITED EDITION SECTION -->
+        <!-- LIMITED EDITION -->
 
         <section class="edition-section" id="edition">
 
-            <div class="edition-inner">
+            <div class="edition-image-wrap">
+
+                <img
+                    src="assets/images/1000308472_2.jpg"
+                    alt="DO limited edition campaign"
+                    class="edition-image">
+
+                <span class="edition-image-label">
+                    DO / LIMITED SERIES
+                </span>
+
+            </div>
 
 
-                <div>
+            <div class="edition-content">
 
-                    <img
-                        src="assets/images/1000308472_2.jpg"
-                        alt="DO limited edition campaign"
-                        class="edition-image"
-                    >
+                <span class="section-eyebrow">
+                    004 / THE LIMITED SERIES
+                </span>
 
+
+                <h2>
+
+                    Rarity is<br>
+
+                    an <em>attitude.</em>
+
+                </h2>
+
+
+                <p>
+
+                    Some ideas deserve their own space.
+
+                    Some designs deserve to remain distinctive.
+
+                    Explore the DO limited-edition philosophy,
+                    where creativity takes priority over conformity.
+
+                </p>
+
+
+                <a href="#collector" class="outline-button">
+
+                    ENTER THE EXPERIENCE ↗
+
+                </a>
+
+
+                <div class="edition-number">
+                    004 — DO EXCLUSIVES
                 </div>
-
-
-
-                <div class="edition-content">
-
-                    <p class="edition-label">
-                        THE LIMITED SERIES · DO
-                    </p>
-
-
-                    <h2 class="edition-title">
-
-                        Not everyone<br>
-                        gets to own<br>
-                        everything.
-
-                    </h2>
-
-
-                    <p class="edition-description">
-
-                        Some designs deserve to remain rare.
-
-                        DO explores a new approach to limited
-                        fashion, where individuality matters
-                        more than mass production.
-
-                        Every edition has its own identity.
-
-                    </p>
-
-
-                    <a href="#collector" class="edition-button">
-
-                        ENTER THE EXPERIENCE ↗
-
-                    </a>
-
-                </div>
-
 
             </div>
 
@@ -320,91 +537,195 @@
 
         <!-- COLLECTOR EXPERIENCE -->
 
-        <section class="section" id="collector">
+        <section class="collector-section" id="collector">
 
-            <div class="section-inner">
-
-                <div class="section-heading">
-
-                    <p class="section-eyebrow">
-                        THE COLLECTOR'S ROOM
-                    </p>
+            <span class="section-eyebrow">
+                005 / THE COLLECTOR'S ROOM
+            </span>
 
 
-                    <h2 class="section-title">
-                        A different kind of discovery.
-                    </h2>
+            <h2>
+
+                Not everything<br>
+
+                needs to be <em>everywhere.</em>
+
+            </h2>
 
 
-                    <p class="section-description">
+            <p>
 
-                        Explore the DO limited-edition concept.
-                        Each release is designed to celebrate
-                        rarity, creativity and individuality.
+                A space dedicated to limited concepts,
+                distinctive ideas and creative releases.
 
-                    </p>
-
-                </div>
+            </p>
 
 
-                <div class="brand-statement">
+            <a href="#collection" class="light-button">
 
-                    <h2>
+                EXPLORE DO ↗
 
-                        If you can afford luxury,
-                        why settle for a <span>crowd?</span>
-
-                    </h2>
-
-
-                    <p>
-                        DO — DESI OFFICIALS
-                    </p>
-
-                </div>
-
-
-                <div style="text-align:center; margin-top:40px;">
-
-                    <p style="
-                        font-size:11px;
-                        color:#858078;
-                        line-height:1.8;
-                        max-width:480px;
-                        margin:auto;
-                    ">
-
-                        DEMONSTRATION EXPERIENCE
-
-                        <br>
-
-                        This is a concept preview.
-                        No real bids, payments or purchases
-                        are accepted through this demonstration.
-
-                    </p>
-
-                </div>
-
-            </div>
+            </a>
 
         </section>
 
 
 
-        <!-- ABOUT DO -->
+        <!-- FASHION JOURNAL -->
+
+        <section class="journal-section section" id="journal">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-eyebrow">
+                        006 / THE DO JOURNAL
+                    </span>
+
+                    <h2>
+                        Beyond the <em>wardrobe.</em>
+                    </h2>
+
+                </div>
+
+
+                <span class="journal-edition">
+                    CULTURE · STYLE · PERSPECTIVE
+                </span>
+
+            </div>
+
+
+            <p class="section-subtitle">
+
+                Fashion is a conversation.
+                These are some of the stories worth exploring.
+
+            </p>
+
+
+            <div class="journal-grid">
+
+
+                <article class="journal-card searchable-item">
+
+                    <a href="#about" class="journal-image">
+
+                        <img
+                            src="assets/images/1000308476_2.jpg"
+                            alt="Fashion and personal expression">
+
+                        <span>01 / PERSPECTIVE</span>
+
+                    </a>
+
+
+                    <div class="journal-info">
+
+                        <p>STYLE & IDENTITY</p>
+
+                        <h3>
+                            The art of dressing like yourself.
+                        </h3>
+
+                        <a href="#about">
+                            EXPLORE STORY ↗
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+
+                <article class="journal-card searchable-item">
+
+                    <a href="#edition" class="journal-image">
+
+                        <img
+                            src="assets/images/1000308472.jpg"
+                            alt="Limited edition fashion">
+
+                        <span>02 / CULTURE</span>
+
+                    </a>
+
+
+                    <div class="journal-info">
+
+                        <p>FASHION CULTURE</p>
+
+                        <h3>
+                            Why individuality matters more than trends.
+                        </h3>
+
+                        <a href="#edition">
+                            EXPLORE STORY ↗
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+
+                <article class="journal-card searchable-item">
+
+                    <a href="#collection" class="journal-image">
+
+                        <img
+                            src="assets/images/1000308474.jpg"
+                            alt="Creative fashion inspiration">
+
+                        <span>03 / INSPIRATION</span>
+
+                    </a>
+
+
+                    <div class="journal-info">
+
+                        <p>CREATIVE THINKING</p>
+
+                        <h3>
+                            Fashion as a language of expression.
+                        </h3>
+
+                        <a href="#collection">
+                            EXPLORE STORY ↗
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+            </div>
+
+            <p class="journal-note">
+                EDITORIAL PREVIEW — FULL DO JOURNAL COMING SOON.
+            </p>
+
+        </section>
+
+
+
+        <!-- BRAND PHILOSOPHY -->
 
         <section class="brand-statement" id="about">
 
-            <p class="section-eyebrow">
-                THE PHILOSOPHY
-            </p>
+            <span class="section-eyebrow">
+                007 / OUR PHILOSOPHY
+            </span>
 
 
             <h2>
 
-                We don't believe in dressing
-                like <span>everyone else.</span>
+                The world doesn't need<br>
+
+                another copy.<br>
+
+                It needs <em>originals.</em>
 
             </h2>
 
@@ -416,124 +737,281 @@
         </section>
 
 
-    </main>
 
+        <!-- ACCOUNT CTA -->
 
+        <section class="account-section">
 
-    <!-- FOOTER -->
+            <div>
 
-    <footer class="site-footer">
+                <span class="section-eyebrow">
+                    YOUR WORLD. YOUR EXPRESSION.
+                </span>
 
-        <div class="footer-inner">
+                <h2>
+                    Become part of <em>DO.</em>
+                </h2>
 
-
-            <!-- BRAND INFORMATION -->
-
-            <div class="footer-brand">
-
-                <a href="#home" class="do-logo do-logo-light">
-
-                    <span class="do-logo-symbol">
-                        DO
-                    </span>
-
-                    <span class="do-logo-name">
-                        DESI OFFICIALS
-                    </span>
-
-                </a>
-
-
-                <p class="footer-description">
-
-                    An independent fashion concept
-                    built around individuality,
-                    distinctive design and limited editions.
-
-                    <br><br>
-
-                    MADE TO STAND APART.
-
+                <p>
+                    Sign in and be part of the DO experience.
                 </p>
 
             </div>
 
 
+            <a href="/auth/google" class="primary-button">
+                SIGN IN WITH GOOGLE ↗
+            </a>
 
-            <!-- EXPLORE -->
+        </section>
 
-            <div class="footer-column">
 
-                <h3>EXPLORE</h3>
 
-                <a href="#home">Home</a>
+        <!-- FOOTER -->
 
-                <a href="#collection">Collection</a>
+        <footer class="site-footer">
 
-                <a href="#edition">Limited Edition</a>
+            <div class="footer-inner">
 
-                <a href="#collector">Collector's Room</a>
+
+                <div class="footer-brand">
+
+                    <a href="#home" class="do-logo do-logo-light">
+
+                        <span class="do-logo-symbol">
+                            D<span>O</span>
+                        </span>
+
+                        <span class="do-logo-name">
+                            DESI OFFICIALS
+                        </span>
+
+                    </a>
+
+
+                    <p>
+
+                        Independent fashion.
+                        Distinctive design.
+                        A world of individual expression.
+
+                        <br><br>
+
+                        MADE TO STAND APART.
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="footer-column">
+
+                    <h3>EXPLORE</h3>
+
+                    <a href="#home">Home</a>
+
+                    <a href="#collection">Shop</a>
+
+                    <a href="#edition">Collections</a>
+
+                    <a href="#journal">Journal</a>
+
+                    <a href="#about">Our Story</a>
+
+                </div>
+
+
+
+                <div class="footer-column">
+
+                    <h3>YOUR ACCOUNT</h3>
+
+                    <a href="/auth/google">Sign In</a>
+
+                    <a href="#collection">Discover DO</a>
+
+                    <a href="mailto:desioficials@gmail.com">
+                        Contact
+                    </a>
+
+                </div>
+
+
+
+                <div class="footer-column">
+
+                    <h3>CONNECT</h3>
+
+                    <a
+                        href="https://www.instagram.com/desi_officials/"
+                        target="_blank"
+                        rel="noopener noreferrer">
+
+                        Instagram ↗
+
+                    </a>
+
+                    <a href="mailto:desioficials@gmail.com">
+                        Email DO
+                    </a>
+
+                </div>
+
 
             </div>
 
 
 
-            <!-- CONNECT -->
+            <div class="footer-bottom">
 
-            <div class="footer-column">
+                <p>
+                    © <span id="current-year">2026</span>
+                    DO — DESI OFFICIALS
+                </p>
 
-                <h3>CONNECT</h3>
 
-                <a
-                    href="https://www.instagram.com/desi_officials/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Instagram ↗
-                </a>
+                <p>
+                    MADE TO STAND APART.
+                </p>
 
-                <a href="mailto:desioficials@gmail.com">
-                    Email DO
+
+                <a href="#home">
+                    BACK TO TOP ↑
                 </a>
 
             </div>
 
-
-        </div>
-
+        </footer>
 
 
-        <!-- COPYRIGHT -->
-
-        <div class="footer-bottom">
-
-            <p>
-                © <span id="current-year">2026</span>
-                DO — DESI OFFICIALS
-            </p>
-
-
-            <p>
-                MADE TO STAND APART.
-            </p>
-
-        </div>
-
-
-    </footer>
+    </main>
 
 
 
-    <!-- SMALL JAVASCRIPT -->
+    <!-- JAVASCRIPT -->
 
     <script>
 
+        // CURRENT YEAR
+
         document.getElementById("current-year").textContent =
             new Date().getFullYear();
+
+
+        // MOBILE MENU
+
+        const menuToggle =
+            document.getElementById("menu-toggle");
+
+        const navigation =
+            document.getElementById("main-navigation");
+
+
+        menuToggle.addEventListener("click", function () {
+
+            const isOpen =
+                navigation.classList.toggle("active");
+
+            menuToggle.classList.toggle("active");
+
+            menuToggle.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+
+        });
+
+
+        navigation.querySelectorAll("a").forEach(link => {
+
+            link.addEventListener("click", () => {
+
+                navigation.classList.remove("active");
+
+                menuToggle.classList.remove("active");
+
+                menuToggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+            });
+
+        });
+
+
+
+        // SEARCH PANEL
+
+        const searchTrigger =
+            document.getElementById("search-trigger");
+
+        const searchPanel =
+            document.getElementById("search-panel");
+
+        const closeSearch =
+            document.getElementById("close-search");
+
+        const searchInput =
+            document.getElementById("site-search");
+
+
+        searchTrigger.addEventListener("click", () => {
+
+            searchPanel.classList.toggle("active");
+
+            if (searchPanel.classList.contains("active")) {
+                searchInput.focus();
+            }
+
+        });
+
+
+        closeSearch.addEventListener("click", () => {
+
+            searchPanel.classList.remove("active");
+
+            searchInput.value = "";
+
+            filterSearch("");
+
+        });
+
+
+
+        // BASIC PRODUCT AND ARTICLE SEARCH
+
+        function filterSearch(query) {
+
+            const items =
+                document.querySelectorAll(".searchable-item");
+
+            items.forEach(item => {
+
+                const text =
+                    item.textContent.toLowerCase();
+
+                const matches =
+                    text.includes(query.toLowerCase());
+
+                item.style.display =
+                    matches ? "" : "none";
+
+            });
+
+        }
+
+
+        searchInput.addEventListener("input", event => {
+
+            filterSearch(event.target.value);
+
+        });
 
     </script>
 
 
 </body>
 
-</html>
+                            </html>
