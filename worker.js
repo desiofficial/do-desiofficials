@@ -12,6 +12,11 @@ const STATE_COOKIE = "do_oauth_state";
 const SESSION_DURATION = 7 * 24 * 60 * 60;
 const encoder = new TextEncoder();
 
+const JSON_HEADERS = {
+  "Content-Type": "application/json; charset=utf-8",
+  "Cache-Control": "no-store"
+};
+
 /* =========================================
    SECURITY HELPERS
 ========================================= */
@@ -63,9 +68,7 @@ function getCookie(request, name) {
 
     if (separator === -1) continue;
 
-    const key = item.slice(0, separator).trim();
-
-    if (key === name) {
+    if (item.slice(0, separator).trim() === name) {
       return item.slice(separator + 1).trim();
     }
   }
@@ -77,13 +80,88 @@ function cookie(name, value, maxAge) {
   return `${name}=${value}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${maxAge}`;
 }
 
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: JSON_HEADERS
+  });
+}
+
+function isAdmin(email) {
+  return ADMIN_EMAILS.includes(
+    String(email || "").toLowerCase()
+  );
+}
+
+function isValidId(value) {
+  return typeof value === "string" &&
+    /^[a-zA-Z0-9_-]{1,100}$/.test(value);
+}
+
+function slugify(value) {
+  return String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 100);
+}
+
+async function readJSON(request) {
+  const contentType = request.headers.get("Content-Type") || "";
+
+  if (!contentType.includes("application/json")) {
+    throw new Error("Content-Type must be application/json.");
+  }
+
+  const length = Number(
+    request.headers.get("Content-Length") || 0
+  );
+
+  if (length > 20000) {
+    throw new Error("Request is too large.");
+  }
+
+  const text = await request.text();
+
+  if (text.length > 20000) {
+    throw new Error("Request is too large.");
+  }
+
+  return JSON.parse(text);
+}
+
+function checkOrigin(request) {
+  const origin = request.headers.get("Origin");
+
+  if (!origin) return false;
+
+  try {
+    return new URL(origin).origin ===
+      new URL(request.url).origin;
+  } catch {
+    return false;
+  }
+}
+
+async function requireJSONBody(request) {
+  try {
+    return await readJSON(request);
+  } catch (error) {
+    throw new Error(error.message || "Invalid request body.");
+  }
+}
+
 /* =========================================
    SESSION MANAGEMENT
 ========================================= */
 
 async function getSigningKey(env) {
-  if (!env.SESSION_SECRET || env.SESSION_SECRET.length < 32) {
-    throw new Error("Session configuration unavailable");
+  if (
+    !env.SESSION_SECRET ||
+    env.SESSION_SECRET.length < 32
+  ) {
+    throw new Error("Session configuration unavailable.");
   }
 
   return crypto.subtle.importKey(
@@ -103,6 +181,8 @@ async function createSession(user, env) {
     email: user.email,
     name: user.name || "",
     picture: user.picture || "",
+    customerId: user.customerId,
+    role: isAdmin(user.email) ? "admin" : "customer",
     exp: Math.floor(Date.now() / 1000) + SESSION_DURATION
   };
 
@@ -162,12 +242,53 @@ async function verifySession(token, env) {
   }
 }
 
+async function getCurrentUser(request, env) {
+  const token = getCookie(request, SESSION_COOKIE);
+
+  return verifySession(token, env);
+}
+
+async function requireCustomer(request, env) {
+  const user = await getCurrentUser(request, env);
+
+  if (!user || !user.customerId) {
+    return {
+      error: json({
+        error: "Please sign in to continue."
+      }, 401)
+    };
+  }
+
+  return { user };
+}
+
+async function requireAdmin(request, env) {
+  const user = await getCurrentUser(request, env);
+
+  if (!user || !isAdmin(user.email)) {
+    return {
+      error: json({
+        error: "Administrator access required."
+      }, 403)
+    };
+  }
+
+  return { user };
+}
+
 /* =========================================
    GOOGLE LOGIN
 ========================================= */
 
-async function googleLogin(env) {
+async function googleLogin(request, env) {
   const state = randomString();
+
+  const requestedMode =
+    new URL(request.url).searchParams.get("mode");
+
+  const mode = requestedMode === "admin"
+    ? "admin"
+    : "customer";
 
   const googleURL = new URL(
     "https://accounts.google.com/o/oauth2/v2/auth"
@@ -200,7 +321,11 @@ async function googleLogin(env) {
     status: 302,
     headers: {
       "Location": googleURL.toString(),
-      "Set-Cookie": cookie(STATE_COOKIE, state, 600)
+      "Set-Cookie": cookie(
+        STATE_COOKIE,
+        `${state}.${mode}`,
+        600
+      )
     }
   });
 }
@@ -212,11 +337,19 @@ async function googleCallback(request, env) {
   const returnedState = url.searchParams.get("state");
   const savedState = getCookie(request, STATE_COOKIE);
 
+  const stateParts = savedState
+    ? savedState.split(".")
+    : [];
+
+  const savedRandomState = stateParts[0];
+  const loginMode = stateParts[1];
+
   if (
     !code ||
     !returnedState ||
-    !savedState ||
-    returnedState !== savedState
+    !savedRandomState ||
+    returnedState !== savedRandomState ||
+    !["customer", "admin"].includes(loginMode)
   ) {
     return new Response(
       "Invalid login request. Please try again.",
@@ -262,7 +395,10 @@ async function googleCallback(request, env) {
       "https://oauth2.googleapis.com/tokeninfo"
     );
 
-    verifyURL.searchParams.set("id_token", tokens.id_token);
+    verifyURL.searchParams.set(
+      "id_token",
+      tokens.id_token
+    );
 
     const verificationResponse = await fetch(verifyURL);
 
@@ -296,7 +432,8 @@ async function googleCallback(request, env) {
       !validAudience ||
       !validExpiry ||
       !verifiedEmail ||
-      !googleUser.email
+      !googleUser.email ||
+      !googleUser.sub
     ) {
       return new Response(
         "Google account verification failed.",
@@ -306,22 +443,65 @@ async function googleCallback(request, env) {
 
     const email = googleUser.email.toLowerCase();
 
-    if (!ADMIN_EMAILS.includes(email)) {
+    if (
+      loginMode === "admin" &&
+      !isAdmin(email)
+    ) {
       return new Response(
         "Access denied. This account is not an authorized DO administrator.",
         { status: 403 }
       );
     }
 
+    const customerId = randomString(18);
+
+    const customer = await env.DB.prepare(`
+      INSERT INTO customers (
+        id,
+        google_id,
+        email,
+        name,
+        picture,
+        created_at,
+        last_login
+      )
+      VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+
+      ON CONFLICT(google_id)
+      DO UPDATE SET
+        email = excluded.email,
+        name = excluded.name,
+        picture = excluded.picture,
+        last_login = CURRENT_TIMESTAMP
+
+      RETURNING id
+    `).bind(
+      customerId,
+      googleUser.sub,
+      email,
+      googleUser.name || "",
+      googleUser.picture || ""
+    ).first();
+
+    if (!customer || !customer.id) {
+      throw new Error("Customer account could not be created.");
+    }
+
     const session = await createSession({
       email,
       name: googleUser.name || "",
-      picture: googleUser.picture || ""
+      picture: googleUser.picture || "",
+      customerId: customer.id
     }, env);
 
     const headers = new Headers();
 
-    headers.set("Location", "/");
+    headers.set(
+      "Location",
+      loginMode === "admin"
+        ? "/admin/"
+        : "/#account"
+    );
 
     headers.append(
       "Set-Cookie",
@@ -338,7 +518,9 @@ async function googleCallback(request, env) {
       headers
     });
 
-  } catch {
+  } catch (error) {
+    console.error("Google callback error:", error);
+
     return new Response(
       "Login could not be completed. Please try again.",
       { status: 500 }
@@ -347,564 +529,175 @@ async function googleCallback(request, env) {
 }
 
 /* =========================================
-   DO BRAND + HEADER FIX
+   AUCTION SETTLEMENT
 ========================================= */
 
-const DO_HEADER_FIX = `
-<style>
+async function settleExpiredAuctions(env) {
+  const now = new Date().toISOString();
 
-/* -----------------------------------------
-   INLINE DO LOGO
------------------------------------------ */
+  const expired = await env.DB.prepare(`
+    SELECT id
+    FROM products
+    WHERE status = 'live'
+      AND auction_end <= ?
+    LIMIT 50
+  `).bind(now).all();
 
-.do-inline-logo {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  text-decoration: none;
-  color: #d0b98d;
-  line-height: 1;
-}
+  for (const product of expired.results || []) {
+    await env.DB.batch([
 
-.do-inline-logo svg {
-  display: block;
-  width: 100px;
-  height: 43px;
-  overflow: visible;
-}
+      env.DB.prepare(`
+        INSERT OR IGNORE INTO auction_history (
+          id,
+          product_id,
+          winner_id,
+          winning_bid_id,
+          winning_amount,
+          closed_at
+        )
+        SELECT
+          ?,
+          p.id,
+          (
+            SELECT b.customer_id
+            FROM bids b
+            WHERE b.product_id = p.id
+            ORDER BY b.amount DESC, b.created_at ASC
+            LIMIT 1
+          ),
+          (
+            SELECT b.id
+            FROM bids b
+            WHERE b.product_id = p.id
+            ORDER BY b.amount DESC, b.created_at ASC
+            LIMIT 1
+          ),
+          (
+            SELECT b.amount
+            FROM bids b
+            WHERE b.product_id = p.id
+            ORDER BY b.amount DESC, b.created_at ASC
+            LIMIT 1
+          ),
+          CURRENT_TIMESTAMP
+        FROM products p
+        WHERE p.id = ?
+          AND p.status = 'live'
+          AND p.auction_end <= ?
+      `).bind(
+        randomString(18),
+        product.id,
+        now
+      ),
 
-.do-inline-logo .do-name {
-  color: #f5f2eb;
-  font-family: "DM Sans", sans-serif;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 3px;
-}
+      env.DB.prepare(`
+        UPDATE products
+        SET status = 'closed'
+        WHERE id = ?
+          AND status = 'live'
+          AND auction_end <= ?
+      `).bind(
+        product.id,
+        now
+      )
 
-.do-inline-logo .do-tagline {
-  color: #ad9160;
-  font-family: "DM Sans", sans-serif;
-  font-size: 7px;
-  letter-spacing: 2px;
-}
-
-/* -----------------------------------------
-   HEADER BUTTONS
------------------------------------------ */
-
-.menu-button,
-.dots-button,
-#leftMenuButton,
-#rightMenuButton,
-#menuToggle {
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  position: relative;
-  z-index: 10002;
-}
-
-/* -----------------------------------------
-   DRAWER BACKDROP
------------------------------------------ */
-
-.drawer-backdrop,
-#drawerBackdrop {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 10000 !important;
-  background: rgba(0, 0, 0, .72) !important;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition:
-    opacity .3s ease,
-    visibility .3s ease;
-}
-
-.drawer-backdrop.is-visible,
-#drawerBackdrop.is-visible {
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-}
-
-/* -----------------------------------------
-   LEFT DRAWER
------------------------------------------ */
-
-.left-drawer,
-#leftDrawer {
-  position: fixed !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  z-index: 10001 !important;
-  transform: translateX(-105%);
-  transition: transform .35s ease;
-  visibility: visible;
-  pointer-events: auto;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.left-drawer.is-open,
-#leftDrawer.is-open {
-  transform: translateX(0) !important;
-}
-
-/* -----------------------------------------
-   RIGHT DRAWER
------------------------------------------ */
-
-.right-drawer,
-#rightDrawer {
-  position: fixed !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  right: 0 !important;
-  left: auto !important;
-  z-index: 10001 !important;
-  transform: translateX(105%);
-  transition: transform .35s ease;
-  visibility: visible;
-  pointer-events: auto;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.right-drawer.is-open,
-#rightDrawer.is-open {
-  transform: translateX(0) !important;
-}
-
-/* -----------------------------------------
-   PAGE SCROLL LOCK
------------------------------------------ */
-
-body.do-drawer-open {
-  overflow: hidden !important;
-  touch-action: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .left-drawer,
-  .right-drawer,
-  .drawer-backdrop {
-    transition: none !important;
+    ]);
   }
 }
-
-</style>
-
-<script>
-(function () {
-  "use strict";
-
-  function initDOHeader() {
-
-    /* =====================================
-       LOGO REPLACEMENT
-    ===================================== */
-
-    const logoMarkup = \`
-      <span class="do-inline-logo" aria-label="DO Desi Officials">
-        <svg viewBox="0 0 180 65" role="img" aria-label="DO">
-          <text x="4" y="52"
-            font-family="Georgia, serif"
-            font-size="57"
-            font-weight="bold"
-            fill="#d0b98d">D</text>
-          <text x="72" y="52"
-            font-family="Georgia, serif"
-            font-size="57"
-            font-weight="bold"
-            fill="#f5f2eb">O</text>
-          <path d="M8 59 H170"
-            stroke="#ad9160"
-            stroke-width="1"/>
-        </svg>
-        <span class="do-name">DESI OFFICIALS</span>
-        <span class="do-tagline">DISTINCTIVE BY DESIGN</span>
-      </span>
-    \`;
-
-    document.querySelectorAll(
-      'img[alt*="DO Desi Officials" i]'
-    ).forEach(function (oldLogo) {
-
-      const wrapper = document.createElement("span");
-      wrapper.innerHTML = logoMarkup;
-
-      oldLogo.replaceWith(wrapper.firstElementChild);
-    });
-
-    /* =====================================
-       FIND ACTUAL DRAWER ELEMENTS
-    ===================================== */
-
-    const leftDrawer = document.querySelector(
-      ".left-drawer, #leftDrawer"
-    );
-
-    const rightDrawer = document.querySelector(
-      ".right-drawer, #rightDrawer"
-    );
-
-    const backdrop = document.querySelector(
-      ".drawer-backdrop, #drawerBackdrop"
-    );
-
-    const leftButton = document.querySelector(
-      ".menu-button, #leftMenuButton, #menuToggle"
-    );
-
-    const rightButton = document.querySelector(
-      ".dots-button, #rightMenuButton"
-    );
-
-    if (!leftDrawer || !rightDrawer || !backdrop) {
-      console.error(
-        "DO header: drawer elements not found.",
-        { leftDrawer, rightDrawer, backdrop }
-      );
-      return;
-    }
-
-    /* =====================================
-       CLOSE BOTH DRAWERS
-    ===================================== */
-
-    function closeDrawers() {
-
-      leftDrawer.classList.remove("is-open");
-      rightDrawer.classList.remove("is-open");
-
-      backdrop.classList.remove("is-visible");
-
-      document.body.classList.remove("do-drawer-open");
-
-      leftButton?.setAttribute("aria-expanded", "false");
-      rightButton?.setAttribute("aria-expanded", "false");
-    }
-
-    /* =====================================
-       OPEN ONE DRAWER
-    ===================================== */
-
-    function openDrawer(drawer, button) {
-
-      closeDrawers();
-
-      drawer.classList.add("is-open");
-
-      backdrop.classList.add("is-visible");
-
-      document.body.classList.add("do-drawer-open");
-
-      button?.setAttribute("aria-expanded", "true");
-    }
-
-    /* =====================================
-       LEFT THREE-LINE BUTTON
-    ===================================== */
-
-    if (leftButton) {
-
-      leftButton.setAttribute(
-        "aria-controls",
-        leftDrawer.id || "leftDrawer"
-      );
-
-      leftButton.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-
-      leftButton.addEventListener(
-        "click",
-        function (event) {
-
-          event.preventDefault();
-          event.stopPropagation();
-
-          if (leftDrawer.classList.contains("is-open")) {
-            closeDrawers();
-          } else {
-            openDrawer(leftDrawer, leftButton);
-          }
-
-        },
-        true
-      );
-    }
-
-    /* =====================================
-       RIGHT THREE-DOT BUTTON
-    ===================================== */
-
-    if (rightButton) {
-
-      rightButton.setAttribute(
-        "aria-controls",
-        rightDrawer.id || "rightDrawer"
-      );
-
-      rightButton.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-
-      rightButton.addEventListener(
-        "click",
-        function (event) {
-
-          event.preventDefault();
-          event.stopPropagation();
-
-          if (rightDrawer.classList.contains("is-open")) {
-            closeDrawers();
-          } else {
-            openDrawer(rightDrawer, rightButton);
-          }
-
-        },
-        true
-      );
-    }
-
-    /* =====================================
-       BACKDROP CLOSE
-    ===================================== */
-
-    backdrop.addEventListener("click", function () {
-      closeDrawers();
-    });
-
-    /* =====================================
-       DRAWER CLOSE BUTTONS
-    ===================================== */
-
-    document.querySelectorAll(
-      ".drawer-close, [data-close-drawers], [data-close-drawer]"
-    ).forEach(function (button) {
-
-      button.addEventListener("click", function (event) {
-        event.preventDefault();
-        closeDrawers();
-      });
-
-    });
-
-    /* =====================================
-       ESCAPE KEY
-    ===================================== */
-
-    document.addEventListener("keydown", function (event) {
-
-      if (event.key === "Escape") {
-        closeDrawers();
-      }
-
-    });
-
-    /* =====================================
-       NAVIGATION LINKS
-    ===================================== */
-
-    document.querySelectorAll(
-      ".left-drawer a, .right-drawer a, #leftDrawer a, #rightDrawer a"
-    ).forEach(function (link) {
-
-      link.addEventListener("click", function () {
-        closeDrawers();
-      });
-
-    });
-
-    console.log("DO header successfully initialized.");
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      initDOHeader
-    );
-  } else {
-    initDOHeader();
-  }
-
-})();
-</script>
-`;
 
 /* =========================================
-   HTML ENHANCEMENT
+   PRODUCT APIs
 ========================================= */
 
-async function serveSite(request, env) {
+async function listProducts(env) {
+  await settleExpiredAuctions(env);
 
-  const response = await env.ASSETS.fetch(request);
+  const result = await env.DB.prepare(`
+    SELECT
+      p.*,
+      (
+        SELECT MAX(b.amount)
+        FROM bids b
+        WHERE b.product_id = p.id
+      ) AS current_bid,
+      (
+        SELECT COUNT(*)
+        FROM bids b
+        WHERE b.product_id = p.id
+      ) AS bid_count
+    FROM products p
+    WHERE p.status IN ('live', 'closed')
+    ORDER BY p.created_at DESC
+  `).all();
 
-  const contentType =
-    response.headers.get("Content-Type") || "";
-
-  if (!contentType.includes("text/html")) {
-    return response;
-  }
-
-  const html = await response.text();
-
-  const enhancedHTML = html.includes("</body>")
-    ? html.replace(
-        "</body>",
-        DO_HEADER_FIX + "</body>"
-      )
-    : html + DO_HEADER_FIX;
-
-  const headers = new Headers(response.headers);
-
-  headers.delete("Content-Length");
-  headers.delete("Content-Encoding");
-
-  return new Response(enhancedHTML, {
-    status: response.status,
-    statusText: response.statusText,
-    headers
+  return json({
+    products: result.results || []
   });
 }
 
-/* =========================================
-   MAIN CLOUDFLARE WORKER
-========================================= */
+async function getProduct(env, slug) {
+  await settleExpiredAuctions(env);
 
-export default {
+  const product = await env.DB.prepare(`
+    SELECT
+      p.*,
+      (
+        SELECT MAX(b.amount)
+        FROM bids b
+        WHERE b.product_id = p.id
+      ) AS current_bid,
+      (
+        SELECT COUNT(*)
+        FROM bids b
+        WHERE b.product_id = p.id
+      ) AS bid_count
+    FROM products p
+    WHERE p.slug = ?
+      AND p.status IN ('live', 'closed')
+  `).bind(slug).first();
 
-  async fetch(request, env) {
-
-    const url = new URL(request.url);
-
-    /* STATUS */
-
-    if (url.pathname === "/api/status") {
-
-      return Response.json({
-        brand: "DO DESI OFFICIALS",
-        status: "online"
-      });
-
-    }
-
-    /* DATABASE CHECK */
-
-    if (url.pathname === "/api/db-check") {
-
-      try {
-
-        const result = await env.DB.prepare(
-          "SELECT COUNT(*) AS total FROM sqlite_master WHERE type='table'"
-        ).first();
-
-        return Response.json({
-          database: "connected",
-          tables: result.total
-        });
-
-      } catch {
-
-        return Response.json({
-          database: "error",
-          message: "Database connection failed"
-        }, { status: 500 });
-
-      }
-
-    }
-
-    /* GOOGLE LOGIN */
-
-    if (url.pathname === "/auth/google") {
-
-      if (
-        !env.GOOGLE_CLIENT_ID ||
-        !env.GOOGLE_CLIENT_SECRET
-      ) {
-
-        return new Response(
-          "Google login configuration is incomplete.",
-          { status: 500 }
-        );
-
-      }
-
-      return googleLogin(env);
-
-    }
-
-    /* GOOGLE CALLBACK */
-
-    if (url.pathname === "/auth/google/callback") {
-
-      return googleCallback(request, env);
-
-    }
-
-    /* CURRENT USER */
-
-    if (url.pathname === "/api/me") {
-
-      const token = getCookie(request, SESSION_COOKIE);
-
-      const user = await verifySession(token, env);
-
-      if (!user) {
-
-        return Response.json({
-          authenticated: false
-        }, { status: 401 });
-
-      }
-
-      return Response.json({
-
-        authenticated: true,
-
-        user: {
-          email: user.email,
-          name: user.name,
-          picture: user.picture
-        },
-
-        admin: ADMIN_EMAILS.includes(user.email)
-
-      });
-
-    }
-
-    /* LOGOUT */
-
-    if (url.pathname === "/auth/logout") {
-
-      return new Response(null, {
-
-        status: 302,
-
-        headers: {
-          "Location": "/",
-          "Set-Cookie": cookie(SESSION_COOKIE, "", 0)
-        }
-
-      });
-
-    }
-
-    /* WEBSITE */
-
-    return serveSite(request, env);
-
+  if (!product) {
+    return json({ error: "Product not found." }, 404);
   }
 
-};
+  return json({ product });
+}
+
+async function createProduct(request, env) {
+  const body = await requireJSONBody(request);
+
+  const name = String(body.name || "").trim();
+  const description = String(body.description || "");
+  const category = String(body.category || "").trim();
+  const imageUrl = String(body.image_url || "").trim();
+  const startingPrice = Number(body.starting_price);
+  const auctionStart = body.auction_start
+    ? new Date(body.auction_start)
+    : new Date();
+  const auctionEnd = new Date(body.auction_end);
+
+  const slug = slugify(body.slug || name);
+
+  if (
+    !name ||
+    !slug ||
+    !Number.isSafeInteger(startingPrice) ||
+    startingPrice < 0 ||
+    Number.isNaN(auctionStart.getTime()) ||
+    Number.isNaN(auctionEnd.getTime()) ||
+    auctionEnd <= auctionStart ||
+    description.length > 10000 ||
+    imageUrl.length > 2000
+  ) {
+    return json({
+      error: "Please provide valid product details."
+    }, 400);
+  }
+
+  if (
+    imageUrl &&
+    !imageUrl.startsWith("/") &&
+    !/^https:\/\//i.test(imageUrl)
+  ) {
+    return json({
+      error: "Product image
