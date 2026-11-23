@@ -1356,3 +1356,104 @@ input:focus-visible {
         animation-duration: 0.01ms !important;
     }
 }
+/* =========================================
+   DO DRAWER — MOBILE SCROLL & SIZE FIX
+========================================= */
+
+/* Independent scrolling inside both sidebars */
+
+.drawer {
+    top: 0;
+    bottom: 0;
+    height: 100vh;
+    height: 100dvh;
+
+    width: min(330px, 86vw);
+    padding: 22px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) transparent;
+}
+
+/* Sidebar scrollbar */
+
+.drawer::-webkit-scrollbar {
+    width: 4px;
+}
+
+.drawer::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 10px;
+}
+
+.drawer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Compact headings */
+
+.drawer-top {
+    padding-bottom: 17px;
+    margin-bottom: 18px;
+}
+
+.drawer-top h2 {
+    font-size: 23px;
+    line-height: 1.2;
+}
+
+.drawer .eyebrow {
+    margin-top: 12px;
+    margin-bottom: 7px;
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+/* Compact navigation options */
+
+.drawer-link {
+    padding: 11px 0;
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 1.3px;
+}
+
+/* Footer spacing */
+
+.drawer-foot {
+    margin-top: 25px;
+    padding-top: 18px;
+    font-size: 9px;
+}
+
+/* Prevent background page scrolling while a drawer is open */
+
+body:has(.drawer.is-open) {
+    overflow: hidden;
+}
+
+/* Small phone screens */
+
+@media (max-width: 380px) {
+
+    .drawer {
+        width: 84vw;
+        padding: 18px;
+    }
+
+    .drawer-top h2 {
+        font-size: 21px;
+    }
+
+    .drawer-link {
+        padding: 10px 0;
+        font-size: 10px;
+    }
+}
