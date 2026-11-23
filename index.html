@@ -674,3 +674,34 @@
 
 </body>
                 </html>
+/* FIX: CLOSE BOTH SIDE DRAWERS */
+
+document.addEventListener("click", function (event) {
+
+    const closeButton = event.target.closest(".drawer-close");
+
+    if (!closeButton) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const leftDrawer = document.getElementById("leftDrawer");
+    const rightDrawer = document.getElementById("rightDrawer");
+    const backdrop = document.getElementById("drawerBackdrop");
+
+    leftDrawer?.classList.remove("is-open");
+    rightDrawer?.classList.remove("is-open");
+    backdrop?.classList.remove("is-visible");
+
+    leftDrawer?.setAttribute("aria-hidden", "true");
+    rightDrawer?.setAttribute("aria-hidden", "true");
+
+    document.getElementById("leftMenuButton")
+        ?.setAttribute("aria-expanded", "false");
+
+    document.getElementById("rightMenuButton")
+        ?.setAttribute("aria-expanded", "false");
+
+    document.body.classList.remove("drawer-active");
+
+});
