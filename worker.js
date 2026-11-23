@@ -77,6 +77,10 @@ function cookie(name, value, maxAge) {
   return `${name}=${value}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${maxAge}`;
 }
 
+/* =========================================
+   SESSION MANAGEMENT
+========================================= */
+
 async function getSigningKey(env) {
   if (!env.SESSION_SECRET || env.SESSION_SECRET.length < 32) {
     throw new Error("Session configuration unavailable");
@@ -93,10 +97,6 @@ async function getSigningKey(env) {
     ["sign", "verify"]
   );
 }
-
-/* =========================================
-   SESSION MANAGEMENT
-========================================= */
 
 async function createSession(user, env) {
   const payload = {
@@ -163,7 +163,7 @@ async function verifySession(token, env) {
 }
 
 /* =========================================
-   GOOGLE AUTHENTICATION
+   GOOGLE LOGIN
 ========================================= */
 
 async function googleLogin(env) {
@@ -262,10 +262,7 @@ async function googleCallback(request, env) {
       "https://oauth2.googleapis.com/tokeninfo"
     );
 
-    verifyURL.searchParams.set(
-      "id_token",
-      tokens.id_token
-    );
+    verifyURL.searchParams.set("id_token", tokens.id_token);
 
     const verificationResponse = await fetch(verifyURL);
 
@@ -350,242 +347,406 @@ async function googleCallback(request, env) {
 }
 
 /* =========================================
-   DO LOGO + DRAWER ENHANCEMENTS
+   DO BRAND + HEADER FIX
 ========================================= */
 
-const DO_ENHANCEMENTS = `
+const DO_HEADER_FIX = `
 <style>
-/* DO INLINE LOGO */
 
-.do-worker-logo {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 2px !important;
-  text-decoration: none !important;
-  color: #d0b98d !important;
-  line-height: 1 !important;
+/* -----------------------------------------
+   INLINE DO LOGO
+----------------------------------------- */
+
+.do-inline-logo {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  text-decoration: none;
+  color: #d0b98d;
+  line-height: 1;
 }
 
-.do-worker-logo svg {
-  width: 100px;
-  height: 48px;
+.do-inline-logo svg {
   display: block;
+  width: 100px;
+  height: 43px;
+  overflow: visible;
 }
 
-.do-worker-logo-name {
+.do-inline-logo .do-name {
+  color: #f5f2eb;
   font-family: "DM Sans", sans-serif;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 3px;
-  color: #f5f2eb;
 }
 
-.do-worker-logo-tagline {
+.do-inline-logo .do-tagline {
+  color: #ad9160;
   font-family: "DM Sans", sans-serif;
   font-size: 7px;
   letter-spacing: 2px;
-  color: #ad9160;
 }
 
-/* DRAWER BACKDROP */
+/* -----------------------------------------
+   HEADER BUTTONS
+----------------------------------------- */
 
+.menu-button,
+.dots-button,
+#leftMenuButton,
+#rightMenuButton,
+#menuToggle {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  position: relative;
+  z-index: 10002;
+}
+
+/* -----------------------------------------
+   DRAWER BACKDROP
+----------------------------------------- */
+
+.drawer-backdrop,
 #drawerBackdrop {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 9998 !important;
-  background: rgba(0,0,0,.72) !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-  transition: opacity .3s ease, visibility .3s ease !important;
+  z-index: 10000 !important;
+  background: rgba(0, 0, 0, .72) !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity .3s ease,
+    visibility .3s ease;
 }
 
+.drawer-backdrop.is-visible,
 #drawerBackdrop.is-visible {
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
 }
 
-/* DRAWERS */
+/* -----------------------------------------
+   LEFT DRAWER
+----------------------------------------- */
 
-#leftDrawer,
+.left-drawer,
+#leftDrawer {
+  position: fixed !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  z-index: 10001 !important;
+  transform: translateX(-105%);
+  transition: transform .35s ease;
+  visibility: visible;
+  pointer-events: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.left-drawer.is-open,
+#leftDrawer.is-open {
+  transform: translateX(0) !important;
+}
+
+/* -----------------------------------------
+   RIGHT DRAWER
+----------------------------------------- */
+
+.right-drawer,
 #rightDrawer {
   position: fixed !important;
   top: 0 !important;
   bottom: 0 !important;
-  z-index: 9999 !important;
-  transition: transform .35s ease !important;
-  visibility: visible;
-}
-
-#leftDrawer {
-  left: 0 !important;
-  transform: translateX(-110%) !important;
-}
-
-#rightDrawer {
   right: 0 !important;
-  transform: translateX(110%) !important;
+  left: auto !important;
+  z-index: 10001 !important;
+  transform: translateX(105%);
+  transition: transform .35s ease;
+  visibility: visible;
+  pointer-events: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-#leftDrawer.is-open,
+.right-drawer.is-open,
 #rightDrawer.is-open {
   transform: translateX(0) !important;
 }
 
+/* -----------------------------------------
+   PAGE SCROLL LOCK
+----------------------------------------- */
+
 body.do-drawer-open {
   overflow: hidden !important;
+  touch-action: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #leftDrawer,
-  #rightDrawer,
-  #drawerBackdrop {
+  .left-drawer,
+  .right-drawer,
+  .drawer-backdrop {
     transition: none !important;
   }
 }
+
 </style>
 
 <script>
 (function () {
   "use strict";
 
-  function initDO() {
-    const leftButton = document.getElementById("leftMenuButton");
-    const rightButton = document.getElementById("rightMenuButton");
+  function initDOHeader() {
 
-    const leftDrawer = document.getElementById("leftDrawer");
-    const rightDrawer = document.getElementById("rightDrawer");
-
-    const backdrop = document.getElementById("drawerBackdrop");
-
-    /* INLINE LOGO */
+    /* =====================================
+       LOGO REPLACEMENT
+    ===================================== */
 
     const logoMarkup = \`
-      <a href="#home" class="do-worker-logo" aria-label="DO Desi Officials Home">
-        <svg viewBox="0 0 180 90" role="img" aria-label="DO">
-          <path d="M8 8 H58 C85 8 101 23 101 45 C101 67 85 82 58 82 H8 Z"
-            fill="none" stroke="currentColor" stroke-width="3"/>
-          <path d="M55 8 V82" stroke="currentColor" stroke-width="2"/>
-          <text x="9" y="60" font-size="48"
-            font-family="Georgia,serif" font-weight="bold"
-            fill="currentColor">D</text>
-          <text x="105" y="60" font-size="48"
-            font-family="Georgia,serif" font-weight="bold"
-            fill="currentColor">O</text>
+      <span class="do-inline-logo" aria-label="DO Desi Officials">
+        <svg viewBox="0 0 180 65" role="img" aria-label="DO">
+          <text x="4" y="52"
+            font-family="Georgia, serif"
+            font-size="57"
+            font-weight="bold"
+            fill="#d0b98d">D</text>
+          <text x="72" y="52"
+            font-family="Georgia, serif"
+            font-size="57"
+            font-weight="bold"
+            fill="#f5f2eb">O</text>
+          <path d="M8 59 H170"
+            stroke="#ad9160"
+            stroke-width="1"/>
         </svg>
-        <span class="do-worker-logo-name">DESI OFFICIALS</span>
-        <span class="do-worker-logo-tagline">DISTINCTIVE BY DESIGN</span>
-      </a>
+        <span class="do-name">DESI OFFICIALS</span>
+        <span class="do-tagline">DISTINCTIVE BY DESIGN</span>
+      </span>
     \`;
 
     document.querySelectorAll(
-      ".brand-logo-image, .drawer-logo-image, .footer-logo-image"
+      'img[alt*="DO Desi Officials" i]'
     ).forEach(function (oldLogo) {
-      const replacement = document.createElement("span");
-      replacement.innerHTML = logoMarkup;
-      oldLogo.replaceWith(replacement.firstElementChild);
+
+      const wrapper = document.createElement("span");
+      wrapper.innerHTML = logoMarkup;
+
+      oldLogo.replaceWith(wrapper.firstElementChild);
     });
 
-    /* DRAWERS */
+    /* =====================================
+       FIND ACTUAL DRAWER ELEMENTS
+    ===================================== */
+
+    const leftDrawer = document.querySelector(
+      ".left-drawer, #leftDrawer"
+    );
+
+    const rightDrawer = document.querySelector(
+      ".right-drawer, #rightDrawer"
+    );
+
+    const backdrop = document.querySelector(
+      ".drawer-backdrop, #drawerBackdrop"
+    );
+
+    const leftButton = document.querySelector(
+      ".menu-button, #leftMenuButton, #menuToggle"
+    );
+
+    const rightButton = document.querySelector(
+      ".dots-button, #rightMenuButton"
+    );
 
     if (!leftDrawer || !rightDrawer || !backdrop) {
-      console.warn("DO: Drawer HTML elements were not found.");
+      console.error(
+        "DO header: drawer elements not found.",
+        { leftDrawer, rightDrawer, backdrop }
+      );
       return;
     }
 
+    /* =====================================
+       CLOSE BOTH DRAWERS
+    ===================================== */
+
     function closeDrawers() {
+
       leftDrawer.classList.remove("is-open");
       rightDrawer.classList.remove("is-open");
+
       backdrop.classList.remove("is-visible");
 
       document.body.classList.remove("do-drawer-open");
 
-      if (leftButton) {
-        leftButton.setAttribute("aria-expanded", "false");
-      }
-
-      if (rightButton) {
-        rightButton.setAttribute("aria-expanded", "false");
-      }
+      leftButton?.setAttribute("aria-expanded", "false");
+      rightButton?.setAttribute("aria-expanded", "false");
     }
 
+    /* =====================================
+       OPEN ONE DRAWER
+    ===================================== */
+
     function openDrawer(drawer, button) {
+
       closeDrawers();
 
       drawer.classList.add("is-open");
+
       backdrop.classList.add("is-visible");
 
       document.body.classList.add("do-drawer-open");
 
-      if (button) {
-        button.setAttribute("aria-expanded", "true");
-      }
+      button?.setAttribute("aria-expanded", "true");
     }
 
-    function bindButton(button, drawer) {
-      if (!button) return;
+    /* =====================================
+       LEFT THREE-LINE BUTTON
+    ===================================== */
 
-      button.setAttribute("aria-controls", drawer.id);
-      button.setAttribute("aria-expanded", "false");
+    if (leftButton) {
+
+      leftButton.setAttribute(
+        "aria-controls",
+        leftDrawer.id || "leftDrawer"
+      );
+
+      leftButton.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+
+      leftButton.addEventListener(
+        "click",
+        function (event) {
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          if (leftDrawer.classList.contains("is-open")) {
+            closeDrawers();
+          } else {
+            openDrawer(leftDrawer, leftButton);
+          }
+
+        },
+        true
+      );
+    }
+
+    /* =====================================
+       RIGHT THREE-DOT BUTTON
+    ===================================== */
+
+    if (rightButton) {
+
+      rightButton.setAttribute(
+        "aria-controls",
+        rightDrawer.id || "rightDrawer"
+      );
+
+      rightButton.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+
+      rightButton.addEventListener(
+        "click",
+        function (event) {
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          if (rightDrawer.classList.contains("is-open")) {
+            closeDrawers();
+          } else {
+            openDrawer(rightDrawer, rightButton);
+          }
+
+        },
+        true
+      );
+    }
+
+    /* =====================================
+       BACKDROP CLOSE
+    ===================================== */
+
+    backdrop.addEventListener("click", function () {
+      closeDrawers();
+    });
+
+    /* =====================================
+       DRAWER CLOSE BUTTONS
+    ===================================== */
+
+    document.querySelectorAll(
+      ".drawer-close, [data-close-drawers], [data-close-drawer]"
+    ).forEach(function (button) {
 
       button.addEventListener("click", function (event) {
         event.preventDefault();
-        event.stopImmediatePropagation();
+        closeDrawers();
+      });
 
-        if (drawer.classList.contains("is-open")) {
-          closeDrawers();
-        } else {
-          openDrawer(drawer, button);
-        }
-      }, true);
-    }
+    });
 
-    bindButton(leftButton, leftDrawer);
-    bindButton(rightButton, rightDrawer);
-
-    backdrop.addEventListener("click", closeDrawers);
-
-    document.querySelectorAll("[data-close-drawer]").forEach(
-      function (button) {
-        button.addEventListener("click", function (event) {
-          event.preventDefault();
-          closeDrawers();
-        });
-      }
-    );
+    /* =====================================
+       ESCAPE KEY
+    ===================================== */
 
     document.addEventListener("keydown", function (event) {
+
       if (event.key === "Escape") {
         closeDrawers();
       }
+
     });
+
+    /* =====================================
+       NAVIGATION LINKS
+    ===================================== */
 
     document.querySelectorAll(
-      "#leftDrawer a, #rightDrawer a"
+      ".left-drawer a, .right-drawer a, #leftDrawer a, #rightDrawer a"
     ).forEach(function (link) {
-      link.addEventListener("click", closeDrawers);
+
+      link.addEventListener("click", function () {
+        closeDrawers();
+      });
+
     });
 
-    console.log("DO: Logo and drawer enhancements loaded.");
+    console.log("DO header successfully initialized.");
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initDO);
+    document.addEventListener(
+      "DOMContentLoaded",
+      initDOHeader
+    );
   } else {
-    initDO();
+    initDOHeader();
   }
+
 })();
 </script>
 `;
 
 /* =========================================
-   INJECT ENHANCEMENTS INTO EXISTING HTML
+   HTML ENHANCEMENT
 ========================================= */
 
 async function serveSite(request, env) {
+
   const response = await env.ASSETS.fetch(request);
 
   const contentType =
@@ -600,9 +761,9 @@ async function serveSite(request, env) {
   const enhancedHTML = html.includes("</body>")
     ? html.replace(
         "</body>",
-        DO_ENHANCEMENTS + "</body>"
+        DO_HEADER_FIX + "</body>"
       )
-    : html + DO_ENHANCEMENTS;
+    : html + DO_HEADER_FIX;
 
   const headers = new Headers(response.headers);
 
@@ -621,22 +782,28 @@ async function serveSite(request, env) {
 ========================================= */
 
 export default {
+
   async fetch(request, env) {
+
     const url = new URL(request.url);
 
-    /* API STATUS */
+    /* STATUS */
 
     if (url.pathname === "/api/status") {
+
       return Response.json({
         brand: "DO DESI OFFICIALS",
         status: "online"
       });
+
     }
 
     /* DATABASE CHECK */
 
     if (url.pathname === "/api/db-check") {
+
       try {
+
         const result = await env.DB.prepare(
           "SELECT COUNT(*) AS total FROM sqlite_master WHERE type='table'"
         ).first();
@@ -647,72 +814,97 @@ export default {
         });
 
       } catch {
+
         return Response.json({
           database: "error",
           message: "Database connection failed"
         }, { status: 500 });
+
       }
+
     }
 
     /* GOOGLE LOGIN */
 
     if (url.pathname === "/auth/google") {
+
       if (
         !env.GOOGLE_CLIENT_ID ||
         !env.GOOGLE_CLIENT_SECRET
       ) {
+
         return new Response(
           "Google login configuration is incomplete.",
           { status: 500 }
         );
+
       }
 
       return googleLogin(env);
+
     }
 
     /* GOOGLE CALLBACK */
 
     if (url.pathname === "/auth/google/callback") {
+
       return googleCallback(request, env);
+
     }
 
     /* CURRENT USER */
 
     if (url.pathname === "/api/me") {
+
       const token = getCookie(request, SESSION_COOKIE);
+
       const user = await verifySession(token, env);
 
       if (!user) {
+
         return Response.json({
           authenticated: false
         }, { status: 401 });
+
       }
 
       return Response.json({
+
         authenticated: true,
+
         user: {
           email: user.email,
           name: user.name,
           picture: user.picture
         },
+
         admin: ADMIN_EMAILS.includes(user.email)
+
       });
+
     }
 
     /* LOGOUT */
 
     if (url.pathname === "/auth/logout") {
+
       return new Response(null, {
+
         status: 302,
+
         headers: {
           "Location": "/",
           "Set-Cookie": cookie(SESSION_COOKIE, "", 0)
         }
+
       });
+
     }
 
-    /* EXISTING WEBSITE + ENHANCEMENTS */
+    /* WEBSITE */
 
     return serveSite(request, env);
+
   }
+
 };
