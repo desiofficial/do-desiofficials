@@ -2,14 +2,14 @@ const REDIRECT_URI =
   "https://do-desiofficials.desioficials.workers.dev/auth/google/callback";
 
 const ADMIN_EMAILS = [
-  "desioficials@gmail.com",
+  "desiofficials@gmail.com",
   "desiofficials26@gmail.com"
 ];
 
 const SESSION_COOKIE = "do_session";
 const STATE_COOKIE = "do_oauth_state";
-
 const SESSION_DURATION = 7 * 24 * 60 * 60;
+
 const encoder = new TextEncoder();
 
 const JSON_HEADERS = {
@@ -61,9 +61,9 @@ function randomString(length = 32) {
 }
 
 function getCookie(request, name) {
-  const cookieHeader = request.headers.get("Cookie") || "";
+  const header = request.headers.get("Cookie") || "";
 
-  for (const item of cookieHeader.split(";")) {
+  for (const item of header.split(";")) {
     const separator = item.indexOf("=");
 
     if (separator === -1) continue;
@@ -108,7 +108,8 @@ function slugify(value) {
 }
 
 async function readJSON(request) {
-  const contentType = request.headers.get("Content-Type") || "";
+  const contentType =
+    request.headers.get("Content-Type") || "";
 
   if (!contentType.includes("application/json")) {
     throw new Error("Content-Type must be application/json.");
@@ -144,12 +145,8 @@ function checkOrigin(request) {
   }
 }
 
-async function requireJSONBody(request) {
-  try {
-    return await readJSON(request);
-  } catch (error) {
-    throw new Error(error.message || "Invalid request body.");
-  }
+function errorMessage(error) {
+  return error?.message || "Something went wrong.";
 }
 
 /* =========================================
@@ -243,9 +240,10 @@ async function verifySession(token, env) {
 }
 
 async function getCurrentUser(request, env) {
-  const token = getCookie(request, SESSION_COOKIE);
-
-  return verifySession(token, env);
+  return verifySession(
+    getCookie(request, SESSION_COOKIE),
+    env
+  );
 }
 
 async function requireCustomer(request, env) {
@@ -254,6 +252,7 @@ async function requireCustomer(request, env) {
   if (!user || !user.customerId) {
     return {
       error: json({
+        authenticated: false,
         error: "Please sign in to continue."
       }, 401)
     };
@@ -281,6 +280,13 @@ async function requireAdmin(request, env) {
 ========================================= */
 
 async function googleLogin(request, env) {
+  if (!env.GOOGLE_CLIENT_ID) {
+    return new Response(
+      "Google login configuration is unavailable.",
+      { status: 500 }
+    );
+  }
+
   const state = randomString();
 
   const requestedMode =
@@ -304,16 +310,8 @@ async function googleLogin(request, env) {
     REDIRECT_URI
   );
 
-  googleURL.searchParams.set(
-    "response_type",
-    "code"
-  );
-
-  googleURL.searchParams.set(
-    "scope",
-    "openid email profile"
-  );
-
+  googleURL.searchParams.set("response_type", "code");
+  googleURL.searchParams.set("scope", "openid email profile");
   googleURL.searchParams.set("state", state);
   googleURL.searchParams.set("prompt", "select_account");
 
@@ -335,7 +333,11 @@ async function googleCallback(request, env) {
 
   const code = url.searchParams.get("code");
   const returnedState = url.searchParams.get("state");
-  const savedState = getCookie(request, STATE_COOKIE);
+
+  const savedState = getCookie(
+    request,
+    STATE_COOKIE
+  );
 
   const stateParts = savedState
     ? savedState.split(".")
@@ -363,7 +365,8 @@ async function googleCallback(request, env) {
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          "Content-Type":
+            "application/x-www-form-urlencoded"
         },
         body: new URLSearchParams({
           code,
@@ -409,7 +412,8 @@ async function googleCallback(request, env) {
       );
     }
 
-    const googleUser = await verificationResponse.json();
+    const googleUser =
+      await verificationResponse.json();
 
     const validIssuer = [
       "accounts.google.com",
@@ -483,7 +487,7 @@ async function googleCallback(request, env) {
       googleUser.picture || ""
     ).first();
 
-    if (!customer || !customer.id) {
+    if (!customer?.id) {
       throw new Error("Customer account could not be created.");
     }
 
@@ -545,7 +549,6 @@ async function settleExpiredAuctions(env) {
 
   for (const product of expired.results || []) {
     await env.DB.batch([
-
       env.DB.prepare(`
         INSERT OR IGNORE INTO auction_history (
           id,
@@ -596,11 +599,7 @@ async function settleExpiredAuctions(env) {
         WHERE id = ?
           AND status = 'live'
           AND auction_end <= ?
-      `).bind(
-        product.id,
-        now
-      )
-
+      `).bind(product.id, now)
     ]);
   }
 }
@@ -664,19 +663,26 @@ async function getProduct(env, slug) {
 }
 
 async function createProduct(request, env) {
-  const body = await requireJSONBody(request);
+  const body = await readJSON(request);
 
   const name = String(body.name || "").trim();
   const description = String(body.description || "");
   const category = String(body.category || "").trim();
   const imageUrl = String(body.image_url || "").trim();
+
   const startingPrice = Number(body.starting_price);
+
   const auctionStart = body.auction_start
     ? new Date(body.auction_start)
     : new Date();
+
   const auctionEnd = new Date(body.auction_end);
 
   const slug = slugify(body.slug || name);
+
+  const status = ["draft", "live", "closed"].includes(body.status)
+    ? body.status
+    : "draft";
 
   if (
     !name ||
@@ -687,6 +693,7 @@ async function createProduct(request, env) {
     Number.isNaN(auctionEnd.getTime()) ||
     auctionEnd <= auctionStart ||
     description.length > 10000 ||
+    category.length > 100 ||
     imageUrl.length > 2000
   ) {
     return json({
@@ -700,4 +707,917 @@ async function createProduct(request, env) {
     !/^https:\/\//i.test(imageUrl)
   ) {
     return json({
-      error: "Product image
+      error: "Product image must use a site path or HTTPS URL."
+    }, 400);
+  }
+
+  const id = randomString(18);
+
+  await env.DB.prepare(`
+    INSERT INTO products (
+      id,
+      name,
+      slug,
+      description,
+      category,
+      image_url,
+      starting_price,
+      auction_start,
+      auction_end,
+      status
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).bind(
+    id,
+    name,
+    slug,
+    description,
+    category,
+    imageUrl,
+    startingPrice,
+    auctionStart.toISOString(),
+    auctionEnd.toISOString(),
+    status
+  ).run();
+
+  return json({
+    success: true,
+    product: {
+      id,
+      name,
+      slug,
+      description,
+      category,
+      image_url: imageUrl,
+      starting_price: startingPrice,
+      auction_start: auctionStart.toISOString(),
+      auction_end: auctionEnd.toISOString(),
+      status
+    }
+  }, 201);
+}
+
+async function updateProduct(request, env, id) {
+  if (!isValidId(id)) {
+    return json({ error: "Invalid product ID." }, 400);
+  }
+
+  const body = await readJSON(request);
+
+  const existing = await env.DB.prepare(`
+    SELECT *
+    FROM products
+    WHERE id = ?
+  `).bind(id).first();
+
+  if (!existing) {
+    return json({ error: "Product not found." }, 404);
+  }
+
+  const name = String(body.name ?? existing.name).trim();
+  const description = String(
+    body.description ?? existing.description
+  );
+  const category = String(
+    body.category ?? existing.category
+  ).trim();
+  const imageUrl = String(
+    body.image_url ?? existing.image_url
+  ).trim();
+
+  const startingPrice = Number(
+    body.starting_price ?? existing.starting_price
+  );
+
+  const auctionStart = new Date(
+    body.auction_start ?? existing.auction_start
+  );
+
+  const auctionEnd = new Date(
+    body.auction_end ?? existing.auction_end
+  );
+
+  const slug = slugify(body.slug || name);
+
+  const status = body.status ?? existing.status;
+
+  if (
+    !name ||
+    !slug ||
+    !Number.isSafeInteger(startingPrice) ||
+    startingPrice < 0 ||
+    Number.isNaN(auctionStart.getTime()) ||
+    Number.isNaN(auctionEnd.getTime()) ||
+    auctionEnd <= auctionStart ||
+    !["draft", "live", "closed"].includes(status) ||
+    description.length > 10000 ||
+    category.length > 100 ||
+    imageUrl.length > 2000
+  ) {
+    return json({
+      error: "Please provide valid product details."
+    }, 400);
+  }
+
+  if (
+    imageUrl &&
+    !imageUrl.startsWith("/") &&
+    !/^https:\/\//i.test(imageUrl)
+  ) {
+    return json({
+      error: "Product image must use a site path or HTTPS URL."
+    }, 400);
+  }
+
+  await env.DB.prepare(`
+    UPDATE products
+    SET
+      name = ?,
+      slug = ?,
+      description = ?,
+      category = ?,
+      image_url = ?,
+      starting_price = ?,
+      auction_start = ?,
+      auction_end = ?,
+      status = ?
+    WHERE id = ?
+  `).bind(
+    name,
+    slug,
+    description,
+    category,
+    imageUrl,
+    startingPrice,
+    auctionStart.toISOString(),
+    auctionEnd.toISOString(),
+    status,
+    id
+  ).run();
+
+  return json({
+    success: true,
+    message: "Product updated."
+  });
+}
+
+async function deleteProduct(env, id) {
+  if (!isValidId(id)) {
+    return json({ error: "Invalid product ID." }, 400);
+  }
+
+  const product = await env.DB.prepare(`
+    SELECT id
+    FROM products
+    WHERE id = ?
+  `).bind(id).first();
+
+  if (!product) {
+    return json({ error: "Product not found." }, 404);
+  }
+
+  const bids = await env.DB.prepare(`
+    SELECT COUNT(*) AS total
+    FROM bids
+    WHERE product_id = ?
+  `).bind(id).first();
+
+  if (Number(bids?.total || 0) > 0) {
+    return json({
+      error: "Products with bids cannot be deleted."
+    }, 409);
+  }
+
+  await env.DB.prepare(`
+    DELETE FROM products
+    WHERE id = ?
+  `).bind(id).run();
+
+  return json({ success: true });
+}
+
+/* =========================================
+   BIDDING APIs
+========================================= */
+
+async function placeBid(request, env) {
+  const auth = await requireCustomer(request, env);
+
+  if (auth.error) return auth.error;
+
+  const body = await readJSON(request);
+
+  const productId = String(body.product_id || "");
+  const amount = Number(body.amount);
+
+  if (
+    !isValidId(productId) ||
+    !Number.isSafeInteger(amount) ||
+    amount <= 0
+  ) {
+    return json({
+      error: "Please enter a valid bid."
+    }, 400);
+  }
+
+  await settleExpiredAuctions(env);
+
+  const result = await env.DB.prepare(`
+    INSERT INTO bids (
+      id,
+      product_id,
+      customer_id,
+      amount
+    )
+    SELECT
+      ?,
+      p.id,
+      ?,
+      ?
+    FROM products p
+    WHERE p.id = ?
+      AND p.status = 'live'
+      AND p.auction_start <= ?
+      AND p.auction_end > ?
+      AND ? > MAX(
+        p.starting_price,
+        COALESCE(
+          (
+            SELECT MAX(b.amount)
+            FROM bids b
+            WHERE b.product_id = p.id
+          ),
+          0
+        )
+      )
+  `).bind(
+    randomString(18),
+    auth.user.customerId,
+    amount,
+    productId,
+    new Date().toISOString(),
+    new Date().toISOString(),
+    amount
+  ).run();
+
+  if (!result.meta || result.meta.changes !== 1) {
+    return json({
+      error: "Your bid was not accepted. The auction may have closed or your bid may be too low."
+    }, 409);
+  }
+
+  return json({
+    success: true,
+    message: "Your bid has been placed.",
+    amount
+  }, 201);
+}
+
+async function getMyBids(env, customerId) {
+  await settleExpiredAuctions(env);
+
+  const result = await env.DB.prepare(`
+    SELECT
+      b.id,
+      b.amount,
+      b.created_at,
+      p.name AS product_name,
+      p.slug AS product_slug,
+      p.image_url,
+      p.status AS product_status,
+      p.auction_end,
+      (
+        SELECT MAX(other.amount)
+        FROM bids other
+        WHERE other.product_id = b.product_id
+      ) AS highest_bid
+    FROM bids b
+    JOIN products p ON p.id = b.product_id
+    WHERE b.customer_id = ?
+    ORDER BY b.created_at DESC
+  `).bind(customerId).all();
+
+  return json({
+    bids: result.results || []
+  });
+}
+
+/* =========================================
+   ARTICLE APIs
+========================================= */
+
+async function listArticles(env) {
+  const result = await env.DB.prepare(`
+    SELECT
+      id,
+      title,
+      slug,
+      content,
+      image_url,
+      created_at,
+      updated_at
+    FROM articles
+    WHERE status = 'published'
+    ORDER BY created_at DESC
+  `).all();
+
+  return json({
+    articles: result.results || []
+  });
+}
+
+async function getArticle(env, slug) {
+  const article = await env.DB.prepare(`
+    SELECT
+      id,
+      title,
+      slug,
+      content,
+      image_url,
+      created_at,
+      updated_at
+    FROM articles
+    WHERE slug = ?
+      AND status = 'published'
+  `).bind(slug).first();
+
+  if (!article) {
+    return json({ error: "Article not found." }, 404);
+  }
+
+  return json({ article });
+}
+
+async function createArticle(request, env, adminEmail) {
+  const body = await readJSON(request);
+
+  const title = String(body.title || "").trim();
+  const content = String(body.content || "");
+  const imageUrl = String(body.image_url || "").trim();
+  const slug = slugify(body.slug || title);
+
+  const status = body.status === "published"
+    ? "published"
+    : "draft";
+
+  if (
+    !title ||
+    !slug ||
+    !content.trim() ||
+    title.length > 250 ||
+    content.length > 30000 ||
+    imageUrl.length > 2000
+  ) {
+    return json({
+      error: "Please provide valid article details."
+    }, 400);
+  }
+
+  if (
+    imageUrl &&
+    !imageUrl.startsWith("/") &&
+    !/^https:\/\//i.test(imageUrl)
+  ) {
+    return json({
+      error: "Article image must use a site path or HTTPS URL."
+    }, 400);
+  }
+
+  const id = randomString(18);
+
+  await env.DB.prepare(`
+    INSERT INTO articles (
+      id,
+      title,
+      slug,
+      content,
+      image_url,
+      status,
+      author_email
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `).bind(
+    id,
+    title,
+    slug,
+    content,
+    imageUrl,
+    status,
+    adminEmail
+  ).run();
+
+  return json({
+    success: true,
+    id,
+    slug
+  }, 201);
+}
+
+async function updateArticle(request, env, id) {
+  if (!isValidId(id)) {
+    return json({ error: "Invalid article ID." }, 400);
+  }
+
+  const body = await readJSON(request);
+
+  const existing = await env.DB.prepare(`
+    SELECT *
+    FROM articles
+    WHERE id = ?
+  `).bind(id).first();
+
+  if (!existing) {
+    return json({ error: "Article not found." }, 404);
+  }
+
+  const title = String(body.title ?? existing.title).trim();
+  const content = String(body.content ?? existing.content);
+  const imageUrl = String(
+    body.image_url ?? existing.image_url
+  ).trim();
+
+  const slug = slugify(body.slug || title);
+
+  const status = body.status ?? existing.status;
+
+  if (
+    !title ||
+    !slug ||
+    !content.trim() ||
+    title.length > 250 ||
+    content.length > 30000 ||
+    imageUrl.length > 2000 ||
+    !["draft", "published"].includes(status)
+  ) {
+    return json({
+      error: "Please provide valid article details."
+    }, 400);
+  }
+
+  if (
+    imageUrl &&
+    !imageUrl.startsWith("/") &&
+    !/^https:\/\//i.test(imageUrl)
+  ) {
+    return json({
+      error: "Article image must use a site path or HTTPS URL."
+    }, 400);
+  }
+
+  await env.DB.prepare(`
+    UPDATE articles
+    SET
+      title = ?,
+      slug = ?,
+      content = ?,
+      image_url = ?,
+      status = ?,
+      updated_at = CURRENT_TIMESTAMP
+    WHERE id = ?
+  `).bind(
+    title,
+    slug,
+    content,
+    imageUrl,
+    status,
+    id
+  ).run();
+
+  return json({
+    success: true,
+    message: "Article updated."
+  });
+}
+
+async function deleteArticle(env, id) {
+  if (!isValidId(id)) {
+    return json({ error: "Invalid article ID." }, 400);
+  }
+
+  const result = await env.DB.prepare(`
+    DELETE FROM articles
+    WHERE id = ?
+  `).bind(id).run();
+
+  if (!result.meta || result.meta.changes !== 1) {
+    return json({ error: "Article not found." }, 404);
+  }
+
+  return json({ success: true });
+}
+
+/* =========================================
+   ADMIN APIs
+========================================= */
+
+async function adminOverview(env) {
+  await settleExpiredAuctions(env);
+
+  const [
+    customers,
+    products,
+    liveProducts,
+    bids,
+    articles
+  ] = await Promise.all([
+    env.DB.prepare(
+      "SELECT COUNT(*) AS total FROM customers"
+    ).first(),
+
+    env.DB.prepare(
+      "SELECT COUNT(*) AS total FROM products"
+    ).first(),
+
+    env.DB.prepare(
+      "SELECT COUNT(*) AS total FROM products WHERE status = 'live'"
+    ).first(),
+
+    env.DB.prepare(
+      "SELECT COUNT(*) AS total FROM bids"
+    ).first(),
+
+    env.DB.prepare(
+      "SELECT COUNT(*) AS total FROM articles"
+    ).first()
+  ]);
+
+  return json({
+    customers: customers.total,
+    products: products.total,
+    live_products: liveProducts.total,
+    bids: bids.total,
+    articles: articles.total
+  });
+}
+
+async function adminCustomers(env) {
+  const result = await env.DB.prepare(`
+    SELECT
+      id,
+      email,
+      name,
+      picture,
+      created_at,
+      last_login
+    FROM customers
+    ORDER BY created_at DESC
+  `).all();
+
+  return json({
+    customers: result.results || []
+  });
+}
+
+async function adminBids(env) {
+  await settleExpiredAuctions(env);
+
+  const result = await env.DB.prepare(`
+    SELECT
+      b.id,
+      b.amount,
+      b.created_at,
+      p.id AS product_id,
+      p.name AS product_name,
+      p.slug AS product_slug,
+      c.id AS customer_id,
+      c.name AS customer_name,
+      c.email AS customer_email
+    FROM bids b
+    JOIN products p ON p.id = b.product_id
+    JOIN customers c ON c.id = b.customer_id
+    ORDER BY b.created_at DESC
+  `).all();
+
+  return json({
+    bids: result.results || []
+  });
+}
+
+async function adminProducts(env) {
+  await settleExpiredAuctions(env);
+
+  const result = await env.DB.prepare(`
+    SELECT
+      p.*,
+      (
+        SELECT MAX(b.amount)
+        FROM bids b
+        WHERE b.product_id = p.id
+      ) AS current_bid,
+      (
+        SELECT COUNT(*)
+        FROM bids b
+        WHERE b.product_id = p.id
+      ) AS bid_count
+    FROM products p
+    ORDER BY p.created_at DESC
+  `).all();
+
+  return json({
+    products: result.results || []
+  });
+}
+
+async function adminArticles(env) {
+  const result = await env.DB.prepare(`
+    SELECT *
+    FROM articles
+    ORDER BY created_at DESC
+  `).all();
+
+  return json({
+    articles: result.results || []
+  });
+}
+
+/* =========================================
+   MAIN REQUEST ROUTER
+========================================= */
+
+async function handleRequest(request, env) {
+  const url = new URL(request.url);
+  const path = url.pathname;
+  const method = request.method.toUpperCase();
+
+  /* HEALTH CHECK */
+
+  if (path === "/api/status" && method === "GET") {
+    return json({
+      brand: "DO DESI OFFICIALS",
+      status: "online"
+    });
+  }
+
+  /* DATABASE CHECK */
+
+  if (path === "/api/db-check" && method === "GET") {
+    const result = await env.DB.prepare(`
+      SELECT COUNT(*) AS total
+      FROM sqlite_master
+      WHERE type = 'table'
+    `).first();
+
+    return json({
+      database: "connected",
+      tables: result.total
+    });
+  }
+
+  /* GOOGLE AUTHENTICATION */
+
+  if (path === "/auth/google" && method === "GET") {
+    return googleLogin(request, env);
+  }
+
+  if (
+    path === "/auth/google/callback" &&
+    method === "GET"
+  ) {
+    return googleCallback(request, env);
+  }
+
+  /* CURRENT USER */
+
+  if (path === "/api/me" && method === "GET") {
+    const user = await getCurrentUser(request, env);
+
+    if (!user) {
+      return json({
+        authenticated: false
+      }, 401);
+    }
+
+    return json({
+      authenticated: true,
+      user: {
+        email: user.email,
+        name: user.name,
+        picture: user.picture,
+        role: isAdmin(user.email)
+          ? "admin"
+          : "customer"
+      }
+    });
+  }
+
+  /* LOGOUT */
+
+  if (path === "/auth/logout" && method === "POST") {
+    if (!checkOrigin(request)) {
+      return json({ error: "Invalid request origin." }, 403);
+    }
+
+    return new Response(null, {
+      status: 302,
+      headers: {
+        "Location": "/",
+        "Set-Cookie": cookie(SESSION_COOKIE, "", 0)
+      }
+    });
+  }
+
+  /* PUBLIC PRODUCTS */
+
+  if (path === "/api/products" && method === "GET") {
+    return listProducts(env);
+  }
+
+  if (
+    path.startsWith("/api/products/") &&
+    method === "GET"
+  ) {
+    const slug = decodeURIComponent(
+      path.slice("/api/products/".length)
+    );
+
+    return getProduct(env, slug);
+  }
+
+  /* PLACE BID */
+
+  if (path === "/api/bids" && method === "POST") {
+    if (!checkOrigin(request)) {
+      return json({ error: "Invalid request origin." }, 403);
+    }
+
+    return placeBid(request, env);
+  }
+
+  /* CUSTOMER BID HISTORY */
+
+  if (path === "/api/my-bids" && method === "GET") {
+    const auth = await requireCustomer(request, env);
+
+    if (auth.error) return auth.error;
+
+    return getMyBids(env, auth.user.customerId);
+  }
+
+  /* PUBLIC ARTICLES */
+
+  if (path === "/api/articles" && method === "GET") {
+    return listArticles(env);
+  }
+
+  if (
+    path.startsWith("/api/articles/") &&
+    method === "GET"
+  ) {
+    const slug = decodeURIComponent(
+      path.slice("/api/articles/".length)
+    );
+
+    return getArticle(env, slug);
+  }
+
+  /* ALL ADMIN ROUTES */
+
+  if (path.startsWith("/api/admin/")) {
+    const auth = await requireAdmin(request, env);
+
+    if (auth.error) return auth.error;
+
+    if (
+      method !== "GET" &&
+      !checkOrigin(request)
+    ) {
+      return json({
+        error: "Invalid request origin."
+      }, 403);
+    }
+
+    if (
+      path === "/api/admin/overview" &&
+      method === "GET"
+    ) {
+      return adminOverview(env);
+    }
+
+    if (
+      path === "/api/admin/customers" &&
+      method === "GET"
+    ) {
+      return adminCustomers(env);
+    }
+
+    if (
+      path === "/api/admin/bids" &&
+      method === "GET"
+    ) {
+      return adminBids(env);
+    }
+
+    if (
+      path === "/api/admin/products" &&
+      method === "GET"
+    ) {
+      return adminProducts(env);
+    }
+
+    if (
+      path === "/api/admin/products" &&
+      method === "POST"
+    ) {
+      return createProduct(request, env);
+    }
+
+    const productMatch = path.match(
+      /^\/api\/admin\/products\/([^/]+)$/
+    );
+
+    if (productMatch) {
+      const id = decodeURIComponent(productMatch[1]);
+
+      if (
+        ["PUT", "PATCH"].includes(method)
+      ) {
+        return updateProduct(request, env, id);
+      }
+
+      if (method === "DELETE") {
+        return deleteProduct(env, id);
+      }
+    }
+
+    if (
+      path === "/api/admin/articles" &&
+      method === "GET"
+    ) {
+      return adminArticles(env);
+    }
+
+    if (
+      path === "/api/admin/articles" &&
+      method === "POST"
+    ) {
+      return createArticle(
+        request,
+        env,
+        auth.user.email
+      );
+    }
+
+    const articleMatch = path.match(
+      /^\/api\/admin\/articles\/([^/]+)$/
+    );
+
+    if (articleMatch) {
+      const id = decodeURIComponent(articleMatch[1]);
+
+      if (
+        ["PUT", "PATCH"].includes(method)
+      ) {
+        return updateArticle(request, env, id);
+      }
+
+      if (method === "DELETE") {
+        return deleteArticle(env, id);
+      }
+    }
+
+    return json({
+      error: "Admin API route not found."
+    }, 404);
+  }
+
+  /* UNKNOWN API ROUTES */
+
+  if (path.startsWith("/api/")) {
+    return json({
+      error: "API endpoint not found.",
+      path
+    }, 404);
+  }
+
+  /* STATIC WEBSITE */
+
+  return env.ASSETS.fetch(request);
+}
+
+/* =========================================
+   WORKER ENTRY POINT
+========================================= */
+
+export default {
+  async fetch(request, env) {
+    try {
+      return await handleRequest(request, env);
+
+    } catch (error) {
+      console.error("Worker error:", error);
+
+      const path = new URL(request.url).pathname;
+
+      if (path.startsWith("/api/")) {
+        return json({
+          error: "Internal server error."
+        }, 500);
+      }
+
+      return new Response(
+        "Something went wrong. Please try again.",
+        { status: 500 }
+      );
+    }
+  }
+};
