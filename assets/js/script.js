@@ -1,39 +1,63 @@
 /* ==========================================
    DO — DESI OFFICIALS
    INTERACTIVE EXPERIENCE ENGINE
+   STABLE VERSION 2.0
    ========================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+
+/* ==========================================
+   1. LOADING EXPERIENCE — FIXED
+========================================== */
+
+const loader = document.getElementById("loader");
+
+let loaderHidden = false;
+
+function hideLoader() {
+
+    if (loaderHidden) return;
+
+    loaderHidden = true;
+
+    if (!loader) return;
+
+    loader.style.transition = "opacity 0.8s ease";
+    loader.style.opacity = "0";
+    loader.style.pointerEvents = "none";
+
+    setTimeout(() => {
+
+        loader.style.display = "none";
+
+    }, 850);
+
+}
+
+
+/* Hide when page finishes loading */
+
+window.addEventListener("load", () => {
+
+    setTimeout(hideLoader, 500);
+
+});
+
+
+/* Emergency fallback:
+   Never allow the loader to block the website indefinitely. */
+
+setTimeout(hideLoader, 2500);
+
+
+/* ==========================================
+   2. MAIN INITIALIZATION
+========================================== */
+
+function initializeDO() {
 
 
     /* ======================================
-       1. LOADING EXPERIENCE
-    ====================================== */
-
-    const loader = document.getElementById("loader");
-
-    window.addEventListener("load", () => {
-
-        setTimeout(() => {
-
-            if (loader) {
-
-                loader.style.transition = "opacity 0.8s ease";
-                loader.style.opacity = "0";
-
-                setTimeout(() => {
-                    loader.style.display = "none";
-                }, 800);
-
-            }
-
-        }, 1000);
-
-    });
-
-
-    /* ======================================
-       2. NAVIGATION DRAWER
+       3. NAVIGATION DRAWER
     ====================================== */
 
     const menuOpen = document.getElementById("menuOpen");
@@ -42,7 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const drawer = document.getElementById("navigationDrawer");
     const overlay = document.getElementById("drawerOverlay");
 
+
     function openDrawer() {
+
+        if (!drawer || !overlay) return;
 
         drawer.classList.add("open");
         overlay.classList.add("show");
@@ -51,47 +78,69 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+
     function closeDrawer() {
 
-        drawer.classList.remove("open");
-        overlay.classList.remove("show");
+        if (drawer) {
+            drawer.classList.remove("open");
+        }
+
+        if (overlay) {
+            overlay.classList.remove("show");
+        }
 
         document.body.style.overflow = "";
 
     }
 
+
     if (menuOpen) {
+
         menuOpen.addEventListener("click", openDrawer);
+
     }
+
 
     if (menuClose) {
+
         menuClose.addEventListener("click", closeDrawer);
+
     }
+
 
     if (overlay) {
+
         overlay.addEventListener("click", closeDrawer);
+
     }
 
-    document.querySelectorAll(".navigation-drawer a").forEach(link => {
 
-        link.addEventListener("click", closeDrawer);
+    document.querySelectorAll(".navigation-drawer a")
+        .forEach(link => {
 
-    });
+            link.addEventListener("click", closeDrawer);
+
+        });
+
 
     document.addEventListener("keydown", event => {
 
         if (event.key === "Escape") {
+
             closeDrawer();
+
         }
 
     });
 
 
+
     /* ======================================
-       3. SCROLL REVEAL ANIMATIONS
+       4. SCROLL REVEAL ANIMATIONS
     ====================================== */
 
     const revealElements = document.querySelectorAll(
+
         ".section-heading, " +
         ".experience-card, " +
         ".product-card, " +
@@ -102,67 +151,75 @@ document.addEventListener("DOMContentLoaded", () => {
         ".about-section, " +
         ".account-section, " +
         ".contact-section"
+
     );
 
-    const revealStyle = document.createElement("style");
 
-    revealStyle.textContent = `
+    if ("IntersectionObserver" in window) {
 
-        .reveal-element {
+        const revealStyle = document.createElement("style");
 
-            opacity: 0;
-            transform: translateY(35px);
+        revealStyle.textContent = `
 
-            transition:
-                opacity 0.8s ease,
-                transform 0.8s ease;
+            .reveal-element {
 
-        }
+                opacity: 0;
+                transform: translateY(30px);
 
-        .reveal-element.visible {
-
-            opacity: 1;
-            transform: translateY(0);
-
-        }
-
-    `;
-
-    document.head.appendChild(revealStyle);
-
-
-    const revealObserver = new IntersectionObserver((entries) => {
-
-        entries.forEach(entry => {
-
-            if (entry.isIntersecting) {
-
-                entry.target.classList.add("visible");
-
-                revealObserver.unobserve(entry.target);
+                transition:
+                    opacity 0.8s ease,
+                    transform 0.8s ease;
 
             }
 
+            .reveal-element.visible {
+
+                opacity: 1;
+                transform: translateY(0);
+
+            }
+
+        `;
+
+        document.head.appendChild(revealStyle);
+
+
+        const revealObserver = new IntersectionObserver(
+            (entries, observer) => {
+
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add("visible");
+
+                        observer.unobserve(entry.target);
+
+                    }
+
+                });
+
+            },
+            {
+                threshold: 0.12
+            }
+        );
+
+
+        revealElements.forEach(element => {
+
+            element.classList.add("reveal-element");
+
+            revealObserver.observe(element);
+
         });
 
-    }, {
+    }
 
-        threshold: 0.12
-
-    });
-
-
-    revealElements.forEach(element => {
-
-        element.classList.add("reveal-element");
-
-        revealObserver.observe(element);
-
-    });
 
 
     /* ======================================
-       4. ACTIVE NAVIGATION
+       5. ACTIVE NAVIGATION
     ====================================== */
 
     const sections = document.querySelectorAll("main section[id]");
@@ -171,52 +228,58 @@ document.addEventListener("DOMContentLoaded", () => {
         ".desktop-navigation a"
     );
 
-    const navigationObserver = new IntersectionObserver(entries => {
 
-        entries.forEach(entry => {
+    if ("IntersectionObserver" in window) {
 
-            if (entry.isIntersecting) {
+        const navigationObserver = new IntersectionObserver(
+            entries => {
 
-                navigationLinks.forEach(link => {
+                entries.forEach(entry => {
 
-                    link.classList.remove("active");
+                    if (!entry.isIntersecting) return;
 
-                    if (
-                        link.getAttribute("href") ===
-                        "#" + entry.target.id
-                    ) {
+                    navigationLinks.forEach(link => {
 
-                        link.classList.add("active");
+                        link.classList.remove("active");
 
-                    }
+                        if (
+                            link.getAttribute("href") ===
+                            "#" + entry.target.id
+                        ) {
+
+                            link.classList.add("active");
+
+                        }
+
+                    });
 
                 });
 
+            },
+            {
+                threshold: 0.35
             }
+        );
+
+
+        sections.forEach(section => {
+
+            navigationObserver.observe(section);
 
         });
 
-    }, {
+    }
 
-        threshold: 0.35
-
-    });
-
-
-    sections.forEach(section => {
-
-        navigationObserver.observe(section);
-
-    });
 
 
     /* ======================================
-       5. HEADER SCROLL EFFECT
+       6. HEADER SCROLL EFFECT
     ====================================== */
 
     const header = document.querySelector(".header");
 
-    window.addEventListener("scroll", () => {
+
+    function updateHeader() {
 
         if (!header) return;
 
@@ -230,16 +293,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
             header.style.background = "rgba(0,0,0,0.55)";
 
+            header.style.backdropFilter = "blur(20px)";
+
         }
 
+    }
+
+
+    window.addEventListener("scroll", updateHeader, {
+        passive: true
     });
+
+    updateHeader();
+
 
 
     /* ======================================
-       6. PRODUCT HOVER EFFECTS
+       7. PRODUCT INTERACTIONS
     ====================================== */
 
     const productCards = document.querySelectorAll(".product-card");
+
 
     productCards.forEach(card => {
 
@@ -247,11 +321,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!image) return;
 
+
         card.addEventListener("mouseenter", () => {
 
             image.style.filter = "brightness(1.12)";
 
         });
+
 
         card.addEventListener("mouseleave", () => {
 
@@ -262,86 +338,98 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
+
     /* ======================================
-       7. INTERACTIVE BUTTON EFFECTS
+       8. BUTTON INTERACTIONS
     ====================================== */
 
-    document.querySelectorAll(".primary-button").forEach(button => {
+    document.querySelectorAll(".primary-button")
+        .forEach(button => {
 
-        button.addEventListener("pointerdown", () => {
+            button.addEventListener("pointerdown", () => {
 
-            button.style.transform = "scale(0.96)";
+                button.style.transform = "scale(0.97)";
+
+            });
+
+
+            function resetButton() {
+
+                button.style.transform = "";
+
+            }
+
+
+            button.addEventListener("pointerup", resetButton);
+
+            button.addEventListener("pointerleave", resetButton);
+
+            button.addEventListener("pointercancel", resetButton);
 
         });
 
-        button.addEventListener("pointerup", () => {
-
-            button.style.transform = "";
-
-        });
-
-        button.addEventListener("pointerleave", () => {
-
-            button.style.transform = "";
-
-        });
-
-    });
 
 
     /* ======================================
-       8. ORBIT ANIMATION CONTROL
+       9. ORBIT ANIMATION
     ====================================== */
 
-    const orbitElements = document.querySelectorAll(".orbit");
+    document.querySelectorAll(".orbit")
+        .forEach(orbit => {
 
-    orbitElements.forEach((orbit, index) => {
+            orbit.addEventListener("mouseenter", () => {
 
-        orbit.addEventListener("mouseenter", () => {
+                orbit.style.animationPlayState = "paused";
 
-            orbit.style.animationPlayState = "paused";
+            });
+
+
+            orbit.addEventListener("mouseleave", () => {
+
+                orbit.style.animationPlayState = "running";
+
+            });
 
         });
 
-        orbit.addEventListener("mouseleave", () => {
-
-            orbit.style.animationPlayState = "running";
-
-        });
-
-    });
 
 
     /* ======================================
-       9. FOOTER YEAR
+       10. FOOTER YEAR
     ====================================== */
 
     const footerYear = document.querySelector(".footer-bottom");
+
 
     if (footerYear) {
 
         footerYear.innerHTML = `
 
-            <span>© ${new Date().getFullYear()} DESI OFFICIALS.</span>
+            <span>
+                © ${new Date().getFullYear()} DESI OFFICIALS.
+            </span>
 
-            <span>DESIGNED TO BE DISTINCT.</span>
+            <span>
+                DESIGNED TO BE DISTINCT.
+            </span>
 
         `;
 
     }
 
 
+
     /* ======================================
-       10. IMAGE LOADING
+       11. IMAGE ERROR DETECTION
     ====================================== */
 
     document.querySelectorAll("img").forEach(image => {
 
         image.addEventListener("error", () => {
 
-            console.warn(
-                "DO Image could not load:",
-                image.src
+            console.error(
+                "DO IMAGE ERROR:",
+                image.getAttribute("src")
             );
 
         });
@@ -349,8 +437,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
+
     /* ======================================
-       11. INITIALIZATION
+       12. INITIALIZATION COMPLETE
     ====================================== */
 
     console.log(
@@ -362,4 +451,28 @@ document.addEventListener("DOMContentLoaded", () => {
         "Beyond Fashion. Welcome to the DO experience."
     );
 
-});
+}
+
+
+/* ==========================================
+   13. SAFE INITIALIZATION
+========================================== */
+
+if (document.readyState === "loading") {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeDO,
+        { once: true }
+    );
+
+} else {
+
+    initializeDO();
+
+}
+
+
+/* ==========================================
+   END — DO INTERACTIVE EXPERIENCE ENGINE
+========================================== */
