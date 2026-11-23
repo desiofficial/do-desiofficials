@@ -12,6 +12,10 @@ const STATE_COOKIE = "do_oauth_state";
 const SESSION_DURATION = 7 * 24 * 60 * 60;
 const encoder = new TextEncoder();
 
+/* =========================================
+   SECURITY HELPERS
+========================================= */
+
 function base64url(data) {
   const bytes = data instanceof Uint8Array
     ? data
@@ -46,27 +50,23 @@ function decodeBase64url(value) {
 }
 
 function randomString(length = 32) {
-  const bytes = crypto.getRandomValues(
-    new Uint8Array(length)
+  return base64url(
+    crypto.getRandomValues(new Uint8Array(length))
   );
-
-  return base64url(bytes);
 }
 
 function getCookie(request, name) {
   const cookieHeader = request.headers.get("Cookie") || "";
 
-  const cookies = cookieHeader.split(";");
-
-  for (const cookie of cookies) {
-    const separator = cookie.indexOf("=");
+  for (const item of cookieHeader.split(";")) {
+    const separator = item.indexOf("=");
 
     if (separator === -1) continue;
 
-    const key = cookie.slice(0, separator).trim();
+    const key = item.slice(0, separator).trim();
 
     if (key === name) {
-      return cookie.slice(separator + 1).trim();
+      return item.slice(separator + 1).trim();
     }
   }
 
@@ -93,6 +93,10 @@ async function getSigningKey(env) {
     ["sign", "verify"]
   );
 }
+
+/* =========================================
+   SESSION MANAGEMENT
+========================================= */
 
 async function createSession(user, env) {
   const payload = {
@@ -144,7 +148,10 @@ async function verifySession(token, env) {
       )
     );
 
-    if (!user.exp || user.exp < Math.floor(Date.now() / 1000)) {
+    if (
+      !user.exp ||
+      user.exp < Math.floor(Date.now() / 1000)
+    ) {
       return null;
     }
 
@@ -154,6 +161,10 @@ async function verifySession(token, env) {
     return null;
   }
 }
+
+/* =========================================
+   GOOGLE AUTHENTICATION
+========================================= */
 
 async function googleLogin(env) {
   const state = randomString();
@@ -207,9 +218,10 @@ async function googleCallback(request, env) {
     !savedState ||
     returnedState !== savedState
   ) {
-    return new Response("Invalid login request. Please try again.", {
-      status: 400
-    });
+    return new Response(
+      "Invalid login request. Please try again.",
+      { status: 400 }
+    );
   }
 
   try {
@@ -231,31 +243,37 @@ async function googleCallback(request, env) {
     );
 
     if (!tokenResponse.ok) {
-      return new Response("Google login failed. Please try again.", {
-        status: 401
-      });
+      return new Response(
+        "Google login failed. Please try again.",
+        { status: 401 }
+      );
     }
 
     const tokens = await tokenResponse.json();
 
     if (!tokens.id_token) {
-      return new Response("Google did not return a valid identity token.", {
-        status: 401
-      });
+      return new Response(
+        "Google did not return a valid identity token.",
+        { status: 401 }
+      );
     }
 
     const verifyURL = new URL(
       "https://oauth2.googleapis.com/tokeninfo"
     );
 
-    verifyURL.searchParams.set("id_token", tokens.id_token);
+    verifyURL.searchParams.set(
+      "id_token",
+      tokens.id_token
+    );
 
     const verificationResponse = await fetch(verifyURL);
 
     if (!verificationResponse.ok) {
-      return new Response("Google identity verification failed.", {
-        status: 401
-      });
+      return new Response(
+        "Google identity verification failed.",
+        { status: 401 }
+      );
     }
 
     const googleUser = await verificationResponse.json();
@@ -269,7 +287,8 @@ async function googleCallback(request, env) {
       googleUser.aud === env.GOOGLE_CLIENT_ID;
 
     const validExpiry =
-      Number(googleUser.exp) > Math.floor(Date.now() / 1000);
+      Number(googleUser.exp) >
+      Math.floor(Date.now() / 1000);
 
     const verifiedEmail =
       googleUser.email_verified === true ||
@@ -282,17 +301,19 @@ async function googleCallback(request, env) {
       !verifiedEmail ||
       !googleUser.email
     ) {
-      return new Response("Google account verification failed.", {
-        status: 401
-      });
+      return new Response(
+        "Google account verification failed.",
+        { status: 401 }
+      );
     }
 
     const email = googleUser.email.toLowerCase();
 
     if (!ADMIN_EMAILS.includes(email)) {
-      return new Response("Access denied. This account is not an authorized DO administrator.", {
-        status: 403
-      });
+      return new Response(
+        "Access denied. This account is not an authorized DO administrator.",
+        { status: 403 }
+      );
     }
 
     const session = await createSession({
@@ -304,6 +325,7 @@ async function googleCallback(request, env) {
     const headers = new Headers();
 
     headers.set("Location", "/");
+
     headers.append(
       "Set-Cookie",
       cookie(SESSION_COOKIE, session, SESSION_DURATION)
@@ -320,15 +342,289 @@ async function googleCallback(request, env) {
     });
 
   } catch {
-    return new Response("Login could not be completed. Please try again.", {
-      status: 500
-    });
+    return new Response(
+      "Login could not be completed. Please try again.",
+      { status: 500 }
+    );
   }
 }
+
+/* =========================================
+   DO LOGO + DRAWER ENHANCEMENTS
+========================================= */
+
+const DO_ENHANCEMENTS = `
+<style>
+/* DO INLINE LOGO */
+
+.do-worker-logo {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  text-decoration: none !important;
+  color: #d0b98d !important;
+  line-height: 1 !important;
+}
+
+.do-worker-logo svg {
+  width: 100px;
+  height: 48px;
+  display: block;
+}
+
+.do-worker-logo-name {
+  font-family: "DM Sans", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #f5f2eb;
+}
+
+.do-worker-logo-tagline {
+  font-family: "DM Sans", sans-serif;
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: #ad9160;
+}
+
+/* DRAWER BACKDROP */
+
+#drawerBackdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9998 !important;
+  background: rgba(0,0,0,.72) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity .3s ease, visibility .3s ease !important;
+}
+
+#drawerBackdrop.is-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* DRAWERS */
+
+#leftDrawer,
+#rightDrawer {
+  position: fixed !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  z-index: 9999 !important;
+  transition: transform .35s ease !important;
+  visibility: visible;
+}
+
+#leftDrawer {
+  left: 0 !important;
+  transform: translateX(-110%) !important;
+}
+
+#rightDrawer {
+  right: 0 !important;
+  transform: translateX(110%) !important;
+}
+
+#leftDrawer.is-open,
+#rightDrawer.is-open {
+  transform: translateX(0) !important;
+}
+
+body.do-drawer-open {
+  overflow: hidden !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #leftDrawer,
+  #rightDrawer,
+  #drawerBackdrop {
+    transition: none !important;
+  }
+}
+</style>
+
+<script>
+(function () {
+  "use strict";
+
+  function initDO() {
+    const leftButton = document.getElementById("leftMenuButton");
+    const rightButton = document.getElementById("rightMenuButton");
+
+    const leftDrawer = document.getElementById("leftDrawer");
+    const rightDrawer = document.getElementById("rightDrawer");
+
+    const backdrop = document.getElementById("drawerBackdrop");
+
+    /* INLINE LOGO */
+
+    const logoMarkup = \`
+      <a href="#home" class="do-worker-logo" aria-label="DO Desi Officials Home">
+        <svg viewBox="0 0 180 90" role="img" aria-label="DO">
+          <path d="M8 8 H58 C85 8 101 23 101 45 C101 67 85 82 58 82 H8 Z"
+            fill="none" stroke="currentColor" stroke-width="3"/>
+          <path d="M55 8 V82" stroke="currentColor" stroke-width="2"/>
+          <text x="9" y="60" font-size="48"
+            font-family="Georgia,serif" font-weight="bold"
+            fill="currentColor">D</text>
+          <text x="105" y="60" font-size="48"
+            font-family="Georgia,serif" font-weight="bold"
+            fill="currentColor">O</text>
+        </svg>
+        <span class="do-worker-logo-name">DESI OFFICIALS</span>
+        <span class="do-worker-logo-tagline">DISTINCTIVE BY DESIGN</span>
+      </a>
+    \`;
+
+    document.querySelectorAll(
+      ".brand-logo-image, .drawer-logo-image, .footer-logo-image"
+    ).forEach(function (oldLogo) {
+      const replacement = document.createElement("span");
+      replacement.innerHTML = logoMarkup;
+      oldLogo.replaceWith(replacement.firstElementChild);
+    });
+
+    /* DRAWERS */
+
+    if (!leftDrawer || !rightDrawer || !backdrop) {
+      console.warn("DO: Drawer HTML elements were not found.");
+      return;
+    }
+
+    function closeDrawers() {
+      leftDrawer.classList.remove("is-open");
+      rightDrawer.classList.remove("is-open");
+      backdrop.classList.remove("is-visible");
+
+      document.body.classList.remove("do-drawer-open");
+
+      if (leftButton) {
+        leftButton.setAttribute("aria-expanded", "false");
+      }
+
+      if (rightButton) {
+        rightButton.setAttribute("aria-expanded", "false");
+      }
+    }
+
+    function openDrawer(drawer, button) {
+      closeDrawers();
+
+      drawer.classList.add("is-open");
+      backdrop.classList.add("is-visible");
+
+      document.body.classList.add("do-drawer-open");
+
+      if (button) {
+        button.setAttribute("aria-expanded", "true");
+      }
+    }
+
+    function bindButton(button, drawer) {
+      if (!button) return;
+
+      button.setAttribute("aria-controls", drawer.id);
+      button.setAttribute("aria-expanded", "false");
+
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        if (drawer.classList.contains("is-open")) {
+          closeDrawers();
+        } else {
+          openDrawer(drawer, button);
+        }
+      }, true);
+    }
+
+    bindButton(leftButton, leftDrawer);
+    bindButton(rightButton, rightDrawer);
+
+    backdrop.addEventListener("click", closeDrawers);
+
+    document.querySelectorAll("[data-close-drawer]").forEach(
+      function (button) {
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          closeDrawers();
+        });
+      }
+    );
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeDrawers();
+      }
+    });
+
+    document.querySelectorAll(
+      "#leftDrawer a, #rightDrawer a"
+    ).forEach(function (link) {
+      link.addEventListener("click", closeDrawers);
+    });
+
+    console.log("DO: Logo and drawer enhancements loaded.");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initDO);
+  } else {
+    initDO();
+  }
+})();
+</script>
+`;
+
+/* =========================================
+   INJECT ENHANCEMENTS INTO EXISTING HTML
+========================================= */
+
+async function serveSite(request, env) {
+  const response = await env.ASSETS.fetch(request);
+
+  const contentType =
+    response.headers.get("Content-Type") || "";
+
+  if (!contentType.includes("text/html")) {
+    return response;
+  }
+
+  const html = await response.text();
+
+  const enhancedHTML = html.includes("</body>")
+    ? html.replace(
+        "</body>",
+        DO_ENHANCEMENTS + "</body>"
+      )
+    : html + DO_ENHANCEMENTS;
+
+  const headers = new Headers(response.headers);
+
+  headers.delete("Content-Length");
+  headers.delete("Content-Encoding");
+
+  return new Response(enhancedHTML, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
+}
+
+/* =========================================
+   MAIN CLOUDFLARE WORKER
+========================================= */
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    /* API STATUS */
 
     if (url.pathname === "/api/status") {
       return Response.json({
@@ -336,6 +632,8 @@ export default {
         status: "online"
       });
     }
+
+    /* DATABASE CHECK */
 
     if (url.pathname === "/api/db-check") {
       try {
@@ -356,19 +654,29 @@ export default {
       }
     }
 
+    /* GOOGLE LOGIN */
+
     if (url.pathname === "/auth/google") {
-      if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
-        return new Response("Google login configuration is incomplete.", {
-          status: 500
-        });
+      if (
+        !env.GOOGLE_CLIENT_ID ||
+        !env.GOOGLE_CLIENT_SECRET
+      ) {
+        return new Response(
+          "Google login configuration is incomplete.",
+          { status: 500 }
+        );
       }
 
       return googleLogin(env);
     }
 
+    /* GOOGLE CALLBACK */
+
     if (url.pathname === "/auth/google/callback") {
       return googleCallback(request, env);
     }
+
+    /* CURRENT USER */
 
     if (url.pathname === "/api/me") {
       const token = getCookie(request, SESSION_COOKIE);
@@ -391,6 +699,8 @@ export default {
       });
     }
 
+    /* LOGOUT */
+
     if (url.pathname === "/auth/logout") {
       return new Response(null, {
         status: 302,
@@ -401,6 +711,8 @@ export default {
       });
     }
 
-    return env.ASSETS.fetch(request);
+    /* EXISTING WEBSITE + ENHANCEMENTS */
+
+    return serveSite(request, env);
   }
 };
