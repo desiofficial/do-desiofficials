@@ -1111,3 +1111,26 @@ section:not(.hero) {
     }
 
                      }
+/* DO HEADER LOGO */
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.header-logo {
+    display: block;
+    width: 130px;
+    height: 55px;
+    object-fit: contain;
+    object-position: center;
+}
+
+@media (max-width: 700px) {
+    .header-logo {
+        width: 105px;
+        height: 45px;
+    }
+}
