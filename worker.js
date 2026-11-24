@@ -129,7 +129,11 @@ async function readJSON(request) {
     throw new Error("Request is too large.");
   }
 
-  return JSON.parse(text);
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error("Invalid JSON request body.");
+  }
 }
 
 function checkOrigin(request) {
@@ -147,6 +151,25 @@ function checkOrigin(request) {
 
 function errorMessage(error) {
   return error?.message || "Something went wrong.";
+}
+
+function databaseError(error) {
+  const message = errorMessage(error);
+
+  if (
+    message.includes("UNIQUE constraint failed") ||
+    message.includes("PRIMARY KEY")
+  ) {
+    return json({
+      error: "This slug or record already exists."
+    }, 409);
+  }
+
+  console.error("Database operation failed:", error);
+
+  return json({
+    error: "Database operation failed."
+  }, 500);
 }
 
 /* =========================================
@@ -713,38 +736,46 @@ async function createProduct(request, env) {
 
   const id = randomString(18);
 
-  await env.DB.prepare(`
-    INSERT INTO products (
+  try {
+    await env.DB.prepare(`
+      INSERT INTO products (
+        id,
+        name,
+        price,
+        slug,
+        description,
+        category,
+        image_url,
+        starting_price,
+        auction_start,
+        auction_end,
+        status
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(
       id,
       name,
+      startingPrice,
       slug,
       description,
       category,
-      image_url,
-      starting_price,
-      auction_start,
-      auction_end,
+      imageUrl,
+      startingPrice,
+      auctionStart.toISOString(),
+      auctionEnd.toISOString(),
       status
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).bind(
-    id,
-    name,
-    slug,
-    description,
-    category,
-    imageUrl,
-    startingPrice,
-    auctionStart.toISOString(),
-    auctionEnd.toISOString(),
-    status
-  ).run();
+    ).run();
+
+  } catch (error) {
+    return databaseError(error);
+  }
 
   return json({
     success: true,
     product: {
       id,
       name,
+      price: startingPrice,
       slug,
       description,
       category,
@@ -775,12 +806,15 @@ async function updateProduct(request, env, id) {
   }
 
   const name = String(body.name ?? existing.name).trim();
+
   const description = String(
     body.description ?? existing.description
   );
+
   const category = String(
     body.category ?? existing.category
   ).trim();
+
   const imageUrl = String(
     body.image_url ?? existing.image_url
   ).trim();
@@ -829,31 +863,38 @@ async function updateProduct(request, env, id) {
     }, 400);
   }
 
-  await env.DB.prepare(`
-    UPDATE products
-    SET
-      name = ?,
-      slug = ?,
-      description = ?,
-      category = ?,
-      image_url = ?,
-      starting_price = ?,
-      auction_start = ?,
-      auction_end = ?,
-      status = ?
-    WHERE id = ?
-  `).bind(
-    name,
-    slug,
-    description,
-    category,
-    imageUrl,
-    startingPrice,
-    auctionStart.toISOString(),
-    auctionEnd.toISOString(),
-    status,
-    id
-  ).run();
+  try {
+    await env.DB.prepare(`
+      UPDATE products
+      SET
+        name = ?,
+        price = ?,
+        slug = ?,
+        description = ?,
+        category = ?,
+        image_url = ?,
+        starting_price = ?,
+        auction_start = ?,
+        auction_end = ?,
+        status = ?
+      WHERE id = ?
+    `).bind(
+      name,
+      startingPrice,
+      slug,
+      description,
+      category,
+      imageUrl,
+      startingPrice,
+      auctionStart.toISOString(),
+      auctionEnd.toISOString(),
+      status,
+      id
+    ).run();
+
+  } catch (error) {
+    return databaseError(error);
+  }
 
   return json({
     success: true,
@@ -888,10 +929,22 @@ async function deleteProduct(env, id) {
     }, 409);
   }
 
-  await env.DB.prepare(`
-    DELETE FROM products
-    WHERE id = ?
-  `).bind(id).run();
+  try {
+    await env.DB.batch([
+      env.DB.prepare(`
+        DELETE FROM auction_history
+        WHERE product_id = ?
+      `).bind(id),
+
+      env.DB.prepare(`
+        DELETE FROM products
+        WHERE id = ?
+      `).bind(id)
+    ]);
+
+  } catch (error) {
+    return databaseError(error);
+  }
 
   return json({ success: true });
 }
@@ -921,6 +974,8 @@ async function placeBid(request, env) {
   }
 
   await settleExpiredAuctions(env);
+
+  const now = new Date().toISOString();
 
   const result = await env.DB.prepare(`
     INSERT INTO bids (
@@ -955,8 +1010,8 @@ async function placeBid(request, env) {
     auth.user.customerId,
     amount,
     productId,
-    new Date().toISOString(),
-    new Date().toISOString(),
+    now,
+    now,
     amount
   ).run();
 
@@ -1085,26 +1140,31 @@ async function createArticle(request, env, adminEmail) {
 
   const id = randomString(18);
 
-  await env.DB.prepare(`
-    INSERT INTO articles (
+  try {
+    await env.DB.prepare(`
+      INSERT INTO articles (
+        id,
+        title,
+        slug,
+        content,
+        image_url,
+        status,
+        author_email
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).bind(
       id,
       title,
       slug,
       content,
-      image_url,
+      imageUrl,
       status,
-      author_email
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `).bind(
-    id,
-    title,
-    slug,
-    content,
-    imageUrl,
-    status,
-    adminEmail
-  ).run();
+      adminEmail
+    ).run();
+
+  } catch (error) {
+    return databaseError(error);
+  }
 
   return json({
     success: true,
@@ -1132,6 +1192,7 @@ async function updateArticle(request, env, id) {
 
   const title = String(body.title ?? existing.title).trim();
   const content = String(body.content ?? existing.content);
+
   const imageUrl = String(
     body.image_url ?? existing.image_url
   ).trim();
@@ -1164,24 +1225,29 @@ async function updateArticle(request, env, id) {
     }, 400);
   }
 
-  await env.DB.prepare(`
-    UPDATE articles
-    SET
-      title = ?,
-      slug = ?,
-      content = ?,
-      image_url = ?,
-      status = ?,
-      updated_at = CURRENT_TIMESTAMP
-    WHERE id = ?
-  `).bind(
-    title,
-    slug,
-    content,
-    imageUrl,
-    status,
-    id
-  ).run();
+  try {
+    await env.DB.prepare(`
+      UPDATE articles
+      SET
+        title = ?,
+        slug = ?,
+        content = ?,
+        image_url = ?,
+        status = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(
+      title,
+      slug,
+      content,
+      imageUrl,
+      status,
+      id
+    ).run();
+
+  } catch (error) {
+    return databaseError(error);
+  }
 
   return json({
     success: true,
@@ -1426,9 +1492,15 @@ async function handleRequest(request, env) {
     path.startsWith("/api/products/") &&
     method === "GET"
   ) {
-    const slug = decodeURIComponent(
-      path.slice("/api/products/".length)
-    );
+    let slug;
+
+    try {
+      slug = decodeURIComponent(
+        path.slice("/api/products/".length)
+      );
+    } catch {
+      return json({ error: "Invalid product slug." }, 400);
+    }
 
     return getProduct(env, slug);
   }
@@ -1463,9 +1535,15 @@ async function handleRequest(request, env) {
     path.startsWith("/api/articles/") &&
     method === "GET"
   ) {
-    const slug = decodeURIComponent(
-      path.slice("/api/articles/".length)
-    );
+    let slug;
+
+    try {
+      slug = decodeURIComponent(
+        path.slice("/api/articles/".length)
+      );
+    } catch {
+      return json({ error: "Invalid article slug." }, 400);
+    }
 
     return getArticle(env, slug);
   }
@@ -1526,7 +1604,13 @@ async function handleRequest(request, env) {
     );
 
     if (productMatch) {
-      const id = decodeURIComponent(productMatch[1]);
+      let id;
+
+      try {
+        id = decodeURIComponent(productMatch[1]);
+      } catch {
+        return json({ error: "Invalid product ID." }, 400);
+      }
 
       if (
         ["PUT", "PATCH"].includes(method)
@@ -1562,7 +1646,13 @@ async function handleRequest(request, env) {
     );
 
     if (articleMatch) {
-      const id = decodeURIComponent(articleMatch[1]);
+      let id;
+
+      try {
+        id = decodeURIComponent(articleMatch[1]);
+      } catch {
+        return json({ error: "Invalid article ID." }, 400);
+      }
 
       if (
         ["PUT", "PATCH"].includes(method)
