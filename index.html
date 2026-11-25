@@ -1,664 +1,1104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#11110f">
+  <meta name="description" content="DO — Desi Officials. Independent thinking. Distinctive wearing.">
+  <title>DO — DESI OFFICIALS</title>
 
-    <meta name="theme-color" content="#050505">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-    <meta name="description"
-        content="DO — DESI OFFICIALS. Beyond fashion. Discover exclusive collections, limited drops and Unique DOs.">
-
-    <title>DO — DESI OFFICIALS | Beyond Fashion</title>
-
-    <link rel="icon" href="assets/images/do-logo.png">
-
-    <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 
 <body>
 
-    <!-- LOADING SCREEN -->
+  <div class="announcement">
+    INDEPENDENT THINKING. DISTINCTIVE WEARING.
+  </div>
 
-    <div id="loader">
-        <img src="assets/images/2.png" alt="DO">
-        <span>ENTER THE FREQUENCY</span>
+  <header class="site-header">
+
+    <button class="icon-button menu-button"
+      id="leftMenuButton"
+      aria-label="Open main menu"
+      aria-controls="leftDrawer"
+      aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <a class="brand" href="#home" aria-label="DO Desi Officials home">
+      <svg class="brand-mark" viewBox="0 0 180 78" role="img" aria-label="DO">
+        <text x="5" y="61" class="mark-d">D</text>
+        <text x="75" y="61" class="mark-o">O</text>
+        <path d="M7 69H173" class="mark-line"/>
+      </svg>
+
+      <span class="brand-name">DESI OFFICIALS</span>
+      <span class="brand-tag">DISTINCTIVE BY DESIGN</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="#discover">DISCOVER</a>
+      <a href="#collection">COLLECTION</a>
+      <a href="#journal">THE EDITION</a>
+      <a href="#about">OUR WORLD</a>
+    </nav>
+
+    <a class="header-explore" href="#collection">
+      EXPLORE <span>↗</span>
+    </a>
+
+    <button class="icon-button dots-button"
+      id="rightMenuButton"
+      aria-label="Open account menu"
+      aria-controls="rightDrawer"
+      aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+  </header>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+  <!-- MAIN MENU -->
+
+  <aside class="drawer left-drawer"
+    id="leftDrawer"
+    aria-label="Main menu"
+    aria-hidden="true">
+
+    <div class="drawer-top">
+      <span class="eyebrow">THE DO WORLD</span>
+      <button class="drawer-close"
+        data-close-drawer
+        aria-label="Close menu">×</button>
     </div>
 
+    <a class="drawer-link" href="#home">Home <span>01</span></a>
+    <a class="drawer-link" href="#discover">Discover <span>02</span></a>
+    <a class="drawer-link" href="#collection">Collection <span>03</span></a>
+    <a class="drawer-link" href="#unique-dos">Unique DOs <span>04</span></a>
+    <a class="drawer-link" href="#journal">The Edition <span>05</span></a>
+    <a class="drawer-link" href="#about">Our World <span>06</span></a>
 
-    <!-- BACKGROUND EFFECTS -->
+    <div class="drawer-foot">
+      INDEPENDENT THINKING.<br>
+      DISTINCTIVE WEARING.
+    </div>
 
-    <div class="ambient-light"></div>
-    <div class="noise-overlay"></div>
+  </aside>
 
+  <!-- ACCOUNT MENU -->
 
-    <!-- HEADER -->
+  <aside class="drawer right-drawer"
+    id="rightDrawer"
+    aria-label="Account menu"
+    aria-hidden="true">
 
-    <header class="header">
+    <div class="drawer-top">
+      <span class="eyebrow">YOUR DO ACCOUNT</span>
 
-        <button class="menu-button" id="menuOpen"
-            aria-label="Open navigation">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+      <button class="drawer-close"
+        data-close-drawer
+        aria-label="Close account menu">×</button>
+    </div>
 
-        <a href="#home" class="brand-logo">
-            <img
-                src="assets/images/do-logo.png"
-                alt="DO — DESI OFFICIALS"
-                class="header-logo">
+    <div id="accountDrawerContent">
+
+      <button class="drawer-action" data-open-auth="login">
+        Sign in <span>↗</span>
+      </button>
+
+      <button class="drawer-action" data-open-auth="register">
+        Create account <span>↗</span>
+      </button>
+
+    </div>
+
+    <a class="drawer-action" href="#unique-dos">
+      Unique DOs bidding <span>↗</span>
+    </a>
+
+    <a class="drawer-action" href="#contact">
+      Contact <span>↗</span>
+    </a>
+
+    <div class="drawer-foot">
+      MEMBERSHIP DOES NOT LIMIT<br>
+      WHO CAN EXPLORE DO.
+    </div>
+
+  </aside>
+
+  <main>
+
+    <!-- HERO -->
+
+    <section class="hero" id="home">
+
+      <div class="hero-image"
+        role="img"
+        aria-label="DO streetwear campaign"></div>
+
+      <div class="hero-shade"></div>
+
+      <div class="hero-content">
+
+        <p class="eyebrow gold">
+          INDEPENDENT STREETWEAR · DESIGNED TO<br>
+          STAND APART
+        </p>
+
+        <h1>NOT MADE<br>TO <em>BLEND.</em></h1>
+
+        <p class="hero-copy">
+          A different perspective on everyday expression.
+          Built around individuality, designed for those
+          who choose their own direction.
+        </p>
+
+        <a class="gold-button" href="#collection">
+          EXPLORE THE COLLECTION <span>↗</span>
         </a>
 
-        <nav class="desktop-navigation">
+      </div>
 
-            <a href="#home" class="active">HOME</a>
+      <div class="hero-side">DISTINCTIVE BY DESIGN</div>
 
-            <a href="#collection">COLLECTION</a>
+      <div class="hero-bottom">
+        <span>DO — DESI OFFICIALS</span>
+        <span>01 / EXPLORE</span>
+      </div>
 
-            <a href="#unique">UNIQUE DOs</a>
+    </section>
 
-            <a href="#archive">ARCHIVE</a>
+    <!-- DISCOVER -->
 
-            <a href="#about">ABOUT</a>
+    <section class="intro section-pad" id="discover">
 
-        </nav>
+      <p class="eyebrow">01 — THE POINT OF VIEW</p>
 
-        <div class="header-actions">
+      <h2>Wear your point<br>of <em>view.</em></h2>
 
-            <a href="#account" aria-label="Account">◎</a>
+      <p class="body-copy">
+        DO is an independent expression of identity.
+        Thoughtful silhouettes, considered details and
+        a perspective that refuses to follow the ordinary.
+      </p>
 
-            <a href="#collection" aria-label="Shopping">◇</a>
+    </section>
 
+    <!-- COLLECTION -->
+
+    <section class="collection section-pad" id="collection">
+
+      <div class="section-heading">
+
+        <div>
+          <p class="eyebrow">02 — THE COLLECTION</p>
+          <h2>Built to <em>stand out.</em></h2>
         </div>
 
-    </header>
+        <p class="section-note">
+          A focused collection.<br>
+          No unnecessary repetition.
+        </p>
 
+      </div>
 
-    <!-- LEFT NAVIGATION DRAWER -->
+      <div class="product-grid">
 
-    <div class="drawer-overlay" id="drawerOverlay"></div>
+        <article class="product-card" data-product-card="full-sleeve-t-shirt">
 
-    <aside class="navigation-drawer" id="navigationDrawer">
+          <div class="product-image product-one">
+            <img src="/assets/images/3.png"
+              alt="DO full sleeve T-shirt"
+              onerror="this.style.display='none'">
 
-        <button class="drawer-close" id="menuClose"
-            aria-label="Close navigation">×</button>
+            <span class="product-index">DO / 001</span>
+          </div>
 
-        <img
-            src="assets/images/do-logo.png"
-            alt="DO — DESI OFFICIALS"
-            class="drawer-logo">
-
-        <p class="drawer-label">EXPLORE THE UNIVERSE</p>
-
-        <a href="#home">01 — Home</a>
-
-        <a href="#collection">02 — Collection</a>
-
-        <a href="#unique">03 — Unique DOs</a>
-
-        <a href="#archive">04 — The Archive</a>
-
-        <a href="#membership">05 — Membership</a>
-
-        <a href="#about">06 — About DO</a>
-
-        <a href="#contact">07 — Contact</a>
-
-    </aside>
-
-
-    <main>
-
-
-        <!-- HERO EXPERIENCE -->
-
-        <section class="hero" id="home">
-
-            <div class="hero-background">
-
-                <img src="assets/images/1.png"
-                    alt="DO fashion campaign">
-
+          <div class="product-meta">
+            <div>
+              <h3>Full Sleeve T-shirt</h3>
+              <p>Starting bid</p>
             </div>
 
-            <div class="hero-content">
+            <strong>₹4,999</strong>
+          </div>
 
-                <span class="eyebrow">
-                    DESI OFFICIALS / EST. DO
-                </span>
+          <button class="outline-button bid-open"
+            data-product="Full Sleeve T-shirt"
+            data-slug="full-sleeve-t-shirt"
+            data-price="4999">
+            PLACE A BID <span>↗</span>
+          </button>
 
-                <h1>
-                    BEYOND
-                    <span>FASHION.</span>
-                </h1>
+        </article>
 
-                <p>
-                    WEAR THE ATTITUDE.
-                    LIVE THE DO.
-                </p>
+        <article class="product-card" data-product-card="cargo-joggers">
 
-                <a href="#collection" class="primary-button">
-                    EXPLORE COLLECTION
-                    <span>↗</span>
-                </a>
+          <div class="product-image product-two">
+            <img src="/assets/images/4.png"
+              alt="DO cargo joggers"
+              onerror="this.style.display='none'">
 
+            <span class="product-index">DO / 002</span>
+          </div>
+
+          <div class="product-meta">
+            <div>
+              <h3>Cargo Joggers</h3>
+              <p>Starting bid</p>
             </div>
 
-            <div class="hero-bottom">
+            <strong>₹9,999</strong>
+          </div>
 
-                <span>01 / THE NEW GENERATION</span>
+          <button class="outline-button bid-open"
+            data-product="Cargo Joggers"
+            data-slug="cargo-joggers"
+            data-price="9999">
+            PLACE A BID <span>↗</span>
+          </button>
 
-                <span>SCROLL TO DISCOVER ↓</span>
+        </article>
 
+        <article class="product-card" data-product-card="signature-hoodie">
+
+          <div class="product-image product-three">
+            <img src="/assets/images/5.png"
+              alt="DO signature hoodie"
+              onerror="this.style.display='none'">
+
+            <span class="product-index">DO / 003</span>
+          </div>
+
+          <div class="product-meta">
+            <div>
+              <h3>Signature Hoodie</h3>
+              <p>Starting bid</p>
             </div>
 
-        </section>
+            <strong>₹11,999</strong>
+          </div>
 
+          <button class="outline-button bid-open"
+            data-product="Signature Hoodie"
+            data-slug="signature-hoodie"
+            data-price="11999">
+            PLACE A BID <span>↗</span>
+          </button>
 
+        </article>
 
-        <!-- EXPERIENCE NAVIGATION -->
+      </div>
 
-        <section class="frequency-section">
+    </section>
 
-            <div class="section-heading">
+    <!-- UNIQUE DOS -->
 
-                <span>THE DO EXPERIENCE</span>
+    <section class="unique section-pad" id="unique-dos">
 
-                <h2>
-                    ENTER THE <span>FREQUENCY.</span>
-                </h2>
+      <p class="eyebrow gold">03 — LIMITED RELEASES</p>
 
-            </div>
+      <h2>Not just a drop.<br>A <em>Unique DO.</em></h2>
 
-            <div class="experience-grid">
+      <p class="body-copy">
+        Selected releases are offered through bidding.
+        Registered customers can participate in eligible
+        auctions. The highest valid bid at the end of an
+        auction is selected for the purchase opportunity.
+      </p>
 
-                <a href="#collection" class="experience-card">
+      <a class="gold-button" href="#collection">
+        EXPLORE BIDDING <span>↗</span>
+      </a>
 
-                    <span class="card-number">01</span>
+    </section>
 
-                    <div class="experience-icon">◇</div>
+    <!-- JOURNAL -->
 
-                    <h3>THE COLLECTION</h3>
+    <section class="journal section-pad" id="journal">
 
-                    <p>Discover the latest drops.</p>
+      <div class="section-heading">
 
-                    <span class="card-arrow">↗</span>
-
-                </a>
-
-
-                <a href="#unique" class="experience-card featured">
-
-                    <span class="card-number">02</span>
-
-                    <span class="member-tag">MEMBERS ONLY</span>
-
-                    <div class="experience-icon">✳</div>
-
-                    <h3>UNIQUE DOs</h3>
-
-                    <p>Bid. Own. Be Exclusive.</p>
-
-                    <span class="card-arrow">↗</span>
-
-                </a>
-
-
-                <a href="#archive" class="experience-card">
-
-                    <span class="card-number">03</span>
-
-                    <div class="experience-icon">▣</div>
-
-                    <h3>THE ARCHIVE</h3>
-
-                    <p>Explore the history of DO.</p>
-
-                    <span class="card-arrow">↗</span>
-
-                </a>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- COLLECTION -->
-
-        <section class="collection-section" id="collection">
-
-            <div class="section-heading">
-
-                <span>01 / THE COLLECTION</span>
-
-                <h2>
-                    DESIGNED TO BE
-                    <span>DISTINCT.</span>
-                </h2>
-
-                <p>
-                    Not just clothing. A statement.
-                </p>
-
-            </div>
-
-            <div class="product-grid">
-
-
-                <!-- T-SHIRT -->
-
-                <article class="product-card">
-
-                    <a href="#contact" class="product-image">
-
-                        <img src="assets/images/3.png"
-                            alt="DO Full Sleeve T-shirt">
-
-                        <span class="product-label">
-                            THE ESSENTIAL
-                        </span>
-
-                    </a>
-
-                    <div class="product-info">
-
-                        <div>
-
-                            <span>DO / 001</span>
-
-                            <h3>FULL-SLEEVE T-SHIRT</h3>
-
-                            <p>FROM ₹4,999</p>
-
-                        </div>
-
-                        <a href="#contact"
-                            class="product-arrow">↗</a>
-
-                    </div>
-
-                </article>
-
-
-
-                <!-- JOGGERS -->
-
-                <article class="product-card">
-
-                    <a href="#contact" class="product-image">
-
-                        <img src="assets/images/4.png"
-                            alt="DO Joggers">
-
-                        <span class="product-label">
-                            STREET CULTURE
-                        </span>
-
-                    </a>
-
-                    <div class="product-info">
-
-                        <div>
-
-                            <span>DO / 002</span>
-
-                            <h3>JOGGERS</h3>
-
-                            <p>FROM ₹9,999</p>
-
-                        </div>
-
-                        <a href="#contact"
-                            class="product-arrow">↗</a>
-
-                    </div>
-
-                </article>
-
-
-
-                <!-- HOODIE -->
-
-                <article class="product-card">
-
-                    <a href="#contact" class="product-image">
-
-                        <img src="assets/images/5.png"
-                            alt="DO Hoodie">
-
-                        <span class="product-label">
-                            THE SIGNATURE
-                        </span>
-
-                    </a>
-
-                    <div class="product-info">
-
-                        <div>
-
-                            <span>DO / 003</span>
-
-                            <h3>HOODIE</h3>
-
-                            <p>FROM ₹11,999</p>
-
-                        </div>
-
-                        <a href="#contact"
-                            class="product-arrow">↗</a>
-
-                    </div>
-
-                </article>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- UNIQUE DOs / GALAXY ANIMATION -->
-
-        <section class="unique-section" id="unique">
-
-            <div class="unique-content">
-
-                <span>02 / EXCLUSIVE ACCESS</span>
-
-                <h2>
-                    NOT EVERYONE
-                    GETS A
-                    <span>UNIQUE DO.</span>
-                </h2>
-
-                <p>
-                    Enter a different world of fashion.
-
-                    Discover exclusive products, participate
-                    in competitive bidding and own something
-                    that isn't available to everyone.
-                </p>
-
-                <div class="unique-features">
-
-                    <span>✳ MEMBERSHIP ACCESS</span>
-
-                    <span>✳ EXCLUSIVE DROPS</span>
-
-                    <span>✳ COMPETITIVE BIDDING</span>
-
-                </div>
-
-                <a href="#membership" class="primary-button">
-                    DISCOVER UNIQUE DOs ↗
-                </a>
-
-            </div>
-
-
-            <div class="unique-visual">
-
-                <div class="orbit orbit-one"></div>
-
-                <div class="orbit orbit-two"></div>
-
-                <div class="orbit-center">
-
-                    <img
-                        src="assets/images/do-logo.png"
-                        alt="DO — DESI OFFICIALS"
-                        class="orbit-logo">
-
-                </div>
-
-                <span class="orbit-label">
-                    EXCLUSIVE / 001
-                </span>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- MEMBERSHIP -->
-
-        <section class="membership-section" id="membership">
-
-            <div class="section-heading">
-
-                <span>03 / JOIN THE MOVEMENT</span>
-
-                <h2>
-                    BECOME A
-                    <span>DO MEMBER.</span>
-                </h2>
-
-                <p>
-                    More than an account.
-                    Your access to the DO universe.
-                </p>
-
-            </div>
-
-            <div class="membership-grid">
-
-                <div class="membership-card">
-
-                    <span>01 / ACCESS</span>
-
-                    <h3>EARLY ACCESS</h3>
-
-                    <p>
-                        Get access to selected releases
-                        before general availability.
-                    </p>
-
-                </div>
-
-
-                <div class="membership-card">
-
-                    <span>02 / EXCLUSIVITY</span>
-
-                    <h3>UNIQUE DOs</h3>
-
-                    <p>
-                        Access the members-only
-                        bidding experience.
-                    </p>
-
-                </div>
-
-
-                <div class="membership-card">
-
-                    <span>03 / IDENTITY</span>
-
-                    <h3>YOUR DO ID</h3>
-
-                    <p>
-                        Your own account, membership
-                        status and purchase history.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <a href="#account" class="primary-button">
-                JOIN DO ↗
-            </a>
-
-        </section>
-
-
-
-        <!-- ARCHIVE -->
-
-        <section class="archive-section" id="archive">
-
-            <div class="section-heading">
-
-                <span>04 / THE HISTORY</span>
-
-                <h2>
-                    NOTHING
-                    <span>DISAPPEARS.</span>
-                </h2>
-
-                <p>
-                    Every drop becomes a part of our story.
-                </p>
-
-            </div>
-
-            <div class="archive-content">
-
-                <div class="archive-number">DO / ARCHIVE</div>
-
-                <h3>THE LEGACY IS BEING WRITTEN.</h3>
-
-                <p>
-                    Explore the collections,
-                    campaigns and moments that
-                    define Desi Officials.
-                </p>
-
-                <a href="#contact">
-                    EXPLORE THE ARCHIVE ↗
-                </a>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ABOUT -->
-
-        <section class="about-section" id="about">
-
-            <span>05 / OUR IDENTITY</span>
-
-            <h2>
-                WE DON'T FOLLOW.
-                <span>WE DEFINE.</span>
-            </h2>
-
-            <p>
-                DO — DESI OFFICIALS.
-
-                A new perspective on fashion,
-                individuality and street culture.
-            </p>
-
-        </section>
-
-
-
-        <!-- ACCOUNT -->
-
-        <section class="account-section" id="account">
-
-            <span>06 / YOUR DIGITAL IDENTITY</span>
-
-            <h2>
-                YOUR WORLD.
-                YOUR <span>DO.</span>
-            </h2>
-
-            <p>
-                Access your account, membership
-                and exclusive experiences.
-            </p>
-
-            <a href="#contact" class="primary-button">
-                ACCESS ACCOUNT ↗
-            </a>
-
-        </section>
-
-
-
-        <!-- CONTACT -->
-
-        <section class="contact-section" id="contact">
-
-            <span>07 / CONNECT WITH DO</span>
-
-            <h2>
-                LET'S START
-                <span>SOMETHING.</span>
-            </h2>
-
-            <p>
-                For collaborations, enquiries
-                and everything DO.
-            </p>
-
-            <a href="mailto:desioficials@gmail.com"
-                class="primary-button">
-                CONTACT US ↗
-            </a>
-
-        </section>
-
-
-    </main>
-
-
-
-    <!-- FOOTER -->
-
-    <footer class="footer">
-
-        <div class="footer-brand">
-
-            <img
-                src="assets/images/do-logo.png"
-                alt="DO — DESI OFFICIALS"
-                class="footer-logo">
-
-            <p>BEYOND FASHION.</p>
-
+        <div>
+          <p class="eyebrow">04 — THE EDITION</p>
+          <h2>Ideas in <em>motion.</em></h2>
         </div>
 
+        <div class="slider-controls">
+          <button id="journalPrevious"
+            aria-label="Previous journal cards">←</button>
 
-        <div class="footer-links">
-
-            <a href="#collection">COLLECTION</a>
-
-            <a href="#unique">UNIQUE DOs</a>
-
-            <a href="#archive">ARCHIVE</a>
-
-            <a href="#about">ABOUT</a>
-
-            <a href="#contact">CONTACT</a>
-
+          <button id="journalNext"
+            aria-label="Next journal cards">→</button>
         </div>
 
+      </div>
 
-        <div class="footer-bottom">
+      <div class="journal-track" id="journalSlider">
 
-            <span>© 2026 DESI OFFICIALS.</span>
+        <article class="journal-card">
+          <span>01 / PERSPECTIVE</span>
+          <h3>Beyond the expected.</h3>
+          <p>Personal style begins where imitation ends.</p>
+        </article>
 
-            <span>DESIGNED TO BE DISTINCT.</span>
+        <article class="journal-card">
+          <span>02 / DESIGN</span>
+          <h3>Details make the difference.</h3>
+          <p>Considered choices. A clear point of view.</p>
+        </article>
 
+        <article class="journal-card">
+          <span>03 / CULTURE</span>
+          <h3>Made to move your way.</h3>
+          <p>Streetwear shaped by individuality.</p>
+        </article>
+
+      </div>
+
+    </section>
+
+    <!-- ABOUT -->
+
+    <section class="about section-pad" id="about">
+
+      <p class="eyebrow">05 — OUR WORLD</p>
+
+      <h2>Distinctive<br><em>by design.</em></h2>
+
+      <p class="body-copy">
+        We believe clothing can be more than a uniform.
+        DO is for independent thinking, creative expression
+        and choosing your own direction.
+      </p>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+
+  <footer id="contact">
+
+    <a class="brand footer-brand" href="#home">
+
+      <svg class="brand-mark" viewBox="0 0 180 78" aria-hidden="true">
+        <text x="5" y="61" class="mark-d">D</text>
+        <text x="75" y="61" class="mark-o">O</text>
+        <path d="M7 69H173" class="mark-line"/>
+      </svg>
+
+      <span class="brand-name">DESI OFFICIALS</span>
+      <span class="brand-tag">DISTINCTIVE BY DESIGN</span>
+
+    </a>
+
+    <div>
+      <p class="eyebrow">GET IN TOUCH</p>
+
+      <a href="mailto:desioficials@gmail.com">
+        desioficials@gmail.com
+      </a>
+
+      <a href="https://www.instagram.com/desi_officials/"
+        target="_blank"
+        rel="noopener">
+        Instagram ↗
+      </a>
+    </div>
+
+    <small>
+      © <span id="year"></span>
+      DO — DESI OFFICIALS. ALL RIGHTS RESERVED.
+    </small>
+
+  </footer>
+
+  <!-- CUSTOMER ACCOUNT MODAL -->
+
+  <div class="modal-backdrop"
+    id="authModal"
+    aria-hidden="true">
+
+    <section class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="DO customer account">
+
+      <button class="modal-close"
+        data-close-modal
+        aria-label="Close">×</button>
+
+      <p class="eyebrow">YOUR DO ACCOUNT</p>
+
+      <h2>Welcome to <em>DO.</em></h2>
+
+      <div id="authModalContent">
+
+        <p class="modal-copy">
+          Sign in or create your DO customer account
+          securely using your Google account.
+        </p>
+
+        <a class="gold-button full-button"
+          href="/auth/google">
+          CONTINUE WITH GOOGLE ↗
+        </a>
+
+        <p class="notice">
+          New customers are registered automatically
+          after successful Google verification.
+        </p>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- BID MODAL -->
+
+  <div class="modal-backdrop"
+    id="bidModal"
+    aria-hidden="true">
+
+    <section class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Place a bid">
+
+      <button class="modal-close"
+        data-close-modal
+        aria-label="Close">×</button>
+
+      <p class="eyebrow">UNIQUE DO — BIDDING</p>
+
+      <h2>Place your <em>bid.</em></h2>
+
+      <p id="bidProductName" class="modal-copy">
+        Product
+      </p>
+
+      <label for="bidAmount">Your bid amount (₹)</label>
+
+      <input
+        id="bidAmount"
+        type="number"
+        min="1"
+        step="1"
+        inputmode="numeric">
+
+      <p class="notice" id="bidMessage" aria-live="polite">
+        Enter your bid amount.
+      </p>
+
+      <button class="gold-button full-button"
+        id="submitBidButton"
+        type="button">
+        SUBMIT BID
+      </button>
+
+    </section>
+
+  </div>
+
+  <!-- WEBSITE FUNCTIONALITY -->
+
+  <script>
+  (() => {
+
+    "use strict";
+
+    const $ = (selector, root = document) =>
+      root.querySelector(selector);
+
+    const $$ = (selector, root = document) =>
+      [...root.querySelectorAll(selector)];
+
+    const left = $("#leftDrawer");
+    const right = $("#rightDrawer");
+    const backdrop = $("#drawerBackdrop");
+
+    const leftBtn = $("#leftMenuButton");
+    const rightBtn = $("#rightMenuButton");
+
+    let currentUser = null;
+    let products = [];
+    let selectedProduct = null;
+
+    /* DRAWER MANAGEMENT */
+
+    function closeDrawers() {
+
+      left.classList.remove("is-open");
+      right.classList.remove("is-open");
+
+      backdrop.classList.remove("is-visible");
+
+      document.body.classList.remove("drawer-open");
+
+      left.setAttribute("aria-hidden", "true");
+      right.setAttribute("aria-hidden", "true");
+
+      leftBtn.setAttribute("aria-expanded", "false");
+      rightBtn.setAttribute("aria-expanded", "false");
+    }
+
+    function openDrawer(drawer, button) {
+
+      closeDrawers();
+
+      drawer.classList.add("is-open");
+
+      backdrop.classList.add("is-visible");
+
+      document.body.classList.add("drawer-open");
+
+      drawer.setAttribute("aria-hidden", "false");
+
+      button.setAttribute("aria-expanded", "true");
+    }
+
+    leftBtn.addEventListener("click", event => {
+
+      event.preventDefault();
+
+      left.classList.contains("is-open")
+        ? closeDrawers()
+        : openDrawer(left, leftBtn);
+
+    });
+
+    rightBtn.addEventListener("click", event => {
+
+      event.preventDefault();
+
+      right.classList.contains("is-open")
+        ? closeDrawers()
+        : openDrawer(right, rightBtn);
+
+    });
+
+    backdrop.addEventListener("click", closeDrawers);
+
+    $$("[data-close-drawer]").forEach(button => {
+      button.addEventListener("click", closeDrawers);
+    });
+
+    $$(".drawer a").forEach(link => {
+      link.addEventListener("click", closeDrawers);
+    });
+
+    /* MODALS */
+
+    function closeModal() {
+
+      $$(".modal-backdrop").forEach(modal => {
+
+        modal.classList.remove("show");
+
+        modal.setAttribute("aria-hidden", "true");
+
+      });
+
+    }
+
+    function openModal(modal) {
+
+      closeDrawers();
+
+      closeModal();
+
+      modal.classList.add("show");
+
+      modal.setAttribute("aria-hidden", "false");
+
+    }
+
+    $$("[data-open-auth]").forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        openModal($("#authModal"));
+
+      });
+
+    });
+
+    $$("[data-close-modal]").forEach(button => {
+
+      button.addEventListener("click", closeModal);
+
+    });
+
+    $$(".modal-backdrop").forEach(modal => {
+
+      modal.addEventListener("click", event => {
+
+        if (event.target === modal) {
+          closeModal();
+        }
+
+      });
+
+    });
+
+    document.addEventListener("keydown", event => {
+
+      if (event.key === "Escape") {
+
+        closeDrawers();
+
+        closeModal();
+
+      }
+
+    });
+
+    /* ACCOUNT DISPLAY */
+
+    function updateAccountInterface() {
+
+      const drawerContent = $("#accountDrawerContent");
+      const modalContent = $("#authModalContent");
+
+      if (!currentUser) {
+
+        drawerContent.innerHTML = `
+          <button class="drawer-action" data-open-auth="login">
+            Sign in <span>↗</span>
+          </button>
+
+          <button class="drawer-action" data-open-auth="register">
+            Create account <span>↗</span>
+          </button>
+        `;
+
+        modalContent.innerHTML = `
+          <p class="modal-copy">
+            Sign in or create your DO customer account
+            securely using your Google account.
+          </p>
+
+          <a class="gold-button full-button" href="/auth/google">
+            CONTINUE WITH GOOGLE ↗
+          </a>
+
+          <p class="notice">
+            New customers are registered automatically
+            after successful Google verification.
+          </p>
+        `;
+
+        $$("[data-open-auth]").forEach(button => {
+
+          button.addEventListener("click", () => {
+            openModal($("#authModal"));
+          });
+
+        });
+
+        return;
+      }
+
+      const name = currentUser.name ||
+        currentUser.email;
+
+      drawerContent.innerHTML = `
+        <div class="account-summary">
+          <p class="eyebrow">SIGNED IN</p>
+          <h3>${escapeHTML(name)}</h3>
+          <p>${escapeHTML(currentUser.email)}</p>
+          <p class="account-role">
+            ${currentUser.role === "admin"
+              ? "DO ADMINISTRATOR"
+              : "DO CUSTOMER"}
+          </p>
         </div>
 
-    </footer>
+        <button class="drawer-action" id="accountLogoutButton">
+          Sign out <span>↗</span>
+        </button>
 
+        ${currentUser.role === "admin"
+          ? `<a class="drawer-action" href="/admin/">
+               Admin dashboard <span>↗</span>
+             </a>`
+          : ""}
+      `;
 
+      modalContent.innerHTML = `
+        <p class="modal-copy">
+          You are signed in to your DO account.
+        </p>
 
-    <!-- JAVASCRIPT -->
+        <h3>${escapeHTML(name)}</h3>
 
-    <script src="assets/js/script.js"></script>
+        <p class="modal-copy">
+          ${escapeHTML(currentUser.email)}
+        </p>
+
+        <button class="gold-button full-button"
+          id="modalLogoutButton"
+          type="button">
+          SIGN OUT
+        </button>
+      `;
+
+      $("#accountLogoutButton")?.addEventListener(
+        "click",
+        logout
+      );
+
+      $("#modalLogoutButton")?.addEventListener(
+        "click",
+        logout
+      );
+
+    }
+
+    function escapeHTML(value) {
+
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+
+    }
+
+    async function loadCurrentUser() {
+
+      try {
+
+        const response = await fetch("/api/me", {
+          method: "GET",
+          credentials: "same-origin",
+          cache: "no-store"
+        });
+
+        if (!response.ok) {
+
+          currentUser = null;
+
+          updateAccountInterface();
+
+          return;
+
+        }
+
+        const data = await response.json();
+
+        currentUser = data.authenticated
+          ? data.user
+          : null;
+
+        updateAccountInterface();
+
+      } catch (error) {
+
+        console.error("Account loading failed:", error);
+
+      }
+
+    }
+
+    async function logout() {
+
+      try {
+
+        const response = await fetch("/auth/logout", {
+          method: "POST",
+          credentials: "same-origin"
+        });
+
+        if (!response.ok) {
+
+          alert("Sign out failed. Please try again.");
+
+          return;
+
+        }
+
+        currentUser = null;
+
+        closeModal();
+
+        closeDrawers();
+
+        updateAccountInterface();
+
+        window.location.reload();
+
+      } catch (error) {
+
+        console.error("Logout failed:", error);
+
+        alert("Unable to sign out. Please try again.");
+
+      }
+
+    }
+
+    /* PRODUCT LOADING */
+
+    async function loadProducts() {
+
+      try {
+
+        const response = await fetch("/api/products", {
+          credentials: "same-origin",
+          cache: "no-store"
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+
+        products = Array.isArray(data.products)
+          ? data.products
+          : [];
+
+      } catch (error) {
+
+        console.error("Product loading failed:", error);
+
+      }
+
+    }
+
+    function findProduct(button) {
+
+      const slug = button.dataset.slug;
+
+      const name = button.dataset.product;
+
+      return products.find(product =>
+        product.slug === slug ||
+        String(product.name || "").toLowerCase() ===
+        String(name || "").toLowerCase()
+      );
+
+    }
+
+    /* BIDDING */
+
+    $$(".bid-open").forEach(button => {
+
+      button.addEventListener("click", async () => {
+
+        await loadProducts();
+
+        const product = findProduct(button);
+
+        if (!product) {
+
+          alert(
+            "This product is not yet available for bidding. Please check again later."
+          );
+
+          return;
+
+        }
+
+        if (product.status !== "live") {
+
+          alert(
+            "Bidding is not currently open for this product."
+          );
+
+          return;
+
+        }
+
+        selectedProduct = product;
+
+        const highestBid = Number(
+          product.current_bid || product.starting_price || 0
+        );
+
+        const minimumBid = highestBid + 1;
+
+        $("#bidProductName").textContent =
+          product.name +
+          " · Current highest bid ₹" +
+          highestBid.toLocaleString("en-IN");
+
+        $("#bidAmount").value = minimumBid;
+
+        $("#bidAmount").min = minimumBid;
+
+        $("#bidMessage").textContent =
+          "Minimum next bid: ₹" +
+          minimumBid.toLocaleString("en-IN");
+
+        openModal($("#bidModal"));
+
+      });
+
+    });
+
+    $("#submitBidButton").addEventListener("click", async () => {
+
+      if (!selectedProduct) {
+
+        $("#bidMessage").textContent =
+          "Please select a valid auction.";
+
+        return;
+
+      }
+
+      if (!currentUser) {
+
+        closeModal();
+
+        openModal($("#authModal"));
+
+        $("#bidMessage").textContent =
+          "Please sign in before placing a bid.";
+
+        return;
+
+      }
+
+      const amount = Number($("#bidAmount").value);
+
+      const minimum = Number(
+        $("#bidAmount").min
+      );
+
+      if (
+        !Number.isSafeInteger(amount) ||
+        amount < minimum
+      ) {
+
+        $("#bidMessage").textContent =
+          "Please enter a valid bid of at least ₹" +
+          minimum.toLocaleString("en-IN") + ".";
+
+        return;
+
+      }
+
+      const button = $("#submitBidButton");
+
+      button.disabled = true;
+
+      button.textContent = "SUBMITTING...";
+
+      try {
+
+        const response = await fetch("/api/bids", {
+
+          method: "POST",
+
+          credentials: "same-origin",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            product_id: selectedProduct.id,
+            amount
+          })
+
+        });
+
+        const result = await response.json();
+
+        if (response.status === 401) {
+
+          currentUser = null;
+
+          updateAccountInterface();
+
+          closeModal();
+
+          openModal($("#authModal"));
+
+          return;
+
+        }
+
+        if (!response.ok) {
+
+          $("#bidMessage").textContent =
+            result.error || "Your bid could not be submitted.";
+
+          return;
+
+        }
+
+        $("#bidMessage").textContent =
+          "Your bid of ₹" +
+          amount.toLocaleString("en-IN") +
+          " was successfully submitted.";
+
+        await loadProducts();
+
+      } catch (error) {
+
+        console.error("Bid submission failed:", error);
+
+        $("#bidMessage").textContent =
+          "Network error. Please try again.";
+
+      } finally {
+
+        button.disabled = false;
+
+        button.textContent = "SUBMIT BID";
+
+      }
+
+    });
+
+    /* JOURNAL SLIDER */
+
+    const slider = $("#journalSlider");
+
+    $("#journalPrevious").addEventListener("click", () => {
+
+      slider.scrollBy({
+        left: -slider.clientWidth * 0.8,
+        behavior: "smooth"
+      });
+
+    });
+
+    $("#journalNext").addEventListener("click", () => {
+
+      slider.scrollBy({
+        left: slider.clientWidth * 0.8,
+        behavior: "smooth"
+      });
+
+    });
+
+    /* FOOTER YEAR */
+
+    $("#year").textContent = new Date().getFullYear();
+
+    /* INITIALIZE */
+
+    loadCurrentUser();
+
+    loadProducts();
+
+  })();
+  </script>
 
 </body>
-
-</html>
+                </html>
