@@ -2,7 +2,7 @@ const REDIRECT_URI =
   "https://do-desiofficials.desioficials.workers.dev/auth/google/callback";
 
 const ADMIN_EMAILS = [
-  "desiofficials@gmail.com",
+  "desioficials@gmail.com",
   "desiofficials26@gmail.com"
 ];
 
