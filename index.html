@@ -2,41 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#11110f">
-  <meta name="description" content="DO — Desi Officials. Independent thinking. Distinctive wearing.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#191916">
+  <meta name="description" content="DO — DESI OFFICIALS. Independent thinking. Distinctive wearing.">
   <title>DO — DESI OFFICIALS</title>
 
+  <link rel="icon" href="/assets/images/do-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="/assets/css/style.css">
+
+  <style>
+    /* Small additions for the real account and auction controls.
+       The original DO editorial layout and gold/cream palette are preserved. */
+    .brand-mark { width: 88px; height: 48px; object-fit: contain; display: block; }
+    .footer-brand .brand-mark { width: 88px; height: 48px; }
+    .account-state { margin-top: 22px; padding: 18px; border: 1px solid var(--line); background: var(--dark-soft); }
+    .account-state strong { display:block; color:var(--cream); margin-bottom:7px; overflow-wrap:anywhere; }
+    .account-state p { color:#bdb8ae; font-size:12px; line-height:1.7; margin:0; }
+    .account-actions { display:grid; gap:10px; margin-top:18px; }
+    .account-actions .gold-button { width:100%; min-width:0; margin-top:0; justify-content:center; }
+    .secondary-button { display:flex; justify-content:center; align-items:center; width:100%; padding:16px 18px; border:1px solid #8f8678; background:transparent; color:var(--cream); font-size:10px; font-weight:700; letter-spacing:1.5px; }
+    .secondary-button:hover { background:var(--cream); color:var(--black); }
+    .modal-status { min-height:20px; margin-top:14px; color:var(--gold-light); font-size:12px; line-height:1.6; }
+    .modal-status.error { color:#ffaaa0; }
+    .bid-details { margin:14px 0; padding:14px; background:var(--dark-soft); color:#d5d0c7; font-size:12px; line-height:1.8; }
+    .bid-form { margin-top:18px; }
+    .bid-form input { width:100%; padding:15px; background:#24231f; border:1px solid #625b4f; color:var(--cream); }
+    .bid-form button { margin-top:14px; }
+    .product-live-state { margin-top:8px; color:var(--muted); font-size:10px; line-height:1.6; }
+    .product-live-state.live { color:#58734b; }
+    .product-live-state.closed { color:#9a655e; }
+    .drawer-account-summary { margin:18px 0; padding:14px; border:1px solid var(--line); color:#bdb8ae; font-size:12px; line-height:1.7; overflow-wrap:anywhere; }
+    .admin-entry { margin-top:22px; padding-top:18px; border-top:1px solid var(--line); }
+    .admin-entry a { color:var(--gold-light); font-size:10px; letter-spacing:1.2px; }
+    .hidden { display:none !important; }
+    @media(max-width:520px) {
+      .brand-mark,.footer-brand .brand-mark { width:78px; height:42px; }
+      .account-state { padding:14px; }
+    }
+  </style>
 </head>
 
 <body>
-
-  <div class="announcement">
-    INDEPENDENT THINKING. DISTINCTIVE WEARING.
-  </div>
+  <div class="announcement">INDEPENDENT THINKING. DISTINCTIVE WEARING.</div>
 
   <header class="site-header">
-
-    <button class="icon-button menu-button"
-      id="leftMenuButton"
-      aria-label="Open main menu"
-      aria-controls="leftDrawer"
-      aria-expanded="false">
+    <button class="icon-button menu-button" id="leftMenuButton" type="button"
+      aria-label="Open main menu" aria-controls="leftDrawer" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
 
     <a class="brand" href="#home" aria-label="DO Desi Officials home">
-      <svg class="brand-mark" viewBox="0 0 180 78" role="img" aria-label="DO">
-        <text x="5" y="61" class="mark-d">D</text>
-        <text x="75" y="61" class="mark-o">O</text>
-        <path d="M7 69H173" class="mark-line"/>
-      </svg>
-
+      <img class="brand-mark" src="/assets/images/do-logo.png" alt="DO — Desi Officials">
       <span class="brand-name">DESI OFFICIALS</span>
       <span class="brand-tag">DISTINCTIVE BY DESIGN</span>
     </a>
@@ -48,1057 +67,592 @@
       <a href="#about">OUR WORLD</a>
     </nav>
 
-    <a class="header-explore" href="#collection">
-      EXPLORE <span>↗</span>
-    </a>
+    <a class="header-explore" href="#collection">EXPLORE <span>↗</span></a>
 
-    <button class="icon-button dots-button"
-      id="rightMenuButton"
-      aria-label="Open account menu"
-      aria-controls="rightDrawer"
-      aria-expanded="false">
+    <button class="icon-button dots-button" id="rightMenuButton" type="button"
+      aria-label="Open account menu" aria-controls="rightDrawer" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
-
   </header>
 
   <div class="drawer-backdrop" id="drawerBackdrop"></div>
 
-  <!-- MAIN MENU -->
-
-  <aside class="drawer left-drawer"
-    id="leftDrawer"
-    aria-label="Main menu"
-    aria-hidden="true">
-
+  <aside class="drawer left-drawer" id="leftDrawer" aria-label="Main menu" aria-hidden="true">
     <div class="drawer-top">
       <span class="eyebrow">THE DO WORLD</span>
-      <button class="drawer-close"
-        data-close-drawer
-        aria-label="Close menu">×</button>
+      <button class="drawer-close" type="button" data-close-drawer aria-label="Close menu">×</button>
     </div>
-
     <a class="drawer-link" href="#home">Home <span>01</span></a>
     <a class="drawer-link" href="#discover">Discover <span>02</span></a>
     <a class="drawer-link" href="#collection">Collection <span>03</span></a>
     <a class="drawer-link" href="#unique-dos">Unique DOs <span>04</span></a>
     <a class="drawer-link" href="#journal">The Edition <span>05</span></a>
     <a class="drawer-link" href="#about">Our World <span>06</span></a>
-
-    <div class="drawer-foot">
-      INDEPENDENT THINKING.<br>
-      DISTINCTIVE WEARING.
-    </div>
-
+    <div class="drawer-foot">INDEPENDENT THINKING.<br>DISTINCTIVE WEARING.</div>
   </aside>
 
-  <!-- ACCOUNT MENU -->
-
-  <aside class="drawer right-drawer"
-    id="rightDrawer"
-    aria-label="Account menu"
-    aria-hidden="true">
-
+  <aside class="drawer right-drawer" id="rightDrawer" aria-label="Account menu" aria-hidden="true">
     <div class="drawer-top">
       <span class="eyebrow">YOUR DO ACCOUNT</span>
-
-      <button class="drawer-close"
-        data-close-drawer
-        aria-label="Close account menu">×</button>
+      <button class="drawer-close" type="button" data-close-drawer aria-label="Close account menu">×</button>
     </div>
 
-    <div id="accountDrawerContent">
-
-      <button class="drawer-action" data-open-auth="login">
-        Sign in <span>↗</span>
-      </button>
-
-      <button class="drawer-action" data-open-auth="register">
-        Create account <span>↗</span>
-      </button>
-
+    <div id="drawerSignedOut">
+      <button class="drawer-action" type="button" data-open-auth="login">Sign in <span>↗</span></button>
+      <button class="drawer-action" type="button" data-open-auth="register">Create account <span>↗</span></button>
     </div>
 
-    <a class="drawer-action" href="#unique-dos">
-      Unique DOs bidding <span>↗</span>
-    </a>
-
-    <a class="drawer-action" href="#contact">
-      Contact <span>↗</span>
-    </a>
-
-    <div class="drawer-foot">
-      MEMBERSHIP DOES NOT LIMIT<br>
-      WHO CAN EXPLORE DO.
+    <div id="drawerSignedIn" class="hidden">
+      <div class="drawer-account-summary">
+        <strong id="drawerUserName">DO customer</strong><br>
+        <span id="drawerUserEmail"></span>
+        <p id="drawerUserRole"></p>
+      </div>
+      <button class="drawer-action" type="button" id="drawerAccountButton">My account <span>↗</span></button>
+      <button class="drawer-action" type="button" id="drawerLogoutButton">Sign out <span>↗</span></button>
     </div>
 
+    <a class="drawer-action" href="#unique-dos">Unique DOs bidding <span>↗</span></a>
+    <a class="drawer-action" href="#contact">Contact <span>↗</span></a>
+    <div class="admin-entry"><a href="/auth/google?mode=admin">ADMIN SIGN IN ↗</a></div>
+    <div class="drawer-foot">MEMBERSHIP DOES NOT LIMIT<br>WHO CAN EXPLORE DO.</div>
   </aside>
 
   <main>
-
-    <!-- HERO -->
-
     <section class="hero" id="home">
-
-      <div class="hero-image"
-        role="img"
-        aria-label="DO streetwear campaign"></div>
-
+      <div class="hero-image" role="img" aria-label="DO streetwear campaign"></div>
       <div class="hero-shade"></div>
-
       <div class="hero-content">
-
-        <p class="eyebrow gold">
-          INDEPENDENT STREETWEAR · DESIGNED TO<br>
-          STAND APART
-        </p>
-
+        <p class="eyebrow gold">INDEPENDENT STREETWEAR · DESIGNED TO<br>STAND APART</p>
         <h1>NOT MADE<br>TO <em>BLEND.</em></h1>
-
-        <p class="hero-copy">
-          A different perspective on everyday expression.
-          Built around individuality, designed for those
-          who choose their own direction.
-        </p>
-
-        <a class="gold-button" href="#collection">
-          EXPLORE THE COLLECTION <span>↗</span>
-        </a>
-
+        <p class="hero-copy">A different perspective on everyday expression. Built around individuality, designed for those who choose their own direction.</p>
+        <a class="gold-button" href="#collection">EXPLORE THE COLLECTION <span>↗</span></a>
       </div>
-
       <div class="hero-side">DISTINCTIVE BY DESIGN</div>
-
-      <div class="hero-bottom">
-        <span>DO — DESI OFFICIALS</span>
-        <span>01 / EXPLORE</span>
-      </div>
-
+      <div class="hero-bottom"><span>DO — DESI OFFICIALS</span><span>01 / EXPLORE</span></div>
     </section>
-
-    <!-- DISCOVER -->
 
     <section class="intro section-pad" id="discover">
-
       <p class="eyebrow">01 — THE POINT OF VIEW</p>
-
       <h2>Wear your point<br>of <em>view.</em></h2>
-
-      <p class="body-copy">
-        DO is an independent expression of identity.
-        Thoughtful silhouettes, considered details and
-        a perspective that refuses to follow the ordinary.
-      </p>
-
+      <p class="body-copy">DO is an independent expression of identity. Thoughtful silhouettes, considered details and a perspective that refuses to follow the ordinary.</p>
     </section>
 
-    <!-- COLLECTION -->
-
     <section class="collection section-pad" id="collection">
-
       <div class="section-heading">
-
         <div>
           <p class="eyebrow">02 — THE COLLECTION</p>
           <h2>Built to <em>stand out.</em></h2>
         </div>
-
-        <p class="section-note">
-          A focused collection.<br>
-          No unnecessary repetition.
-        </p>
-
+        <p class="section-note">A focused collection.<br>No unnecessary repetition.</p>
       </div>
 
-      <div class="product-grid">
-
-        <article class="product-card" data-product-card="full-sleeve-t-shirt">
-
+      <div class="product-grid" id="productGrid">
+        <article class="product-card" data-product-slug="full-sleeve-t-shirt">
           <div class="product-image product-one">
-            <img src="/assets/images/3.png"
-              alt="DO full sleeve T-shirt"
-              onerror="this.style.display='none'">
-
+            <img src="/assets/images/3.png" alt="DO full sleeve T-shirt">
             <span class="product-index">DO / 001</span>
           </div>
-
           <div class="product-meta">
-            <div>
-              <h3>Full Sleeve T-shirt</h3>
-              <p>Starting bid</p>
-            </div>
-
-            <strong>₹4,999</strong>
+            <div><h3>Full Sleeve T-shirt</h3><p class="product-price-label">Starting bid</p></div>
+            <strong class="product-price">₹4,999</strong>
           </div>
-
-          <button class="outline-button bid-open"
-            data-product="Full Sleeve T-shirt"
-            data-slug="full-sleeve-t-shirt"
-            data-price="4999">
-            PLACE A BID <span>↗</span>
+          <p class="product-live-state" aria-live="polite">Checking auction status…</p>
+          <button class="outline-button bid-open" type="button" disabled>
+            BID UNAVAILABLE <span>↗</span>
           </button>
-
         </article>
 
-        <article class="product-card" data-product-card="cargo-joggers">
-
+        <article class="product-card" data-product-slug="cargo-joggers">
           <div class="product-image product-two">
-            <img src="/assets/images/4.png"
-              alt="DO cargo joggers"
-              onerror="this.style.display='none'">
-
+            <img src="/assets/images/4.png" alt="DO cargo joggers">
             <span class="product-index">DO / 002</span>
           </div>
-
           <div class="product-meta">
-            <div>
-              <h3>Cargo Joggers</h3>
-              <p>Starting bid</p>
-            </div>
-
-            <strong>₹9,999</strong>
+            <div><h3>Cargo Joggers</h3><p class="product-price-label">Starting bid</p></div>
+            <strong class="product-price">₹9,999</strong>
           </div>
-
-          <button class="outline-button bid-open"
-            data-product="Cargo Joggers"
-            data-slug="cargo-joggers"
-            data-price="9999">
-            PLACE A BID <span>↗</span>
+          <p class="product-live-state" aria-live="polite">Checking auction status…</p>
+          <button class="outline-button bid-open" type="button" disabled>
+            BID UNAVAILABLE <span>↗</span>
           </button>
-
         </article>
 
-        <article class="product-card" data-product-card="signature-hoodie">
-
+        <article class="product-card" data-product-slug="signature-hoodie">
           <div class="product-image product-three">
-            <img src="/assets/images/5.png"
-              alt="DO signature hoodie"
-              onerror="this.style.display='none'">
-
+            <img src="/assets/images/5.png" alt="DO signature hoodie">
             <span class="product-index">DO / 003</span>
           </div>
-
           <div class="product-meta">
-            <div>
-              <h3>Signature Hoodie</h3>
-              <p>Starting bid</p>
-            </div>
-
-            <strong>₹11,999</strong>
+            <div><h3>Signature Hoodie</h3><p class="product-price-label">Starting bid</p></div>
+            <strong class="product-price">₹11,999</strong>
           </div>
-
-          <button class="outline-button bid-open"
-            data-product="Signature Hoodie"
-            data-slug="signature-hoodie"
-            data-price="11999">
-            PLACE A BID <span>↗</span>
+          <p class="product-live-state" aria-live="polite">Checking auction status…</p>
+          <button class="outline-button bid-open" type="button" disabled>
+            BID UNAVAILABLE <span>↗</span>
           </button>
-
         </article>
-
       </div>
-
     </section>
-
-    <!-- UNIQUE DOS -->
 
     <section class="unique section-pad" id="unique-dos">
-
       <p class="eyebrow gold">03 — LIMITED RELEASES</p>
-
       <h2>Not just a drop.<br>A <em>Unique DO.</em></h2>
-
-      <p class="body-copy">
-        Selected releases are offered through bidding.
-        Registered customers can participate in eligible
-        auctions. The highest valid bid at the end of an
-        auction is selected for the purchase opportunity.
-      </p>
-
-      <a class="gold-button" href="#collection">
-        EXPLORE BIDDING <span>↗</span>
-      </a>
-
+      <p class="body-copy">Selected releases are offered through bidding. Eligible registered customers can participate while an auction is live. The highest valid bid at auction close is recorded by the auction system.</p>
+      <a class="gold-button" href="#collection">EXPLORE THE COLLECTION <span>↗</span></a>
+      <p class="notice">Only auctions marked LIVE by the DO system accept bids. A bid is submitted to the server and is not treated as successful unless the server confirms it.</p>
     </section>
-
-    <!-- JOURNAL -->
 
     <section class="journal section-pad" id="journal">
-
       <div class="section-heading">
-
-        <div>
-          <p class="eyebrow">04 — THE EDITION</p>
-          <h2>Ideas in <em>motion.</em></h2>
-        </div>
-
+        <div><p class="eyebrow">04 — THE EDITION</p><h2>Ideas in <em>motion.</em></h2></div>
         <div class="slider-controls">
-          <button id="journalPrevious"
-            aria-label="Previous journal cards">←</button>
-
-          <button id="journalNext"
-            aria-label="Next journal cards">→</button>
+          <button id="journalPrevious" type="button" aria-label="Previous journal cards">←</button>
+          <button id="journalNext" type="button" aria-label="Next journal cards">→</button>
         </div>
-
       </div>
-
       <div class="journal-track" id="journalSlider">
-
-        <article class="journal-card">
-          <span>01 / PERSPECTIVE</span>
-          <h3>Beyond the expected.</h3>
-          <p>Personal style begins where imitation ends.</p>
-        </article>
-
-        <article class="journal-card">
-          <span>02 / DESIGN</span>
-          <h3>Details make the difference.</h3>
-          <p>Considered choices. A clear point of view.</p>
-        </article>
-
-        <article class="journal-card">
-          <span>03 / CULTURE</span>
-          <h3>Made to move your way.</h3>
-          <p>Streetwear shaped by individuality.</p>
-        </article>
-
+        <article class="journal-card"><span>01 / PERSPECTIVE</span><h3>Beyond the expected.</h3><p>Personal style begins where imitation ends.</p></article>
+        <article class="journal-card"><span>02 / DESIGN</span><h3>Details make the difference.</h3><p>Considered choices. A clear point of view.</p></article>
+        <article class="journal-card"><span>03 / CULTURE</span><h3>Made to move your way.</h3><p>Streetwear shaped by individuality.</p></article>
       </div>
-
     </section>
-
-    <!-- ABOUT -->
 
     <section class="about section-pad" id="about">
-
       <p class="eyebrow">05 — OUR WORLD</p>
-
       <h2>Distinctive<br><em>by design.</em></h2>
-
-      <p class="body-copy">
-        We believe clothing can be more than a uniform.
-        DO is for independent thinking, creative expression
-        and choosing your own direction.
-      </p>
-
+      <p class="body-copy">We believe clothing can be more than a uniform. DO is for independent thinking, creative expression and choosing your own direction.</p>
     </section>
-
   </main>
 
-  <!-- FOOTER -->
-
   <footer id="contact">
-
-    <a class="brand footer-brand" href="#home">
-
-      <svg class="brand-mark" viewBox="0 0 180 78" aria-hidden="true">
-        <text x="5" y="61" class="mark-d">D</text>
-        <text x="75" y="61" class="mark-o">O</text>
-        <path d="M7 69H173" class="mark-line"/>
-      </svg>
-
+    <a class="brand footer-brand" href="#home" aria-label="DO Desi Officials home">
+      <img class="brand-mark" src="/assets/images/do-logo.png" alt="DO — Desi Officials">
       <span class="brand-name">DESI OFFICIALS</span>
       <span class="brand-tag">DISTINCTIVE BY DESIGN</span>
-
     </a>
-
     <div>
       <p class="eyebrow">GET IN TOUCH</p>
-
-      <a href="mailto:desioficials@gmail.com">
-        desioficials@gmail.com
-      </a>
-
-      <a href="https://www.instagram.com/desi_officials/"
-        target="_blank"
-        rel="noopener">
-        Instagram ↗
-      </a>
+      <a href="mailto:desioficials@gmail.com">desioficials@gmail.com</a>
+      <a href="https://www.instagram.com/desi_officials/" target="_blank" rel="noopener">Instagram ↗</a>
+      <a href="/auth/google?mode=admin">Administrator sign in ↗</a>
     </div>
-
-    <small>
-      © <span id="year"></span>
-      DO — DESI OFFICIALS. ALL RIGHTS RESERVED.
-    </small>
-
+    <small>© <span id="year"></span> DO — DESI OFFICIALS. ALL RIGHTS RESERVED.</small>
   </footer>
 
   <!-- CUSTOMER ACCOUNT MODAL -->
-
-  <div class="modal-backdrop"
-    id="authModal"
-    aria-hidden="true">
-
-    <section class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-label="DO customer account">
-
-      <button class="modal-close"
-        data-close-modal
-        aria-label="Close">×</button>
-
+  <div class="modal-backdrop" id="authModal" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
       <p class="eyebrow">YOUR DO ACCOUNT</p>
+      <h2 id="authTitle">Welcome to <em>DO.</em></h2>
 
-      <h2>Welcome to <em>DO.</em></h2>
-
-      <div id="authModalContent">
-
-        <p class="modal-copy">
-          Sign in or create your DO customer account
-          securely using your Google account.
-        </p>
-
-        <a class="gold-button full-button"
-          href="/auth/google">
-          CONTINUE WITH GOOGLE ↗
-        </a>
-
-        <p class="notice">
-          New customers are registered automatically
-          after successful Google verification.
-        </p>
-
+      <div id="signedOutPanel">
+        <p class="modal-copy">Create your DO customer account with Google, or sign in with the Google account you have already registered. First-time sign-in creates your customer account when the customer authentication service is correctly configured.</p>
+        <div class="account-actions">
+          <a class="gold-button" href="/auth/google?mode=customer">CREATE CUSTOMER ACCOUNT WITH GOOGLE ↗</a>
+          <a class="secondary-button" href="/auth/google?mode=customer">SIGN IN WITH GOOGLE</a>
+        </div>
+        <p class="modal-status" id="authStatus" role="status" aria-live="polite"></p>
       </div>
 
+      <div id="signedInPanel" class="hidden">
+        <div class="account-state">
+          <strong id="accountName">DO customer</strong>
+          <p id="accountEmail"></p>
+          <p id="accountRole"></p>
+        </div>
+        <div class="account-actions">
+          <button class="secondary-button" type="button" id="myBidsButton">MY BIDS</button>
+          <button class="secondary-button" type="button" id="logoutButton">SIGN OUT</button>
+        </div>
+        <p class="modal-status" id="accountStatus" role="status" aria-live="polite"></p>
+      </div>
     </section>
-
   </div>
 
   <!-- BID MODAL -->
-
-  <div class="modal-backdrop"
-    id="bidModal"
-    aria-hidden="true">
-
-    <section class="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Place a bid">
-
-      <button class="modal-close"
-        data-close-modal
-        aria-label="Close">×</button>
-
-      <p class="eyebrow">UNIQUE DO — BIDDING</p>
-
-      <h2>Place your <em>bid.</em></h2>
-
-      <p id="bidProductName" class="modal-copy">
-        Product
-      </p>
-
-      <label for="bidAmount">Your bid amount (₹)</label>
-
-      <input
-        id="bidAmount"
-        type="number"
-        min="1"
-        step="1"
-        inputmode="numeric">
-
-      <p class="notice" id="bidMessage" aria-live="polite">
-        Enter your bid amount.
-      </p>
-
-      <button class="gold-button full-button"
-        id="submitBidButton"
-        type="button">
-        SUBMIT BID
-      </button>
-
+  <div class="modal-backdrop" id="bidModal" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="bidTitle">
+      <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
+      <p class="eyebrow">UNIQUE DO — LIVE BIDDING</p>
+      <h2 id="bidTitle">Place your <em>bid.</em></h2>
+      <p id="bidProductName" class="modal-copy">Product</p>
+      <div class="bid-details" id="bidDetails">The auction details will appear here.</div>
+      <form class="bid-form" id="bidForm">
+        <label for="bidAmount">Next valid bid (₹)</label>
+        <input id="bidAmount" name="amount" type="number" min="1" step="1" inputmode="numeric" required>
+        <button class="gold-button full-button" id="submitBidButton" type="submit">SUBMIT LIVE BID</button>
+      </form>
+      <p class="modal-status" id="bidStatus" role="status" aria-live="polite"></p>
     </section>
-
   </div>
-
-  <!-- WEBSITE FUNCTIONALITY -->
 
   <script>
   (() => {
-
     "use strict";
 
-    const $ = (selector, root = document) =>
-      root.querySelector(selector);
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
-    const $$ = (selector, root = document) =>
-      [...root.querySelectorAll(selector)];
-
-    const left = $("#leftDrawer");
-    const right = $("#rightDrawer");
-    const backdrop = $("#drawerBackdrop");
-
-    const leftBtn = $("#leftMenuButton");
-    const rightBtn = $("#rightMenuButton");
+    const leftDrawer = $("#leftDrawer");
+    const rightDrawer = $("#rightDrawer");
+    const drawerBackdrop = $("#drawerBackdrop");
+    const leftMenuButton = $("#leftMenuButton");
+    const rightMenuButton = $("#rightMenuButton");
+    const authModal = $("#authModal");
+    const bidModal = $("#bidModal");
 
     let currentUser = null;
-    let products = [];
     let selectedProduct = null;
+    const productsBySlug = new Map();
 
-    /* DRAWER MANAGEMENT */
+    const money = value => "₹" + Number(value || 0).toLocaleString("en-IN");
 
     function closeDrawers() {
-
-      left.classList.remove("is-open");
-      right.classList.remove("is-open");
-
-      backdrop.classList.remove("is-visible");
-
+      [leftDrawer, rightDrawer].forEach(drawer => {
+        drawer.classList.remove("is-open");
+        drawer.setAttribute("aria-hidden", "true");
+      });
+      drawerBackdrop.classList.remove("is-visible");
       document.body.classList.remove("drawer-open");
-
-      left.setAttribute("aria-hidden", "true");
-      right.setAttribute("aria-hidden", "true");
-
-      leftBtn.setAttribute("aria-expanded", "false");
-      rightBtn.setAttribute("aria-expanded", "false");
+      leftMenuButton.setAttribute("aria-expanded", "false");
+      rightMenuButton.setAttribute("aria-expanded", "false");
     }
 
     function openDrawer(drawer, button) {
-
       closeDrawers();
-
       drawer.classList.add("is-open");
-
-      backdrop.classList.add("is-visible");
-
-      document.body.classList.add("drawer-open");
-
       drawer.setAttribute("aria-hidden", "false");
-
+      drawerBackdrop.classList.add("is-visible");
+      document.body.classList.add("drawer-open");
       button.setAttribute("aria-expanded", "true");
     }
 
-    leftBtn.addEventListener("click", event => {
-
-      event.preventDefault();
-
-      left.classList.contains("is-open")
+    leftMenuButton.addEventListener("click", () => {
+      leftDrawer.classList.contains("is-open")
         ? closeDrawers()
-        : openDrawer(left, leftBtn);
-
+        : openDrawer(leftDrawer, leftMenuButton);
     });
 
-    rightBtn.addEventListener("click", event => {
-
-      event.preventDefault();
-
-      right.classList.contains("is-open")
+    rightMenuButton.addEventListener("click", () => {
+      rightDrawer.classList.contains("is-open")
         ? closeDrawers()
-        : openDrawer(right, rightBtn);
-
+        : openDrawer(rightDrawer, rightMenuButton);
     });
 
-    backdrop.addEventListener("click", closeDrawers);
+    drawerBackdrop.addEventListener("click", closeDrawers);
+    $$("[data-close-drawer]").forEach(button => button.addEventListener("click", closeDrawers));
+    $$(".drawer a").forEach(link => link.addEventListener("click", closeDrawers));
 
-    $$("[data-close-drawer]").forEach(button => {
-      button.addEventListener("click", closeDrawers);
-    });
-
-    $$(".drawer a").forEach(link => {
-      link.addEventListener("click", closeDrawers);
-    });
-
-    /* MODALS */
-
-    function closeModal() {
-
+    function closeModals() {
       $$(".modal-backdrop").forEach(modal => {
-
         modal.classList.remove("show");
-
         modal.setAttribute("aria-hidden", "true");
-
       });
-
     }
 
     function openModal(modal) {
-
       closeDrawers();
-
-      closeModal();
-
+      closeModals();
       modal.classList.add("show");
-
       modal.setAttribute("aria-hidden", "false");
-
     }
 
     $$("[data-open-auth]").forEach(button => {
-
-      button.addEventListener("click", () => {
-
-        openModal($("#authModal"));
-
-      });
-
+      button.addEventListener("click", () => openModal(authModal));
     });
 
     $$("[data-close-modal]").forEach(button => {
-
-      button.addEventListener("click", closeModal);
-
+      button.addEventListener("click", closeModals);
     });
 
     $$(".modal-backdrop").forEach(modal => {
-
       modal.addEventListener("click", event => {
-
-        if (event.target === modal) {
-          closeModal();
-        }
-
+        if (event.target === modal) closeModals();
       });
-
     });
 
     document.addEventListener("keydown", event => {
-
       if (event.key === "Escape") {
-
         closeDrawers();
-
-        closeModal();
-
+        closeModals();
       }
-
     });
 
-    /* ACCOUNT DISPLAY */
+    function showStatus(element, message, isError = false) {
+      element.textContent = message;
+      element.classList.toggle("error", isError);
+    }
 
-    function updateAccountInterface() {
+    function updateAccountUI(user) {
+      currentUser = user || null;
 
-      const drawerContent = $("#accountDrawerContent");
-      const modalContent = $("#authModalContent");
+      $("#signedOutPanel").classList.toggle("hidden", !!currentUser);
+      $("#signedInPanel").classList.toggle("hidden", !currentUser);
+      $("#drawerSignedOut").classList.toggle("hidden", !!currentUser);
+      $("#drawerSignedIn").classList.toggle("hidden", !currentUser);
 
-      if (!currentUser) {
+      if (currentUser) {
+        const displayName = currentUser.name || currentUser.full_name || "DO customer";
+        const role = currentUser.role === "admin" ? "Administrator account" : "DO customer account";
 
-        drawerContent.innerHTML = `
-          <button class="drawer-action" data-open-auth="login">
-            Sign in <span>↗</span>
-          </button>
-
-          <button class="drawer-action" data-open-auth="register">
-            Create account <span>↗</span>
-          </button>
-        `;
-
-        modalContent.innerHTML = `
-          <p class="modal-copy">
-            Sign in or create your DO customer account
-            securely using your Google account.
-          </p>
-
-          <a class="gold-button full-button" href="/auth/google">
-            CONTINUE WITH GOOGLE ↗
-          </a>
-
-          <p class="notice">
-            New customers are registered automatically
-            after successful Google verification.
-          </p>
-        `;
-
-        $$("[data-open-auth]").forEach(button => {
-
-          button.addEventListener("click", () => {
-            openModal($("#authModal"));
-          });
-
-        });
-
-        return;
+        $("#accountName").textContent = displayName;
+        $("#accountEmail").textContent = currentUser.email || "";
+        $("#accountRole").textContent = role;
+        $("#drawerUserName").textContent = displayName;
+        $("#drawerUserEmail").textContent = currentUser.email || "";
+        $("#drawerUserRole").textContent = role;
       }
-
-      const name = currentUser.name ||
-        currentUser.email;
-
-      drawerContent.innerHTML = `
-        <div class="account-summary">
-          <p class="eyebrow">SIGNED IN</p>
-          <h3>${escapeHTML(name)}</h3>
-          <p>${escapeHTML(currentUser.email)}</p>
-          <p class="account-role">
-            ${currentUser.role === "admin"
-              ? "DO ADMINISTRATOR"
-              : "DO CUSTOMER"}
-          </p>
-        </div>
-
-        <button class="drawer-action" id="accountLogoutButton">
-          Sign out <span>↗</span>
-        </button>
-
-        ${currentUser.role === "admin"
-          ? `<a class="drawer-action" href="/admin/">
-               Admin dashboard <span>↗</span>
-             </a>`
-          : ""}
-      `;
-
-      modalContent.innerHTML = `
-        <p class="modal-copy">
-          You are signed in to your DO account.
-        </p>
-
-        <h3>${escapeHTML(name)}</h3>
-
-        <p class="modal-copy">
-          ${escapeHTML(currentUser.email)}
-        </p>
-
-        <button class="gold-button full-button"
-          id="modalLogoutButton"
-          type="button">
-          SIGN OUT
-        </button>
-      `;
-
-      $("#accountLogoutButton")?.addEventListener(
-        "click",
-        logout
-      );
-
-      $("#modalLogoutButton")?.addEventListener(
-        "click",
-        logout
-      );
-
     }
 
-    function escapeHTML(value) {
-
-      return String(value).replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-      })[char]);
-
-    }
-
-    async function loadCurrentUser() {
-
+    async function loadAccount() {
       try {
-
         const response = await fetch("/api/me", {
           method: "GET",
           credentials: "same-origin",
+          headers: { "Accept": "application/json" },
           cache: "no-store"
         });
 
         if (!response.ok) {
-
-          currentUser = null;
-
-          updateAccountInterface();
-
+          updateAccountUI(null);
           return;
-
         }
 
         const data = await response.json();
-
-        currentUser = data.authenticated
-          ? data.user
-          : null;
-
-        updateAccountInterface();
-
+        updateAccountUI(data.authenticated && data.user ? data.user : null);
       } catch (error) {
-
-        console.error("Account loading failed:", error);
-
+        console.error("DO account status:", error);
+        updateAccountUI(null);
       }
-
     }
 
     async function logout() {
+      const buttons = [$("#logoutButton"), $("#drawerLogoutButton")].filter(Boolean);
+      buttons.forEach(button => { button.disabled = true; });
 
       try {
-
         const response = await fetch("/auth/logout", {
           method: "POST",
-          credentials: "same-origin"
+          credentials: "same-origin",
+          headers: { "Accept": "application/json" }
         });
 
         if (!response.ok) {
-
-          alert("Sign out failed. Please try again.");
-
-          return;
-
+          throw new Error("The server did not confirm sign out.");
         }
 
-        currentUser = null;
-
-        closeModal();
-
-        closeDrawers();
-
-        updateAccountInterface();
-
-        window.location.reload();
-
+        window.location.assign("/");
       } catch (error) {
-
-        console.error("Logout failed:", error);
-
-        alert("Unable to sign out. Please try again.");
-
+        buttons.forEach(button => { button.disabled = false; });
+        showStatus($("#accountStatus"), error.message || "Unable to sign out. Please try again.", true);
       }
-
     }
 
-    /* PRODUCT LOADING */
+    $("#logoutButton").addEventListener("click", logout);
+    $("#drawerLogoutButton").addEventListener("click", logout);
+
+    $("#drawerAccountButton").addEventListener("click", () => {
+      closeDrawers();
+      openModal(authModal);
+    });
+
+    $("#myBidsButton").addEventListener("click", async () => {
+      const status = $("#accountStatus");
+      showStatus(status, "Loading your bid history…");
+      try {
+        const response = await fetch("/api/my-bids", {
+          credentials: "same-origin",
+          headers: { "Accept": "application/json" }
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Could not load bid history.");
+        const bids = data.bids || [];
+        showStatus(status, bids.length
+          ? bids.map(bid => `${bid.product_name}: ${money(bid.amount)} (${bid.product_status})`).join(" · ")
+          : "You have not placed any bids yet.");
+      } catch (error) {
+        showStatus(status, error.message, true);
+      }
+    });
+
+    function setProductCardUnavailable(card, message) {
+      const state = $(".product-live-state", card);
+      const button = $(".bid-open", card);
+      state.textContent = message;
+      state.classList.remove("live");
+      state.classList.add("closed");
+      button.disabled = true;
+      button.innerHTML = 'BID UNAVAILABLE <span>↗</span>';
+    }
 
     async function loadProducts() {
-
       try {
-
         const response = await fetch("/api/products", {
           credentials: "same-origin",
+          headers: { "Accept": "application/json" },
           cache: "no-store"
         });
 
-        if (!response.ok) return;
+        if (!response.ok) throw new Error("Product service unavailable.");
 
         const data = await response.json();
+        const products = Array.isArray(data.products) ? data.products : [];
 
-        products = Array.isArray(data.products)
-          ? data.products
-          : [];
+        products.forEach(product => productsBySlug.set(product.slug, product));
 
+        $$(".product-card[data-product-slug]").forEach(card => {
+          const product = productsBySlug.get(card.dataset.productSlug);
+          if (!product) {
+            setProductCardUnavailable(card, "Not currently listed in the live auction system.");
+            return;
+          }
+
+          const priceLabel = $(".product-price-label", card);
+          const price = $(".product-price", card);
+          const state = $(".product-live-state", card);
+          const button = $(".bid-open", card);
+
+          const startingPrice = Number(product.starting_price || 0);
+          const currentBid = Number(product.current_bid || 0);
+          const referenceBid = Math.max(startingPrice, currentBid);
+
+          priceLabel.textContent = currentBid > 0 ? "Current highest bid" : "Starting bid";
+          price.textContent = money(currentBid > 0 ? currentBid : startingPrice);
+
+          const now = Date.now();
+          const start = Date.parse(product.auction_start);
+          const end = Date.parse(product.auction_end);
+          const isLive = product.status === "live" &&
+            Number.isFinite(start) && Number.isFinite(end) &&
+            now >= start && now < end;
+
+          if (isLive) {
+            state.textContent = `LIVE · Next valid bid ${money(referenceBid + 1)}`;
+            state.classList.add("live");
+            state.classList.remove("closed");
+            button.disabled = false;
+            button.innerHTML = 'PLACE A BID <span>↗</span>';
+            button.dataset.productId = product.id;
+            button.dataset.productName = product.name;
+            button.dataset.nextBid = String(referenceBid + 1);
+            button.dataset.slug = product.slug;
+          } else {
+            const reason = product.status !== "live"
+              ? `Auction status: ${product.status}.`
+              : now < start ? "Auction has not started yet." : "Auction has ended.";
+            setProductCardUnavailable(card, reason);
+          }
+        });
       } catch (error) {
-
-        console.error("Product loading failed:", error);
-
+        console.error("DO product list:", error);
+        $$(".product-card").forEach(card => {
+          setProductCardUnavailable(card, "Live auction information could not be loaded.");
+        });
       }
-
     }
-
-    function findProduct(button) {
-
-      const slug = button.dataset.slug;
-
-      const name = button.dataset.product;
-
-      return products.find(product =>
-        product.slug === slug ||
-        String(product.name || "").toLowerCase() ===
-        String(name || "").toLowerCase()
-      );
-
-    }
-
-    /* BIDDING */
 
     $$(".bid-open").forEach(button => {
+      button.addEventListener("click", () => {
+        if (button.disabled) return;
 
-      button.addEventListener("click", async () => {
-
-        await loadProducts();
-
-        const product = findProduct(button);
-
-        if (!product) {
-
-          alert(
-            "This product is not yet available for bidding. Please check again later."
-          );
-
+        if (!currentUser) {
+          showStatus($("#authStatus"), "Sign in or create your DO customer account before bidding.");
+          openModal(authModal);
           return;
-
         }
 
-        if (product.status !== "live") {
+        selectedProduct = {
+          id: button.dataset.productId,
+          name: button.dataset.productName,
+          slug: button.dataset.slug,
+          nextBid: Number(button.dataset.nextBid)
+        };
 
-          alert(
-            "Bidding is not currently open for this product."
-          );
+        $("#bidProductName").textContent = selectedProduct.name;
+        $("#bidDetails").textContent =
+          `The next valid bid is exactly ${money(selectedProduct.nextBid)}. Each accepted bid increases the current amount by ₹1.`;
 
-          return;
+        const input = $("#bidAmount");
+        input.value = selectedProduct.nextBid;
+        input.min = selectedProduct.nextBid;
+        input.max = selectedProduct.nextBid;
+        input.step = "1";
 
-        }
-
-        selectedProduct = product;
-
-        const highestBid = Number(
-          product.current_bid || product.starting_price || 0
-        );
-
-        const minimumBid = highestBid + 1;
-
-        $("#bidProductName").textContent =
-          product.name +
-          " · Current highest bid ₹" +
-          highestBid.toLocaleString("en-IN");
-
-        $("#bidAmount").value = minimumBid;
-
-        $("#bidAmount").min = minimumBid;
-
-        $("#bidMessage").textContent =
-          "Minimum next bid: ₹" +
-          minimumBid.toLocaleString("en-IN");
-
-        openModal($("#bidModal"));
-
+        showStatus($("#bidStatus"), "");
+        openModal(bidModal);
       });
-
     });
 
-    $("#submitBidButton").addEventListener("click", async () => {
+    $("#bidForm").addEventListener("submit", async event => {
+      event.preventDefault();
 
-      if (!selectedProduct) {
-
-        $("#bidMessage").textContent =
-          "Please select a valid auction.";
-
-        return;
-
-      }
-
-      if (!currentUser) {
-
-        closeModal();
-
-        openModal($("#authModal"));
-
-        $("#bidMessage").textContent =
-          "Please sign in before placing a bid.";
-
-        return;
-
-      }
-
+      const status = $("#bidStatus");
+      const button = $("#submitBidButton");
       const amount = Number($("#bidAmount").value);
 
-      const minimum = Number(
-        $("#bidAmount").min
-      );
-
-      if (
-        !Number.isSafeInteger(amount) ||
-        amount < minimum
-      ) {
-
-        $("#bidMessage").textContent =
-          "Please enter a valid bid of at least ₹" +
-          minimum.toLocaleString("en-IN") + ".";
-
+      if (!currentUser) {
+        closeModals();
+        openModal(authModal);
+        showStatus($("#authStatus"), "Sign in to your DO customer account before bidding.");
         return;
-
       }
 
-      const button = $("#submitBidButton");
+      if (!selectedProduct || amount !== selectedProduct.nextBid) {
+        showStatus(status, "The bid must be exactly " + money(selectedProduct?.nextBid) + ".", true);
+        return;
+      }
 
       button.disabled = true;
-
-      button.textContent = "SUBMITTING...";
+      button.textContent = "SUBMITTING…";
+      showStatus(status, "Submitting your bid to the DO auction system…");
 
       try {
-
         const response = await fetch("/api/bids", {
-
           method: "POST",
-
           credentials: "same-origin",
-
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Accept": "application/json"
           },
-
           body: JSON.stringify({
             product_id: selectedProduct.id,
             amount
           })
-
         });
 
-        const result = await response.json();
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || "The bid was not accepted.");
 
-        if (response.status === 401) {
-
-          currentUser = null;
-
-          updateAccountInterface();
-
-          closeModal();
-
-          openModal($("#authModal"));
-
-          return;
-
-        }
-
-        if (!response.ok) {
-
-          $("#bidMessage").textContent =
-            result.error || "Your bid could not be submitted.";
-
-          return;
-
-        }
-
-        $("#bidMessage").textContent =
-          "Your bid of ₹" +
-          amount.toLocaleString("en-IN") +
-          " was successfully submitted.";
-
+        showStatus(status, data.message || "Your bid was accepted by the DO auction system.");
         await loadProducts();
-
       } catch (error) {
-
-        console.error("Bid submission failed:", error);
-
-        $("#bidMessage").textContent =
-          "Network error. Please try again.";
-
+        showStatus(status, error.message || "Unable to submit your bid.", true);
       } finally {
-
         button.disabled = false;
-
-        button.textContent = "SUBMIT BID";
-
+        button.textContent = "SUBMIT LIVE BID";
       }
-
     });
 
-    /* JOURNAL SLIDER */
-
-    const slider = $("#journalSlider");
-
+    const journalSlider = $("#journalSlider");
     $("#journalPrevious").addEventListener("click", () => {
-
-      slider.scrollBy({
-        left: -slider.clientWidth * 0.8,
-        behavior: "smooth"
-      });
-
+      journalSlider.scrollBy({ left: -journalSlider.clientWidth * 0.8, behavior: "smooth" });
     });
-
     $("#journalNext").addEventListener("click", () => {
-
-      slider.scrollBy({
-        left: slider.clientWidth * 0.8,
-        behavior: "smooth"
-      });
-
+      journalSlider.scrollBy({ left: journalSlider.clientWidth * 0.8, behavior: "smooth" });
     });
-
-    /* FOOTER YEAR */
 
     $("#year").textContent = new Date().getFullYear();
 
-    /* INITIALIZE */
+    // The OAuth Worker redirects a successful customer login to /#account.
+    if (window.location.hash === "#account") {
+      openModal(authModal);
+    }
 
-    loadCurrentUser();
-
+    loadAccount();
     loadProducts();
-
   })();
   </script>
-
 </body>
-                </html>
+</html>
