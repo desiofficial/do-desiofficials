@@ -11,6 +11,7 @@ const STATE_COOKIE = "do_oauth_state";
 const SESSION_DURATION = 7 * 24 * 60 * 60;
 
 const encoder = new TextEncoder();
+const decoder = new TextDecoder();
 
 const JSON_HEADERS = {
   "Content-Type": "application/json; charset=utf-8",
@@ -18,8 +19,18 @@ const JSON_HEADERS = {
 };
 
 /* =========================================
-   SECURITY HELPERS
+   GENERAL HELPERS
 ========================================= */
+
+function json(data, status = 200, extraHeaders = {}) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      ...JSON_HEADERS,
+      ...extraHeaders
+    }
+  });
+}
 
 function base64url(data) {
   const bytes = data instanceof Uint8Array
@@ -80,11 +91,8 @@ function cookie(name, value, maxAge) {
   return `${name}=${value}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${maxAge}`;
 }
 
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: JSON_HEADERS
-  });
+function clearCookie(name) {
+  return `${name}=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0`;
 }
 
 function isAdmin(email) {
@@ -105,6 +113,23 @@ function slugify(value) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
     .slice(0, 100);
+}
+
+function errorMessage(error) {
+  return error?.message || "Something went wrong.";
+}
+
+function checkOrigin(request) {
+  const origin = request.headers.get("Origin");
+
+  if (!origin) return false;
+
+  try {
+    return new URL(origin).origin ===
+      new URL(request.url).origin;
+  } catch {
+    return false;
+  }
 }
 
 async function readJSON(request) {
@@ -136,23 +161,6 @@ async function readJSON(request) {
   }
 }
 
-function checkOrigin(request) {
-  const origin = request.headers.get("Origin");
-
-  if (!origin) return false;
-
-  try {
-    return new URL(origin).origin ===
-      new URL(request.url).origin;
-  } catch {
-    return false;
-  }
-}
-
-function errorMessage(error) {
-  return error?.message || "Something went wrong.";
-}
-
 function databaseError(error) {
   const message = errorMessage(error);
 
@@ -161,7 +169,7 @@ function databaseError(error) {
     message.includes("PRIMARY KEY")
   ) {
     return json({
-      error: "This slug or record already exists."
+      error: "This record already exists."
     }, 409);
   }
 
@@ -230,7 +238,6 @@ async function verifySession(token, env) {
     if (parts.length !== 2) return null;
 
     const [payload, signature] = parts;
-
     const key = await getSigningKey(env);
 
     const valid = await crypto.subtle.verify(
@@ -243,9 +250,7 @@ async function verifySession(token, env) {
     if (!valid) return null;
 
     const user = JSON.parse(
-      new TextDecoder().decode(
-        decodeBase64url(payload)
-      )
+      decoder.decode(decodeBase64url(payload))
     );
 
     if (
@@ -296,6 +301,110 @@ async function requireAdmin(request, env) {
   }
 
   return { user };
+}
+
+/* =========================================
+   CUSTOMER DATABASE
+   Uses the existing customers table:
+   id, collector_id, full_name, email,
+   phone, email_verified, account_status,
+   created_at
+========================================= */
+
+async function saveGoogleCustomer(env, googleUser) {
+  const email = String(
+    googleUser.email || ""
+  ).toLowerCase();
+
+  const collectorId = String(
+    googleUser.sub || ""
+  );
+
+  const fullName = String(
+    googleUser.name || ""
+  );
+
+  if (!email || !collectorId) {
+    throw new Error("Google customer information is incomplete.");
+  }
+
+  /*
+    Find an existing customer by Google collector ID
+    or email. This avoids creating a second account
+    when an existing customer signs in with Google.
+  */
+
+  const existing = await env.DB.prepare(`
+    SELECT
+      id,
+      collector_id,
+      full_name,
+      email,
+      phone,
+      email_verified,
+      account_status,
+      created_at
+    FROM customers
+    WHERE collector_id = ?
+       OR email = ?
+    LIMIT 1
+  `).bind(
+    collectorId,
+    email
+  ).first();
+
+  if (existing) {
+    await env.DB.prepare(`
+      UPDATE customers
+      SET
+        collector_id = ?,
+        full_name = ?,
+        email = ?,
+        email_verified = 1
+      WHERE id = ?
+    `).bind(
+      collectorId,
+      fullName,
+      email,
+      existing.id
+    ).run();
+
+    return {
+      id: existing.id,
+      fullName,
+      email,
+      phone: existing.phone || "",
+      accountStatus: existing.account_status || ""
+    };
+  }
+
+  const customerId = randomString(18);
+
+  await env.DB.prepare(`
+    INSERT INTO customers (
+      id,
+      collector_id,
+      full_name,
+      email,
+      email_verified,
+      account_status,
+      created_at
+    )
+    VALUES (?, ?, ?, ?, 1, 'active', CURRENT_TIMESTAMP)
+  `).bind(
+    customerId,
+    collectorId,
+    fullName,
+    email
+  ).run();
+
+  return {
+    id: customerId,
+    fullName,
+    email,
+    phone: "",
+    accountStatus: "active"
+  };
 }
 
 /* =========================================
@@ -382,6 +491,16 @@ async function googleCallback(request, env) {
     );
   }
 
+  if (
+    !env.GOOGLE_CLIENT_ID ||
+    !env.GOOGLE_CLIENT_SECRET
+  ) {
+    return new Response(
+      "Google login configuration is incomplete.",
+      { status: 500 }
+    );
+  }
+
   try {
     const tokenResponse = await fetch(
       "https://oauth2.googleapis.com/token",
@@ -402,6 +521,11 @@ async function googleCallback(request, env) {
     );
 
     if (!tokenResponse.ok) {
+      console.error(
+        "Google token exchange failed:",
+        await tokenResponse.text()
+      );
+
       return new Response(
         "Google login failed. Please try again.",
         { status: 401 }
@@ -480,43 +604,14 @@ async function googleCallback(request, env) {
       );
     }
 
-    const customerId = randomString(18);
-
-    const customer = await env.DB.prepare(`
-      INSERT INTO customers (
-        id,
-        google_id,
-        email,
-        name,
-        picture,
-        created_at,
-        last_login
-      )
-      VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-
-      ON CONFLICT(google_id)
-      DO UPDATE SET
-        email = excluded.email,
-        name = excluded.name,
-        picture = excluded.picture,
-        last_login = CURRENT_TIMESTAMP
-
-      RETURNING id
-    `).bind(
-      customerId,
-      googleUser.sub,
-      email,
-      googleUser.name || "",
-      googleUser.picture || ""
-    ).first();
-
-    if (!customer?.id) {
-      throw new Error("Customer account could not be created.");
-    }
+    const customer = await saveGoogleCustomer(
+      env,
+      googleUser
+    );
 
     const session = await createSession({
       email,
-      name: googleUser.name || "",
+      name: customer.fullName,
       picture: googleUser.picture || "",
       customerId: customer.id
     }, env);
@@ -532,12 +627,16 @@ async function googleCallback(request, env) {
 
     headers.append(
       "Set-Cookie",
-      cookie(SESSION_COOKIE, session, SESSION_DURATION)
+      cookie(
+        SESSION_COOKIE,
+        session,
+        SESSION_DURATION
+      )
     );
 
     headers.append(
       "Set-Cookie",
-      cookie(STATE_COOKIE, "", 0)
+      clearCookie(STATE_COOKIE)
     );
 
     return new Response(null, {
@@ -679,7 +778,9 @@ async function getProduct(env, slug) {
   `).bind(slug).first();
 
   if (!product) {
-    return json({ error: "Product not found." }, 404);
+    return json({
+      error: "Product not found."
+    }, 404);
   }
 
   return json({ product });
@@ -694,16 +795,20 @@ async function createProduct(request, env) {
   const imageUrl = String(body.image_url || "").trim();
 
   const startingPrice = Number(body.starting_price);
+  const price = Number(body.price ?? body.starting_price);
 
   const auctionStart = body.auction_start
     ? new Date(body.auction_start)
     : new Date();
 
   const auctionEnd = new Date(body.auction_end);
-
   const slug = slugify(body.slug || name);
 
-  const status = ["draft", "live", "closed"].includes(body.status)
+  const status = [
+    "draft",
+    "live",
+    "closed"
+  ].includes(body.status)
     ? body.status
     : "draft";
 
@@ -712,6 +817,8 @@ async function createProduct(request, env) {
     !slug ||
     !Number.isSafeInteger(startingPrice) ||
     startingPrice < 0 ||
+    !Number.isSafeInteger(price) ||
+    price < 0 ||
     Number.isNaN(auctionStart.getTime()) ||
     Number.isNaN(auctionEnd.getTime()) ||
     auctionEnd <= auctionStart ||
@@ -755,7 +862,7 @@ async function createProduct(request, env) {
     `).bind(
       id,
       name,
-      startingPrice,
+      price,
       slug,
       description,
       category,
@@ -775,7 +882,7 @@ async function createProduct(request, env) {
     product: {
       id,
       name,
-      price: startingPrice,
+      price,
       slug,
       description,
       category,
@@ -790,7 +897,9 @@ async function createProduct(request, env) {
 
 async function updateProduct(request, env, id) {
   if (!isValidId(id)) {
-    return json({ error: "Invalid product ID." }, 400);
+    return json({
+      error: "Invalid product ID."
+    }, 400);
   }
 
   const body = await readJSON(request);
@@ -802,10 +911,14 @@ async function updateProduct(request, env, id) {
   `).bind(id).first();
 
   if (!existing) {
-    return json({ error: "Product not found." }, 404);
+    return json({
+      error: "Product not found."
+    }, 404);
   }
 
-  const name = String(body.name ?? existing.name).trim();
+  const name = String(
+    body.name ?? existing.name
+  ).trim();
 
   const description = String(
     body.description ?? existing.description
@@ -821,6 +934,10 @@ async function updateProduct(request, env, id) {
 
   const startingPrice = Number(
     body.starting_price ?? existing.starting_price
+  );
+
+  const price = Number(
+    body.price ?? existing.price
   );
 
   const auctionStart = new Date(
@@ -840,6 +957,8 @@ async function updateProduct(request, env, id) {
     !slug ||
     !Number.isSafeInteger(startingPrice) ||
     startingPrice < 0 ||
+    !Number.isSafeInteger(price) ||
+    price < 0 ||
     Number.isNaN(auctionStart.getTime()) ||
     Number.isNaN(auctionEnd.getTime()) ||
     auctionEnd <= auctionStart ||
@@ -880,7 +999,7 @@ async function updateProduct(request, env, id) {
       WHERE id = ?
     `).bind(
       name,
-      startingPrice,
+      price,
       slug,
       description,
       category,
@@ -904,7 +1023,9 @@ async function updateProduct(request, env, id) {
 
 async function deleteProduct(env, id) {
   if (!isValidId(id)) {
-    return json({ error: "Invalid product ID." }, 400);
+    return json({
+      error: "Invalid product ID."
+    }, 400);
   }
 
   const product = await env.DB.prepare(`
@@ -914,7 +1035,9 @@ async function deleteProduct(env, id) {
   `).bind(id).first();
 
   if (!product) {
-    return json({ error: "Product not found." }, 404);
+    return json({
+      error: "Product not found."
+    }, 404);
   }
 
   const bids = await env.DB.prepare(`
@@ -1097,7 +1220,9 @@ async function getArticle(env, slug) {
   `).bind(slug).first();
 
   if (!article) {
-    return json({ error: "Article not found." }, 404);
+    return json({
+      error: "Article not found."
+    }, 404);
   }
 
   return json({ article });
@@ -1175,7 +1300,9 @@ async function createArticle(request, env, adminEmail) {
 
 async function updateArticle(request, env, id) {
   if (!isValidId(id)) {
-    return json({ error: "Invalid article ID." }, 400);
+    return json({
+      error: "Invalid article ID."
+    }, 400);
   }
 
   const body = await readJSON(request);
@@ -1187,11 +1314,18 @@ async function updateArticle(request, env, id) {
   `).bind(id).first();
 
   if (!existing) {
-    return json({ error: "Article not found." }, 404);
+    return json({
+      error: "Article not found."
+    }, 404);
   }
 
-  const title = String(body.title ?? existing.title).trim();
-  const content = String(body.content ?? existing.content);
+  const title = String(
+    body.title ?? existing.title
+  ).trim();
+
+  const content = String(
+    body.content ?? existing.content
+  );
 
   const imageUrl = String(
     body.image_url ?? existing.image_url
@@ -1257,7 +1391,9 @@ async function updateArticle(request, env, id) {
 
 async function deleteArticle(env, id) {
   if (!isValidId(id)) {
-    return json({ error: "Invalid article ID." }, 400);
+    return json({
+      error: "Invalid article ID."
+    }, 400);
   }
 
   const result = await env.DB.prepare(`
@@ -1266,7 +1402,9 @@ async function deleteArticle(env, id) {
   `).bind(id).run();
 
   if (!result.meta || result.meta.changes !== 1) {
-    return json({ error: "Article not found." }, 404);
+    return json({
+      error: "Article not found."
+    }, 404);
   }
 
   return json({ success: true });
@@ -1316,15 +1454,22 @@ async function adminOverview(env) {
   });
 }
 
+/*
+  Corrected to use the real customer columns.
+  Phone numbers and account statuses are preserved.
+*/
+
 async function adminCustomers(env) {
   const result = await env.DB.prepare(`
     SELECT
       id,
+      collector_id,
+      full_name,
       email,
-      name,
-      picture,
-      created_at,
-      last_login
+      phone,
+      email_verified,
+      account_status,
+      created_at
     FROM customers
     ORDER BY created_at DESC
   `).all();
@@ -1346,7 +1491,7 @@ async function adminBids(env) {
       p.name AS product_name,
       p.slug AS product_slug,
       c.id AS customer_id,
-      c.name AS customer_name,
+      c.full_name AS customer_name,
       c.email AS customer_email
     FROM bids b
     JOIN products p ON p.id = b.product_id
@@ -1421,6 +1566,7 @@ async function handleRequest(request, env) {
       SELECT COUNT(*) AS total
       FROM sqlite_master
       WHERE type = 'table'
+        AND name NOT LIKE 'sqlite_%'
     `).first();
 
     return json({
@@ -1456,6 +1602,7 @@ async function handleRequest(request, env) {
     return json({
       authenticated: true,
       user: {
+        customerId: user.customerId,
         email: user.email,
         name: user.name,
         picture: user.picture,
@@ -1470,14 +1617,15 @@ async function handleRequest(request, env) {
 
   if (path === "/auth/logout" && method === "POST") {
     if (!checkOrigin(request)) {
-      return json({ error: "Invalid request origin." }, 403);
+      return json({
+        error: "Invalid request origin."
+      }, 403);
     }
 
     return new Response(null, {
-      status: 302,
+      status: 204,
       headers: {
-        "Location": "/",
-        "Set-Cookie": cookie(SESSION_COOKIE, "", 0)
+        "Set-Cookie": clearCookie(SESSION_COOKIE)
       }
     });
   }
@@ -1499,7 +1647,9 @@ async function handleRequest(request, env) {
         path.slice("/api/products/".length)
       );
     } catch {
-      return json({ error: "Invalid product slug." }, 400);
+      return json({
+        error: "Invalid product slug."
+      }, 400);
     }
 
     return getProduct(env, slug);
@@ -1509,7 +1659,9 @@ async function handleRequest(request, env) {
 
   if (path === "/api/bids" && method === "POST") {
     if (!checkOrigin(request)) {
-      return json({ error: "Invalid request origin." }, 403);
+      return json({
+        error: "Invalid request origin."
+      }, 403);
     }
 
     return placeBid(request, env);
@@ -1522,7 +1674,10 @@ async function handleRequest(request, env) {
 
     if (auth.error) return auth.error;
 
-    return getMyBids(env, auth.user.customerId);
+    return getMyBids(
+      env,
+      auth.user.customerId
+    );
   }
 
   /* PUBLIC ARTICLES */
@@ -1542,13 +1697,15 @@ async function handleRequest(request, env) {
         path.slice("/api/articles/".length)
       );
     } catch {
-      return json({ error: "Invalid article slug." }, 400);
+      return json({
+        error: "Invalid article slug."
+      }, 400);
     }
 
     return getArticle(env, slug);
   }
 
-  /* ALL ADMIN ROUTES */
+  /* ADMIN ROUTES */
 
   if (path.startsWith("/api/admin/")) {
     const auth = await requireAdmin(request, env);
@@ -1609,11 +1766,14 @@ async function handleRequest(request, env) {
       try {
         id = decodeURIComponent(productMatch[1]);
       } catch {
-        return json({ error: "Invalid product ID." }, 400);
+        return json({
+          error: "Invalid product ID."
+        }, 400);
       }
 
       if (
-        ["PUT", "PATCH"].includes(method)
+        method === "PUT" ||
+        method === "PATCH"
       ) {
         return updateProduct(request, env, id);
       }
@@ -1651,11 +1811,14 @@ async function handleRequest(request, env) {
       try {
         id = decodeURIComponent(articleMatch[1]);
       } catch {
-        return json({ error: "Invalid article ID." }, 400);
+        return json({
+          error: "Invalid article ID."
+        }, 400);
       }
 
       if (
-        ["PUT", "PATCH"].includes(method)
+        method === "PUT" ||
+        method === "PATCH"
       ) {
         return updateArticle(request, env, id);
       }
