@@ -305,10 +305,6 @@ async function requireAdmin(request, env) {
 
 /* =========================================
    CUSTOMER DATABASE
-   Uses the existing customers table:
-   id, collector_id, full_name, email,
-   phone, email_verified, account_status,
-   created_at
 ========================================= */
 
 async function saveGoogleCustomer(env, googleUser) {
@@ -324,15 +320,13 @@ async function saveGoogleCustomer(env, googleUser) {
     googleUser.name || ""
   );
 
+  const profilePhoto = String(
+    googleUser.picture || ""
+  );
+
   if (!email || !collectorId) {
     throw new Error("Google customer information is incomplete.");
   }
-
-  /*
-    Find an existing customer by Google collector ID
-    or email. This avoids creating a second account
-    when an existing customer signs in with Google.
-  */
 
   const existing = await env.DB.prepare(`
     SELECT
@@ -343,7 +337,9 @@ async function saveGoogleCustomer(env, googleUser) {
       phone,
       email_verified,
       account_status,
-      created_at
+      created_at,
+      member_id,
+      profile_photo_url
     FROM customers
     WHERE collector_id = ?
        OR email = ?
@@ -360,12 +356,15 @@ async function saveGoogleCustomer(env, googleUser) {
         collector_id = ?,
         full_name = ?,
         email = ?,
-        email_verified = 1
+        email_verified = 1,
+        profile_photo_url = ?,
+        last_login_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `).bind(
       collectorId,
       fullName,
       email,
+      profilePhoto,
       existing.id
     ).run();
 
@@ -374,7 +373,9 @@ async function saveGoogleCustomer(env, googleUser) {
       fullName,
       email,
       phone: existing.phone || "",
-      accountStatus: existing.account_status || ""
+      accountStatus: existing.account_status || "active",
+      memberId: existing.member_id || null,
+      profilePhoto
     };
   }
 
@@ -388,14 +389,20 @@ async function saveGoogleCustomer(env, googleUser) {
       email,
       email_verified,
       account_status,
-      created_at
+      created_at,
+      profile_photo_url,
+      last_login_at
     )
-    VALUES (?, ?, ?, ?, 1, 'active', CURRENT_TIMESTAMP)
+    VALUES (
+      ?, ?, ?, ?, 1, 'active',
+      CURRENT_TIMESTAMP, ?, CURRENT_TIMESTAMP
+    )
   `).bind(
     customerId,
     collectorId,
     fullName,
-    email
+    email,
+    profilePhoto
   ).run();
 
   return {
@@ -403,7 +410,9 @@ async function saveGoogleCustomer(env, googleUser) {
     fullName,
     email,
     phone: "",
-    accountStatus: "active"
+    accountStatus: "active",
+    memberId: null,
+    profilePhoto
   };
 }
 
@@ -612,7 +621,7 @@ async function googleCallback(request, env) {
     const session = await createSession({
       email,
       name: customer.fullName,
-      picture: googleUser.picture || "",
+      picture: customer.profilePhoto,
       customerId: customer.id
     }, env);
 
@@ -652,6 +661,249 @@ async function googleCallback(request, env) {
       { status: 500 }
     );
   }
+}
+
+/* =========================================
+   DO MEMBERSHIP SYSTEM
+========================================= */
+
+function generateDOMemberID() {
+  const bytes = crypto.getRandomValues(
+    new Uint8Array(5)
+  );
+
+  const randomPart = Array.from(bytes)
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase();
+
+  return `DO${new Date().getFullYear()}-${randomPart}`;
+}
+
+async function getDOMembership(request, env) {
+  const auth = await requireCustomer(request, env);
+
+  if (auth.error) return auth.error;
+
+  const customerId = auth.user.customerId;
+
+  const result = await env.DB.prepare(`
+    SELECT
+      c.id,
+      c.full_name,
+      c.email,
+      c.phone,
+      c.member_id,
+      c.profile_photo_url,
+      c.account_status,
+      c.created_at,
+      m.id AS membership_id,
+      m.membership_level,
+      m.membership_status,
+      m.joined_at,
+      m.expires_at
+    FROM customers c
+    LEFT JOIN memberships m
+      ON m.customer_id = c.id
+      AND m.membership_status = 'ACTIVE'
+    WHERE c.id = ?
+    LIMIT 1
+  `).bind(customerId).first();
+
+  if (!result) {
+    return json({
+      success: false,
+      error: "Customer account not found."
+    }, 404);
+  }
+
+  return json({
+    success: true,
+
+    customer: {
+      id: result.id,
+      name: result.full_name,
+      email: result.email,
+      phone: result.phone,
+      member_id: result.member_id,
+      profile_photo: result.profile_photo_url,
+      account_status: result.account_status,
+      created_at: result.created_at
+    },
+
+    membership: result.membership_id ? {
+      id: result.membership_id,
+      level: result.membership_level,
+      status: result.membership_status,
+      joined_at: result.joined_at,
+      expires_at: result.expires_at
+    } : null
+  });
+}
+
+async function joinDO(request, env) {
+  const auth = await requireCustomer(request, env);
+
+  if (auth.error) return auth.error;
+
+  const customerId = auth.user.customerId;
+
+  const account = await env.DB.prepare(`
+    SELECT
+      id,
+      member_id,
+      account_status
+    FROM customers
+    WHERE id = ?
+    LIMIT 1
+  `).bind(customerId).first();
+
+  if (!account) {
+    return json({
+      success: false,
+      error: "Customer account not found."
+    }, 404);
+  }
+
+  if (
+    account.account_status &&
+    account.account_status.toLowerCase() !== "active"
+  ) {
+    return json({
+      success: false,
+      error: "Your account is not active."
+    }, 403);
+  }
+
+  /*
+    Generate permanent Member ID.
+    The customers.member_id column has a unique index.
+  */
+
+  let memberId = account.member_id;
+
+  if (!memberId) {
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const candidate = generateDOMemberID();
+
+      try {
+        await env.DB.prepare(`
+          UPDATE customers
+          SET member_id = ?
+          WHERE id = ?
+            AND member_id IS NULL
+        `).bind(
+          candidate,
+          customerId
+        ).run();
+
+      } catch (error) {
+        if (
+          !String(error.message || "").includes("UNIQUE")
+        ) {
+          throw error;
+        }
+      }
+
+      const updated = await env.DB.prepare(`
+        SELECT member_id
+        FROM customers
+        WHERE id = ?
+      `).bind(customerId).first();
+
+      if (updated?.member_id) {
+        memberId = updated.member_id;
+        break;
+      }
+    }
+  }
+
+  if (!memberId) {
+    return json({
+      success: false,
+      error: "Member ID generation failed. Please try again."
+    }, 500);
+  }
+
+  /*
+    Check for an existing active membership.
+  */
+
+  let membership = await env.DB.prepare(`
+    SELECT *
+    FROM memberships
+    WHERE customer_id = ?
+      AND membership_status = 'ACTIVE'
+    LIMIT 1
+  `).bind(customerId).first();
+
+  if (!membership) {
+    try {
+      await env.DB.prepare(`
+        INSERT INTO memberships (
+          id,
+          customer_id,
+          membership_level,
+          membership_status,
+          joined_at,
+          created_at,
+          updated_at
+        )
+        VALUES (
+          ?,
+          ?,
+          'BASIC',
+          'ACTIVE',
+          CURRENT_TIMESTAMP,
+          CURRENT_TIMESTAMP,
+          CURRENT_TIMESTAMP
+        )
+      `).bind(
+        crypto.randomUUID(),
+        customerId
+      ).run();
+
+    } catch (error) {
+      /*
+        A concurrent request may have already
+        created the active membership.
+      */
+
+      if (
+        !String(error.message || "").includes("UNIQUE")
+      ) {
+        throw error;
+      }
+    }
+
+    membership = await env.DB.prepare(`
+      SELECT *
+      FROM memberships
+      WHERE customer_id = ?
+        AND membership_status = 'ACTIVE'
+      LIMIT 1
+    `).bind(customerId).first();
+  }
+
+  if (!membership) {
+    return json({
+      success: false,
+      error: "Membership could not be created."
+    }, 500);
+  }
+
+  return json({
+    success: true,
+    message: "Welcome to Desi Officials!",
+
+    member: {
+      member_id: memberId,
+      membership_level: membership.membership_level,
+      membership_status: membership.membership_status,
+      joined_at: membership.joined_at,
+      expires_at: membership.expires_at
+    }
+  }, 201);
 }
 
 /* =========================================
@@ -1454,11 +1706,6 @@ async function adminOverview(env) {
   });
 }
 
-/*
-  Corrected to use the real customer columns.
-  Phone numbers and account statuses are preserved.
-*/
-
 async function adminCustomers(env) {
   const result = await env.DB.prepare(`
     SELECT
@@ -1469,6 +1716,7 @@ async function adminCustomers(env) {
       phone,
       email_verified,
       account_status,
+      member_id,
       created_at
     FROM customers
     ORDER BY created_at DESC
@@ -1541,218 +1789,6 @@ async function adminArticles(env) {
   });
 }
 
-// ============================================
-// DESI OFFICIALS — CUSTOMER MEMBERSHIP SYSTEM
-// ============================================
-
-function generateDOMemberID() {
-    const bytes = crypto.getRandomValues(new Uint8Array(5));
-
-    const randomPart = Array.from(bytes)
-        .map(b => b.toString(16).padStart(2, "0"))
-        .join("")
-        .toUpperCase();
-
-    const year = new Date().getFullYear();
-
-    return `DO${year}-${randomPart}`;
-}
-
-function membershipResponse(data, status = 200) {
-    return new Response(JSON.stringify(data), {
-        status,
-        headers: {
-            "Content-Type": "application/json",
-            "Cache-Control": "no-store"
-        }
-    });
-}
-
-
-// GET CUSTOMER MEMBERSHIP
-async function getDOMembership(request, env) {
-
-    const customer = await requireCustomer(request, env);
-
-    if (customer instanceof Response) return customer;
-
-    const customerId = customer.id;
-
-    const result = await env.DB.prepare(`
-        SELECT
-            c.id,
-            c.full_name,
-            c.email,
-            c.member_id,
-            c.profile_photo_url,
-            c.account_status,
-            m.membership_level,
-            m.membership_status,
-            m.joined_at,
-            m.expires_at
-        FROM customers c
-        LEFT JOIN memberships m
-            ON m.customer_id = c.id
-            AND m.membership_status = 'ACTIVE'
-        WHERE c.id = ?
-        LIMIT 1
-    `).bind(customerId).first();
-
-    if (!result) {
-        return membershipResponse({
-            success: false,
-            message: "Customer account not found."
-        }, 404);
-    }
-
-    return membershipResponse({
-        success: true,
-        customer: {
-            name: result.full_name,
-            email: result.email,
-            member_id: result.member_id,
-            profile_photo: result.profile_photo_url,
-            account_status: result.account_status
-        },
-        membership: result.membership_status ? {
-            level: result.membership_level,
-            status: result.membership_status,
-            joined_at: result.joined_at,
-            expires_at: result.expires_at
-        } : null
-    });
-}
-
-
-// JOIN DESI OFFICIALS
-async function joinDO(request, env) {
-
-    const customer = await requireCustomer(request, env);
-
-    if (customer instanceof Response) return customer;
-
-    const customerId = customer.id;
-
-    const account = await env.DB.prepare(`
-        SELECT id, member_id, account_status
-        FROM customers
-        WHERE id = ?
-        LIMIT 1
-    `).bind(customerId).first();
-
-    if (!account) {
-        return membershipResponse({
-            success: false,
-            message: "Customer account not found."
-        }, 404);
-    }
-
-    if (account.account_status &&
-        account.account_status !== "ACTIVE") {
-        return membershipResponse({
-            success: false,
-            message: "Your account is not active."
-        }, 403);
-    }
-
-    // Generate a permanent Member ID if one doesn't exist.
-    let memberId = account.member_id;
-
-    if (!memberId) {
-        memberId = generateDOMemberID();
-
-        await env.DB.prepare(`
-            UPDATE customers
-            SET member_id = ?
-            WHERE id = ?
-            AND member_id IS NULL
-        `).bind(memberId, customerId).run();
-
-        // Read again in case another request generated it first.
-        const updated = await env.DB.prepare(`
-            SELECT member_id
-            FROM customers
-            WHERE id = ?
-        `).bind(customerId).first();
-
-        memberId = updated.member_id;
-    }
-
-    // Check for existing active membership.
-    let membership = await env.DB.prepare(`
-        SELECT *
-        FROM memberships
-        WHERE customer_id = ?
-        AND membership_status = 'ACTIVE'
-        LIMIT 1
-    `).bind(customerId).first();
-
-    if (!membership) {
-
-        const membershipId = crypto.randomUUID();
-
-        try {
-            await env.DB.prepare(`
-                INSERT INTO memberships (
-                    id,
-                    customer_id,
-                    membership_level,
-                    membership_status,
-                    joined_at,
-                    created_at,
-                    updated_at
-                )
-                SELECT
-                    ?,
-                    ?,
-                    'BASIC',
-                    'ACTIVE',
-                    CURRENT_TIMESTAMP,
-                    CURRENT_TIMESTAMP,
-                    CURRENT_TIMESTAMP
-                WHERE NOT EXISTS (
-                    SELECT 1
-                    FROM memberships
-                    WHERE customer_id = ?
-                    AND membership_status = 'ACTIVE'
-                )
-            `).bind(
-                membershipId,
-                customerId,
-                customerId
-            ).run();
-
-        } catch (error) {
-            console.error("Membership creation error:", error);
-        }
-
-        membership = await env.DB.prepare(`
-            SELECT *
-            FROM memberships
-            WHERE customer_id = ?
-            AND membership_status = 'ACTIVE'
-            LIMIT 1
-        `).bind(customerId).first();
-    }
-
-    if (!membership) {
-        return membershipResponse({
-            success: false,
-            message: "Membership could not be created. Please try again."
-        }, 500);
-    }
-
-    return membershipResponse({
-        success: true,
-        message: "Welcome to Desi Officials!",
-        member: {
-            member_id: memberId,
-            membership_level: membership.membership_level,
-            membership_status: membership.membership_status,
-            joined_at: membership.joined_at
-        }
-    });
-}
 /* =========================================
    MAIN REQUEST ROUTER
 ========================================= */
@@ -1840,6 +1876,30 @@ async function handleRequest(request, env) {
         "Set-Cookie": clearCookie(SESSION_COOKIE)
       }
     });
+  }
+
+  /* =====================================
+     DO MEMBERSHIP API
+  ===================================== */
+
+  if (
+    path === "/api/membership" &&
+    method === "GET"
+  ) {
+    return getDOMembership(request, env);
+  }
+
+  if (
+    path === "/api/membership/join" &&
+    method === "POST"
+  ) {
+    if (!checkOrigin(request)) {
+      return json({
+        error: "Invalid request origin."
+      }, 403);
+    }
+
+    return joinDO(request, env);
   }
 
   /* PUBLIC PRODUCTS */
