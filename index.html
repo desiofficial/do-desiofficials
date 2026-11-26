@@ -1,664 +1,630 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="theme-color" content="#050505">
-
-    <meta name="description"
-        content="DO — DESI OFFICIALS. Beyond fashion. Discover exclusive collections, limited drops and Unique DOs.">
-
-    <title>DO — DESI OFFICIALS | Beyond Fashion</title>
-
-    <link rel="icon" href="assets/images/do-logo.png">
-
-    <link rel="stylesheet" href="assets/css/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DO — DESI OFFICIALS | Beyond Fashion</title>
+<meta name="description" content="DO — DESI OFFICIALS. Beyond fashion. Discover exclusive collections, limited drops and Unique DOs.">
+<meta name="theme-color" content="#050505">
+<meta property="og:type" content="website">
+<meta property="og:title" content="DO — DESI OFFICIALS | Beyond Fashion">
+<meta property="og:description" content="Wear the attitude. Live the DO. Exclusive collections, limited drops and Unique DOs.">
+<meta property="og:image" content="assets/images/1.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"DO — DESI OFFICIALS","email":"desioficials@gmail.com","slogan":"Beyond Fashion."}
+</script>
+<style>
+:root{--bg:#050505;--bg2:#0e0e0e;--line:#222;--fg:#f2f0eb;--mute:#8d8a84;--acc:#d7ff3a;--danger:#ff5a4f;--ease:cubic-bezier(.2,.7,.2,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{background:var(--bg);color:var(--fg);font-family:"Helvetica Neue",Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--acc);color:#000;padding:8px 14px;z-index:999}
+.skip:focus{left:8px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+.eyebrow{font-size:11px;letter-spacing:.28em;color:var(--mute);text-transform:uppercase}
+h1,h2,h3{font-weight:900;letter-spacing:-.02em;line-height:.98;text-transform:uppercase}
+h2{font-size:clamp(34px,6vw,76px);margin:14px 0 16px}
+section{padding:90px 0;border-top:1px solid var(--line)}
+.lead{color:var(--mute);max-width:560px;font-size:17px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border:1px solid var(--fg);font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;transition:.25s var(--ease)}
+.btn:hover{background:var(--fg);color:#000}
+.btn.solid{background:var(--acc);border-color:var(--acc);color:#000}
+.btn.solid:hover{background:var(--fg);border-color:var(--fg)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(5,5,5,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.logo img{height:34px;width:auto}
+.logo span{font-weight:900;letter-spacing:.1em}
+nav.main{display:flex;gap:28px}
+nav.main a{font-size:12px;letter-spacing:.2em;color:var(--mute);transition:.2s}
+nav.main a:hover,nav.main a.on{color:var(--fg)}
+.icons{display:flex;gap:6px;align-items:center}
+.ibtn{width:42px;height:42px;display:grid;place-items:center;font-size:18px;position:relative;border:1px solid transparent}
+.ibtn:hover{border-color:var(--line)}
+.count{position:absolute;top:2px;right:0;background:var(--acc);color:#000;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center;padding:0 4px}
+.count:empty,.count[data-n="0"]{display:none}
+.burger{display:none}
+.menu{position:fixed;inset:0;background:var(--bg);z-index:70;padding:24px;display:none;flex-direction:column}
+.menu.open{display:flex}
+.menu .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
+.menu a{font-size:clamp(28px,8vw,44px);font-weight:900;text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--line)}
+.menu a small{font-size:12px;color:var(--mute);margin-right:14px;letter-spacing:.2em}
+/* hero */
+#home{padding:0;border:0;min-height:100svh;display:flex;align-items:flex-end;position:relative;overflow:hidden}
+#home .bg{position:absolute;inset:0}
+#home .bg img{width:100%;height:100%;object-fit:cover;opacity:.55}
+#home .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,var(--bg) 4%,transparent 60%)}
+#home .wrap{position:relative;padding-bottom:70px;padding-top:120px}
+#home h1{font-size:clamp(52px,13vw,190px);margin:18px 0}
+#home p.tag{font-size:clamp(14px,2vw,20px);letter-spacing:.18em;margin-bottom:34px}
+.scroll{position:absolute;right:20px;bottom:24px;font-size:11px;letter-spacing:.25em;color:var(--mute)}
+/* experience */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:40px}
+.tile{background:var(--bg);padding:34px 28px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;transition:.3s var(--ease)}
+.tile:hover{background:var(--bg2)}
+.tile b{font-size:26px;text-transform:uppercase;letter-spacing:-.01em;display:block;margin:10px 0 6px}
+.tile span{color:var(--mute)}
+/* products */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:44px}
+.card{cursor:pointer;display:block;width:100%;text-align:left}
+.ph{aspect-ratio:4/5;background:var(--bg2);overflow:hidden;position:relative;border:1px solid var(--line)}
+.ph img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.card:hover .ph img{transform:scale(1.05)}
+.ph .badge{position:absolute;left:12px;top:12px;background:var(--bg);font-size:10px;letter-spacing:.2em;padding:6px 10px}
+.noimg{background:repeating-linear-gradient(45deg,#111,#111 10px,#151515 10px,#151515 20px)}
+.meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;gap:10px}
+.meta h3{font-size:20px}
+.meta .code{color:var(--mute);font-size:11px;letter-spacing:.2em}
+.price{font-weight:700;margin-top:4px}
+/* unique */
+#unique{background:var(--bg2)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 30px}
+.chip{border:1px solid var(--line);padding:8px 14px;font-size:11px;letter-spacing:.2em}
+.panel{border:1px solid var(--line);background:var(--bg);padding:28px}
+.panel .ph{aspect-ratio:1;margin-bottom:18px}
+.lock{display:flex;gap:12px;align-items:center;color:var(--mute);font-size:14px;margin-bottom:16px}
+.timer{display:flex;gap:18px;margin:12px 0 18px}
+.timer div{text-align:center}
+.timer b{font-size:30px;display:block;font-variant-numeric:tabular-nums}
+.timer span{font-size:10px;letter-spacing:.2em;color:var(--mute)}
+/* forms */
+form{display:grid;gap:14px}
+label{font-size:11px;letter-spacing:.2em;color:var(--mute);text-transform:uppercase;display:grid;gap:7px}
+input,textarea,select{background:var(--bg);border:1px solid var(--line);color:var(--fg);padding:13px 14px;font:inherit;width:100%;border-radius:0}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--acc)}
+textarea{min-height:120px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.note{font-size:12px;color:var(--mute)}
+.perks{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:40px 0}
+.perks div{background:var(--bg);padding:26px}
+.perks h3{font-size:22px;margin:8px 0}
+.perks p{color:var(--mute);font-size:14px}
+.joinbox{max-width:620px}
+/* archive */
+.filters{display:flex;gap:10px;margin:28px 0;flex-wrap:wrap}
+.filters button{border:1px solid var(--line);padding:9px 16px;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+.filters button.on{background:var(--fg);color:#000}
+.agrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.aitem .ph{aspect-ratio:3/4}
+.aitem p{font-size:12px;letter-spacing:.14em;margin-top:10px;text-transform:uppercase}
+.aitem small{color:var(--mute);letter-spacing:.14em;font-size:11px}
+/* about */
+.big{font-size:clamp(30px,5.5vw,70px);font-weight:900;text-transform:uppercase;line-height:1;letter-spacing:-.02em;max-width:1000px}
+.big em{font-style:normal;color:var(--acc)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:50px}
+.facts div{border-top:1px solid var(--line);padding-top:16px}
+.facts b{display:block;text-transform:uppercase;margin-bottom:6px}
+.facts span{color:var(--mute);font-size:14px}
+.links{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
+footer{border-top:1px solid var(--line);padding:50px 0 40px}
+footer .cols{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
+footer nav{display:flex;gap:22px;flex-wrap:wrap}
+footer nav a{font-size:12px;letter-spacing:.2em;color:var(--mute)}
+footer nav a:hover{color:var(--fg)}
+footer p{margin-top:30px;color:var(--mute);font-size:11px;letter-spacing:.2em}
+/* dialogs */
+dialog{background:var(--bg);color:var(--fg);border:1px solid var(--line);padding:0;max-width:min(960px,94vw);width:100%;max-height:92vh;overflow:auto;margin:auto}
+dialog::backdrop{background:rgba(0,0,0,.78);backdrop-filter:blur(4px)}
+.dhead{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:2}
+.dhead h3{font-size:18px}
+.dbody{padding:24px}
+.pm{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.sizes{display:flex;gap:8px;flex-wrap:wrap}
+.sizes button{min-width:50px;padding:11px 12px;border:1px solid var(--line);font-size:13px}
+.sizes button.on{background:var(--fg);color:#000;border-color:var(--fg)}
+.qty{display:inline-flex;border:1px solid var(--line)}
+.qty button{width:40px;height:40px;font-size:18px}
+.qty span{min-width:40px;display:grid;place-items:center}
+table.sg{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+table.sg td,table.sg th{border:1px solid var(--line);padding:8px;text-align:center}
+dialog.drawer{margin:0 0 0 auto;height:100vh;max-height:100vh;max-width:460px;border-width:0 0 0 1px}
+.line{display:grid;grid-template-columns:70px 1fr auto;gap:14px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center}
+.line .ph{aspect-ratio:1}
+.line b{display:block;text-transform:uppercase;font-size:14px}
+.line small{color:var(--mute)}
+.line .rm{color:var(--mute);font-size:12px;text-decoration:underline}
+.tot{display:flex;justify-content:space-between;font-size:20px;font-weight:800;margin:18px 0}
+.empty{color:var(--mute);padding:40px 0;text-align:center}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,30px);background:var(--acc);color:#000;padding:13px 20px;font-weight:700;font-size:13px;opacity:0;pointer-events:none;transition:.35s var(--ease);z-index:200;max-width:92vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.err{background:var(--danger);color:#fff}
+.gate{position:fixed;inset:0;z-index:300;background:var(--bg);display:grid;place-items:center;text-align:center;padding:20px;transition:opacity .6s var(--ease),visibility .6s}
+.gate.hide{opacity:0;visibility:hidden}
+.gate img{width:min(220px,50vw);margin:0 auto 30px}
+.gate button{border:1px solid var(--acc);color:var(--acc);padding:15px 28px;letter-spacing:.3em;font-size:12px;font-weight:700}
+.gate button:hover{background:var(--acc);color:#000}
+.rev{opacity:0;transform:translateY(26px);transition:.9s var(--ease)}
+.rev.in{opacity:1;transform:none}
+.orders li{list-style:none;border:1px solid var(--line);padding:12px 14px;margin-top:10px;font-size:13px}
+@media(max-width:900px){
+ nav.main{display:none}.burger{display:grid}
+ .grid,.tiles,.perks,.facts{grid-template-columns:1fr}
+ .split,.pm{grid-template-columns:1fr}
+ .agrid{grid-template-columns:1fr 1fr}
+ section{padding:64px 0}
+ dialog.drawer{max-width:100vw}
+ .row2{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}.rev{opacity:1;transform:none}}
+</style>
 </head>
-
 <body>
+<a class="skip" href="#collection">Skip to collection</a>
 
-    <!-- LOADING SCREEN -->
+<div class="gate" id="gate" role="dialog" aria-label="Welcome">
+  <div>
+    <img src="assets/images/do-logo.png" alt="DO — DESI OFFICIALS">
+    <button id="enter" type="button">ENTER THE FREQUENCY</button>
+  </div>
+</div>
 
-    <div id="loader">
-        <img src="assets/images/2.png" alt="DO">
-        <span>ENTER THE FREQUENCY</span>
+<header>
+  <div class="wrap bar">
+    <button class="ibtn burger" id="burger" aria-label="Open menu" aria-expanded="false">☰</button>
+    <a class="logo" href="#home" aria-label="DO — DESI OFFICIALS home"><img src="assets/images/do-logo.png" alt="DO"></a>
+    <nav class="main" aria-label="Primary">
+      <a href="#home">HOME</a><a href="#collection">COLLECTION</a><a href="#unique">UNIQUE DOs</a><a href="#archive">ARCHIVE</a><a href="#about">ABOUT</a>
+    </nav>
+    <div class="icons">
+      <button class="ibtn" id="acctBtn" aria-label="Account">◎</button>
+      <button class="ibtn" id="cartBtn" aria-label="Open cart">◇<span class="count" id="cartCount" data-n="0"></span></button>
     </div>
-
-
-    <!-- BACKGROUND EFFECTS -->
-
-    <div class="ambient-light"></div>
-    <div class="noise-overlay"></div>
-
-
-    <!-- HEADER -->
-
-    <header class="header">
-
-        <button class="menu-button" id="menuOpen"
-            aria-label="Open navigation">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <a href="#home" class="brand-logo">
-            <img
-                src="assets/images/do-logo.png"
-                alt="DO — DESI OFFICIALS"
-                class="header-logo">
-        </a>
-
-        <nav class="desktop-navigation">
-
-            <a href="#home" class="active">HOME</a>
-
-            <a href="#collection">COLLECTION</a>
-
-            <a href="#unique">UNIQUE DOs</a>
-
-            <a href="#archive">ARCHIVE</a>
-
-            <a href="#about">ABOUT</a>
-
-        </nav>
-
-        <div class="header-actions">
-
-            <a href="#account" aria-label="Account">◎</a>
-
-            <a href="#collection" aria-label="Shopping">◇</a>
-
-        </div>
-
-    </header>
-
-
-    <!-- LEFT NAVIGATION DRAWER -->
-
-    <div class="drawer-overlay" id="drawerOverlay"></div>
-
-    <aside class="navigation-drawer" id="navigationDrawer">
-
-        <button class="drawer-close" id="menuClose"
-            aria-label="Close navigation">×</button>
-
-        <img
-            src="assets/images/do-logo.png"
-            alt="DO — DESI OFFICIALS"
-            class="drawer-logo">
-
-        <p class="drawer-label">EXPLORE THE UNIVERSE</p>
-
-        <a href="#home">01 — Home</a>
-
-        <a href="#collection">02 — Collection</a>
-
-        <a href="#unique">03 — Unique DOs</a>
-
-        <a href="#archive">04 — The Archive</a>
-
-        <a href="#membership">05 — Membership</a>
-
-        <a href="#about">06 — About DO</a>
-
-        <a href="#contact">07 — Contact</a>
-
-    </aside>
-
-
-    <main>
-
-
-        <!-- HERO EXPERIENCE -->
-
-        <section class="hero" id="home">
-
-            <div class="hero-background">
-
-                <img src="assets/images/1.png"
-                    alt="DO fashion campaign">
-
-            </div>
-
-            <div class="hero-content">
-
-                <span class="eyebrow">
-                    DESI OFFICIALS / EST. DO
-                </span>
-
-                <h1>
-                    BEYOND
-                    <span>FASHION.</span>
-                </h1>
-
-                <p>
-                    WEAR THE ATTITUDE.
-                    LIVE THE DO.
-                </p>
-
-                <a href="#collection" class="primary-button">
-                    EXPLORE COLLECTION
-                    <span>↗</span>
-                </a>
-
-            </div>
-
-            <div class="hero-bottom">
-
-                <span>01 / THE NEW GENERATION</span>
-
-                <span>SCROLL TO DISCOVER ↓</span>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- EXPERIENCE NAVIGATION -->
-
-        <section class="frequency-section">
-
-            <div class="section-heading">
-
-                <span>THE DO EXPERIENCE</span>
-
-                <h2>
-                    ENTER THE <span>FREQUENCY.</span>
-                </h2>
-
-            </div>
-
-            <div class="experience-grid">
-
-                <a href="#collection" class="experience-card">
-
-                    <span class="card-number">01</span>
-
-                    <div class="experience-icon">◇</div>
-
-                    <h3>THE COLLECTION</h3>
-
-                    <p>Discover the latest drops.</p>
-
-                    <span class="card-arrow">↗</span>
-
-                </a>
-
-
-                <a href="#unique" class="experience-card featured">
-
-                    <span class="card-number">02</span>
-
-                    <span class="member-tag">MEMBERS ONLY</span>
-
-                    <div class="experience-icon">✳</div>
-
-                    <h3>UNIQUE DOs</h3>
-
-                    <p>Bid. Own. Be Exclusive.</p>
-
-                    <span class="card-arrow">↗</span>
-
-                </a>
-
-
-                <a href="#archive" class="experience-card">
-
-                    <span class="card-number">03</span>
-
-                    <div class="experience-icon">▣</div>
-
-                    <h3>THE ARCHIVE</h3>
-
-                    <p>Explore the history of DO.</p>
-
-                    <span class="card-arrow">↗</span>
-
-                </a>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- COLLECTION -->
-
-        <section class="collection-section" id="collection">
-
-            <div class="section-heading">
-
-                <span>01 / THE COLLECTION</span>
-
-                <h2>
-                    DESIGNED TO BE
-                    <span>DISTINCT.</span>
-                </h2>
-
-                <p>
-                    Not just clothing. A statement.
-                </p>
-
-            </div>
-
-            <div class="product-grid">
-
-
-                <!-- T-SHIRT -->
-
-                <article class="product-card">
-
-                    <a href="#contact" class="product-image">
-
-                        <img src="assets/images/3.png"
-                            alt="DO Full Sleeve T-shirt">
-
-                        <span class="product-label">
-                            THE ESSENTIAL
-                        </span>
-
-                    </a>
-
-                    <div class="product-info">
-
-                        <div>
-
-                            <span>DO / 001</span>
-
-                            <h3>FULL-SLEEVE T-SHIRT</h3>
-
-                            <p>FROM ₹4,999</p>
-
-                        </div>
-
-                        <a href="#contact"
-                            class="product-arrow">↗</a>
-
-                    </div>
-
-                </article>
-
-
-
-                <!-- JOGGERS -->
-
-                <article class="product-card">
-
-                    <a href="#contact" class="product-image">
-
-                        <img src="assets/images/4.png"
-                            alt="DO Joggers">
-
-                        <span class="product-label">
-                            STREET CULTURE
-                        </span>
-
-                    </a>
-
-                    <div class="product-info">
-
-                        <div>
-
-                            <span>DO / 002</span>
-
-                            <h3>JOGGERS</h3>
-
-                            <p>FROM ₹9,999</p>
-
-                        </div>
-
-                        <a href="#contact"
-                            class="product-arrow">↗</a>
-
-                    </div>
-
-                </article>
-
-
-
-                <!-- HOODIE -->
-
-                <article class="product-card">
-
-                    <a href="#contact" class="product-image">
-
-                        <img src="assets/images/5.png"
-                            alt="DO Hoodie">
-
-                        <span class="product-label">
-                            THE SIGNATURE
-                        </span>
-
-                    </a>
-
-                    <div class="product-info">
-
-                        <div>
-
-                            <span>DO / 003</span>
-
-                            <h3>HOODIE</h3>
-
-                            <p>FROM ₹11,999</p>
-
-                        </div>
-
-                        <a href="#contact"
-                            class="product-arrow">↗</a>
-
-                    </div>
-
-                </article>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- UNIQUE DOs / GALAXY ANIMATION -->
-
-        <section class="unique-section" id="unique">
-
-            <div class="unique-content">
-
-                <span>02 / EXCLUSIVE ACCESS</span>
-
-                <h2>
-                    NOT EVERYONE
-                    GETS A
-                    <span>UNIQUE DO.</span>
-                </h2>
-
-                <p>
-                    Enter a different world of fashion.
-
-                    Discover exclusive products, participate
-                    in competitive bidding and own something
-                    that isn't available to everyone.
-                </p>
-
-                <div class="unique-features">
-
-                    <span>✳ MEMBERSHIP ACCESS</span>
-
-                    <span>✳ EXCLUSIVE DROPS</span>
-
-                    <span>✳ COMPETITIVE BIDDING</span>
-
-                </div>
-
-                <a href="#membership" class="primary-button">
-                    DISCOVER UNIQUE DOs ↗
-                </a>
-
-            </div>
-
-
-            <div class="unique-visual">
-
-                <div class="orbit orbit-one"></div>
-
-                <div class="orbit orbit-two"></div>
-
-                <div class="orbit-center">
-
-                    <img
-                        src="assets/images/do-logo.png"
-                        alt="DO — DESI OFFICIALS"
-                        class="orbit-logo">
-
-                </div>
-
-                <span class="orbit-label">
-                    EXCLUSIVE / 001
-                </span>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- MEMBERSHIP -->
-
-        <section class="membership-section" id="membership">
-
-            <div class="section-heading">
-
-                <span>03 / JOIN THE MOVEMENT</span>
-
-                <h2>
-                    BECOME A
-                    <span>DO MEMBER.</span>
-                </h2>
-
-                <p>
-                    More than an account.
-                    Your access to the DO universe.
-                </p>
-
-            </div>
-
-            <div class="membership-grid">
-
-                <div class="membership-card">
-
-                    <span>01 / ACCESS</span>
-
-                    <h3>EARLY ACCESS</h3>
-
-                    <p>
-                        Get access to selected releases
-                        before general availability.
-                    </p>
-
-                </div>
-
-
-                <div class="membership-card">
-
-                    <span>02 / EXCLUSIVITY</span>
-
-                    <h3>UNIQUE DOs</h3>
-
-                    <p>
-                        Access the members-only
-                        bidding experience.
-                    </p>
-
-                </div>
-
-
-                <div class="membership-card">
-
-                    <span>03 / IDENTITY</span>
-
-                    <h3>YOUR DO ID</h3>
-
-                    <p>
-                        Your own account, membership
-                        status and purchase history.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <a href="#account" class="primary-button">
-                JOIN DO ↗
-            </a>
-
-        </section>
-
-
-
-        <!-- ARCHIVE -->
-
-        <section class="archive-section" id="archive">
-
-            <div class="section-heading">
-
-                <span>04 / THE HISTORY</span>
-
-                <h2>
-                    NOTHING
-                    <span>DISAPPEARS.</span>
-                </h2>
-
-                <p>
-                    Every drop becomes a part of our story.
-                </p>
-
-            </div>
-
-            <div class="archive-content">
-
-                <div class="archive-number">DO / ARCHIVE</div>
-
-                <h3>THE LEGACY IS BEING WRITTEN.</h3>
-
-                <p>
-                    Explore the collections,
-                    campaigns and moments that
-                    define Desi Officials.
-                </p>
-
-                <a href="#contact">
-                    EXPLORE THE ARCHIVE ↗
-                </a>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ABOUT -->
-
-        <section class="about-section" id="about">
-
-            <span>05 / OUR IDENTITY</span>
-
-            <h2>
-                WE DON'T FOLLOW.
-                <span>WE DEFINE.</span>
-            </h2>
-
-            <p>
-                DO — DESI OFFICIALS.
-
-                A new perspective on fashion,
-                individuality and street culture.
-            </p>
-
-        </section>
-
-
-
-        <!-- ACCOUNT -->
-
-        <section class="account-section" id="account">
-
-            <span>06 / YOUR DIGITAL IDENTITY</span>
-
-            <h2>
-                YOUR WORLD.
-                YOUR <span>DO.</span>
-            </h2>
-
-            <p>
-                Access your account, membership
-                and exclusive experiences.
-            </p>
-
-            <a href="#contact" class="primary-button">
-                ACCESS ACCOUNT ↗
-            </a>
-
-        </section>
-
-
-
-        <!-- CONTACT -->
-
-        <section class="contact-section" id="contact">
-
-            <span>07 / CONNECT WITH DO</span>
-
-            <h2>
-                LET'S START
-                <span>SOMETHING.</span>
-            </h2>
-
-            <p>
-                For collaborations, enquiries
-                and everything DO.
-            </p>
-
-            <a href="mailto:desioficials@gmail.com"
-                class="primary-button">
-                CONTACT US ↗
-            </a>
-
-        </section>
-
-
-    </main>
-
-
-
-    <!-- FOOTER -->
-
-    <footer class="footer">
-
-        <div class="footer-brand">
-
-            <img
-                src="assets/images/do-logo.png"
-                alt="DO — DESI OFFICIALS"
-                class="footer-logo">
-
-            <p>BEYOND FASHION.</p>
-
-        </div>
-
-
-        <div class="footer-links">
-
-            <a href="#collection">COLLECTION</a>
-
-            <a href="#unique">UNIQUE DOs</a>
-
-            <a href="#archive">ARCHIVE</a>
-
-            <a href="#about">ABOUT</a>
-
-            <a href="#contact">CONTACT</a>
-
-        </div>
-
-
-        <div class="footer-bottom">
-
-            <span>© 2026 DESI OFFICIALS.</span>
-
-            <span>DESIGNED TO BE DISTINCT.</span>
-
-        </div>
-
-    </footer>
-
-
-
-    <!-- JAVASCRIPT -->
-
-    <script src="assets/js/script.js"></script>
-
+  </div>
+</header>
+
+<div class="menu" id="menu" aria-hidden="true">
+  <div class="top"><span class="eyebrow">Explore the universe</span><button class="ibtn" id="menuClose" aria-label="Close menu">×</button></div>
+  <a href="#home"><small>01</small>Home</a>
+  <a href="#collection"><small>02</small>Collection</a>
+  <a href="#unique"><small>03</small>Unique DOs</a>
+  <a href="#archive"><small>04</small>The Archive</a>
+  <a href="#membership"><small>05</small>Membership</a>
+  <a href="#about"><small>06</small>About DO</a>
+  <a href="#contact"><small>07</small>Contact</a>
+</div>
+
+<main id="main">
+<section id="home">
+  <div class="bg"><img src="assets/images/1.png" alt="DO fashion campaign"></div>
+  <div class="wrap">
+    <p class="eyebrow">DESI OFFICIALS / EST. DO</p>
+    <h1>BEYOND<br>FASHION.</h1>
+    <p class="tag">WEAR THE ATTITUDE. LIVE THE DO.</p>
+    <a class="btn solid" href="#collection">EXPLORE COLLECTION ↗</a>
+  </div>
+  <div class="scroll">01 / THE NEW GENERATION — SCROLL ↓</div>
+</section>
+
+<section id="experience">
+  <div class="wrap rev">
+    <p class="eyebrow">The DO Experience</p>
+    <h2>ENTER THE<br>FREQUENCY.</h2>
+    <div class="tiles">
+      <a class="tile" href="#collection"><div><span class="eyebrow">01 ◇</span><b>The Collection</b><span>Discover the latest drops.</span></div><span>↗</span></a>
+      <a class="tile" href="#unique"><div><span class="eyebrow">02 ✳ Members only</span><b>Unique DOs</b><span>Bid. Own. Be exclusive.</span></div><span>↗</span></a>
+      <a class="tile" href="#archive"><div><span class="eyebrow">03 ▣</span><b>The Archive</b><span>Explore the history of DO.</span></div><span>↗</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="collection">
+  <div class="wrap">
+    <div class="rev">
+      <p class="eyebrow">01 / The Collection</p>
+      <h2>DESIGNED TO<br>BE DISTINCT.</h2>
+      <p class="lead">Not just clothing. A statement.</p>
+    </div>
+    <div class="grid" id="productGrid"></div>
+  </div>
+</section>
+
+<section id="unique">
+  <div class="wrap split">
+    <div class="rev">
+      <p class="eyebrow">02 / Exclusive Access</p>
+      <h2>NOT EVERYONE GETS A UNIQUE DO.</h2>
+      <p class="lead">Enter a different world of fashion. Discover exclusive products, participate in competitive bidding and own something that isn't available to everyone.</p>
+      <div class="chips"><span class="chip">✳ MEMBERSHIP ACCESS</span><span class="chip">✳ EXCLUSIVE DROPS</span><span class="chip">✳ COMPETITIVE BIDDING</span></div>
+      <a class="btn" href="#membership" id="uniqueJoin">BECOME A MEMBER ↗</a>
+    </div>
+    <div class="panel rev">
+      <div class="ph"><img src="assets/images/2.png" alt="Unique DO — exclusive piece"><span class="badge">EXCLUSIVE / 001</span></div>
+      <h3 style="font-size:26px">UNIQUE DO / 001</h3>
+      <p class="note" style="margin-top:6px">Closes in</p>
+      <div class="timer" id="timer"><div><b id="tD">00</b><span>DAYS</span></div><div><b id="tH">00</b><span>HRS</span></div><div><b id="tM">00</b><span>MIN</span></div><div><b id="tS">00</b><span>SEC</span></div></div>
+      <p class="price" id="startBid"></p>
+      <div id="bidArea" style="margin-top:16px"></div>
+    </div>
+  </div>
+</section>
+
+<section id="membership">
+  <div class="wrap">
+    <div class="rev">
+      <p class="eyebrow">03 / Join the Movement</p>
+      <h2>BECOME A<br>DO MEMBER.</h2>
+      <p class="lead">More than an account. Your access to the DO universe.</p>
+    </div>
+    <div class="perks rev">
+      <div><span class="eyebrow">01 / Access</span><h3>EARLY ACCESS</h3><p>Get access to selected releases before general availability.</p></div>
+      <div><span class="eyebrow">02 / Exclusivity</span><h3>UNIQUE DOs</h3><p>Access the members-only bidding experience.</p></div>
+      <div><span class="eyebrow">03 / Identity</span><h3>YOUR DO ID</h3><p>Your own account, membership status and purchase history.</p></div>
+    </div>
+    <div class="joinbox rev" id="joinBox"></div>
+  </div>
+</section>
+
+<section id="archive">
+  <div class="wrap">
+    <div class="rev">
+      <p class="eyebrow">04 / The History</p>
+      <h2>NOTHING<br>DISAPPEARS.</h2>
+      <p class="lead">Every drop becomes a part of our story. Explore the collections, campaigns and moments that define Desi Officials.</p>
+    </div>
+    <div class="filters" id="filters" role="group" aria-label="Filter archive">
+      <button class="on" data-f="all">All</button><button data-f="drop">Drops</button><button data-f="campaign">Campaigns</button>
+    </div>
+    <div class="agrid" id="archiveGrid"></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap rev">
+    <p class="eyebrow">05 / Our Identity</p>
+    <h2 style="font-size:clamp(14px,2vw,16px);letter-spacing:.2em;color:var(--mute);font-weight:400;margin-bottom:24px">DO — DESI OFFICIALS</h2>
+    <p class="big">WE DON'T FOLLOW. <em>WE DEFINE.</em></p>
+    <p class="lead" style="margin-top:26px">A new perspective on fashion, individuality and street culture.</p>
+    <div class="facts">
+      <div><b>Limited by design</b><span>Small drops. When a piece is gone, it moves to the Archive.</span></div>
+      <div><b>Street culture first</b><span>Cut, fit and attitude built for everyday movement.</span></div>
+      <div><b>Made to be owned</b><span>Premium pieces for people who'd rather stand out than blend in.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap split">
+    <div class="rev">
+      <p class="eyebrow">07 / Connect with DO</p>
+      <h2>LET'S START<br>SOMETHING.</h2>
+      <p class="lead">For collaborations, enquiries and everything DO.</p>
+      <div class="links">
+        <a class="btn" href="mailto:desioficials@gmail.com">desioficials@gmail.com</a>
+        <a class="btn" id="waLink" href="#contact" hidden>WhatsApp ↗</a>
+      </div>
+    </div>
+    <form id="contactForm" class="rev" novalidate>
+      <div class="row2">
+        <label>Name<input name="name" required autocomplete="name"></label>
+        <label>Email<input name="email" type="email" required autocomplete="email"></label>
+      </div>
+      <label>Topic<select name="topic"><option>Order / product enquiry</option><option>Collaboration</option><option>Unique DOs</option><option>Other</option></select></label>
+      <label>Message<textarea name="message" required></textarea></label>
+      <button class="btn solid" type="submit">SEND MESSAGE ↗</button>
+      <p class="note" id="contactNote"></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div><img src="assets/images/do-logo.png" alt="DO — DESI OFFICIALS" style="height:40px;width:auto"><p style="margin-top:14px;letter-spacing:.2em;font-size:12px">BEYOND FASHION.</p></div>
+      <nav aria-label="Footer"><a href="#collection">COLLECTION</a><a href="#unique">UNIQUE DOs</a><a href="#archive">ARCHIVE</a><a href="#about">ABOUT</a><a href="#contact">CONTACT</a></nav>
+    </div>
+    <p>© 2026 DESI OFFICIALS. DESIGNED TO BE DISTINCT.</p>
+  </div>
+</footer>
+
+<!-- Product dialog -->
+<dialog id="pDlg" aria-label="Product details">
+  <div class="dhead"><h3 id="pTitle"></h3><button class="ibtn" data-close aria-label="Close">×</button></div>
+  <div class="dbody pm">
+    <div class="ph"><img id="pImg" alt=""></div>
+    <div>
+      <p class="eyebrow" id="pCode"></p>
+      <p class="price" id="pPrice" style="font-size:26px;margin:8px 0 14px"></p>
+      <p class="lead" id="pDesc" style="font-size:15px"></p>
+      <p class="eyebrow" style="margin:22px 0 10px">Size <span id="pSizeErr" style="color:var(--danger);letter-spacing:0;text-transform:none"></span></p>
+      <div class="sizes" id="pSizes"></div>
+      <p class="eyebrow" style="margin:22px 0 10px">Quantity</p>
+      <div class="qty"><button id="pMinus" aria-label="Decrease">−</button><span id="pQty">1</span><button id="pPlus" aria-label="Increase">+</button></div>
+      <div style="display:flex;gap:10px;margin-top:26px;flex-wrap:wrap"><button class="btn solid" id="pAdd">ADD TO CART ↗</button><button class="btn" id="pBuy">BUY NOW</button></div>
+      <details style="margin-top:24px"><summary class="eyebrow" style="cursor:pointer">Size guide (cm)</summary>
+        <table class="sg"><tr><th>Size</th><th>Chest</th><th>Length</th></tr><tr><td>S</td><td>96</td><td>68</td></tr><tr><td>M</td><td>101</td><td>70</td></tr><tr><td>L</td><td>106</td><td>72</td></tr><tr><td>XL</td><td>111</td><td>74</td></tr><tr><td>XXL</td><td>116</td><td>76</td></tr></table>
+        <p class="note" style="margin-top:8px">Indicative measurements. Replace with your real size chart.</p></details>
+      <p class="note" style="margin-top:20px">Free shipping across India on orders above ₹10,000 · Exchange within 7 days of delivery.</p>
+    </div>
+  </div>
+</dialog>
+
+<!-- Cart drawer -->
+<dialog id="cDlg" class="drawer" aria-label="Your cart">
+  <div class="dhead"><h3>YOUR CART</h3><button class="ibtn" data-close aria-label="Close cart">×</button></div>
+  <div class="dbody">
+    <div id="cLines"></div>
+    <div id="cFoot" hidden>
+      <div class="tot"><span>TOTAL</span><span id="cTotal"></span></div>
+      <form id="checkoutForm" novalidate>
+        <label>Full name<input name="name" required autocomplete="name"></label>
+        <div class="row2"><label>Phone<input name="phone" type="tel" required autocomplete="tel"></label><label>Pincode<input name="pin" required inputmode="numeric" autocomplete="postal-code"></label></div>
+        <label>Delivery address<textarea name="address" required style="min-height:80px" autocomplete="street-address"></textarea></label>
+        <button class="btn solid" type="submit" style="justify-content:center">PLACE ORDER ↗</button>
+        <p class="note">We'll confirm availability and share UPI / payment details on WhatsApp or email before dispatch.</p>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+<!-- Account dialog -->
+<dialog id="aDlg" aria-label="Your DO account">
+  <div class="dhead"><h3>YOUR DO ID</h3><button class="ibtn" data-close aria-label="Close">×</button></div>
+  <div class="dbody" id="aBody"></div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============ CONFIG — edit these ============ */
+const CONFIG = {
+  WHATSAPP: "",            // e.g. "919876543210" (country code, no + or spaces). Leave "" to use email.
+  EMAIL: "desioficials@gmail.com",
+  FORM_ENDPOINT: "",       // Optional: Formspree / Cloudflare Worker URL that accepts a JSON POST. Leave "" to use WhatsApp/email.
+  UNIQUE_ENDS: "2026-12-31T23:59:00+05:30",
+  UNIQUE_START_BID: 24999
+};
+const PRODUCTS = [
+  {id:"do-001",code:"DO / 001",name:"Full-Sleeve T-Shirt",tag:"THE ESSENTIAL",price:4999,img:"assets/images/3.png",sizes:["S","M","L","XL","XXL"],desc:"Heavyweight full-sleeve tee with a relaxed street fit. The foundation of every DO fit."},
+  {id:"do-002",code:"DO / 002",name:"Joggers",tag:"STREET CULTURE",price:9999,img:"assets/images/4.png",sizes:["S","M","L","XL","XXL"],desc:"Tapered joggers built for movement, with a clean silhouette and premium feel."},
+  {id:"do-003",code:"DO / 003",name:"Hoodie",tag:"THE SIGNATURE",price:11999,img:"assets/images/5.png",sizes:["S","M","L","XL","XXL"],desc:"The signature DO hoodie. Heavy, structured and made to be noticed."}
+];
+const ARCHIVE = [
+  {t:"DO / 001 — Full-Sleeve",y:"Drop",k:"drop",img:"assets/images/3.png"},
+  {t:"DO / 002 — Joggers",y:"Drop",k:"drop",img:"assets/images/4.png"},
+  {t:"DO / 003 — Hoodie",y:"Drop",k:"drop",img:"assets/images/5.png"},
+  {t:"Beyond Fashion",y:"Campaign",k:"campaign",img:"assets/images/1.png"},
+  {t:"Enter the Frequency",y:"Campaign",k:"campaign",img:"assets/images/2.png"}
+];
+
+/* ============ helpers ============ */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const inr=n=>"₹"+n.toLocaleString("en-IN");
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const sess={get(k){try{return sessionStorage.getItem(k)}catch{return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch{}}};
+function toast(msg,err){const t=$("#toast");t.textContent=msg;t.className="toast show"+(err?" err":"");clearTimeout(toast.t);toast.t=setTimeout(()=>t.className="toast",3600)}
+function el(tag,attrs={},...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs)){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v)}kids.forEach(c=>e.append(c));return e}
+function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)}
+function validPhone(v){return v.replace(/\D/g,"").length>=10}
+function img(src,alt){const i=el("img",{src,alt,loading:"lazy"});return i}
+document.addEventListener("error",e=>{if(e.target.tagName==="IMG"){e.target.removeAttribute("src");e.target.parentElement&&e.target.parentElement.classList.add("noimg")}},true);
+
+/* Delivery: endpoint → WhatsApp → email. Called directly from a user gesture. */
+function deliver(subject,text,data){
+  if(CONFIG.FORM_ENDPOINT){
+    return fetch(CONFIG.FORM_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({subject,message:text,...data})})
+      .then(r=>{if(!r.ok)throw 0;return "sent"}).catch(()=>fallback());
+  }
+  return Promise.resolve(fallback());
+  function fallback(){
+    if(CONFIG.WHATSAPP){window.open(`https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(subject+"\n\n"+text)}`,"_blank","noopener");return "whatsapp"}
+    location.href=`mailto:${CONFIG.EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;return "mailto";
+  }
+}
+const sentMsg={sent:"Sent. We'll get back to you soon.",whatsapp:"Opening WhatsApp — press send to finish.",mailto:"Opening your email app — press send to finish."};
+
+/* ============ gate + menu ============ */
+(function(){
+  const g=$("#gate");
+  const skip=sess.get("do-entered")||(location.hash&&location.hash!=="#home");
+  const close=()=>{g.classList.add("hide");sess.set("do-entered","1");document.body.style.overflow=""};
+  if(skip){g.classList.add("hide")}else{document.body.style.overflow="hidden";$("#enter").focus()}
+  $("#enter").onclick=close;
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!g.classList.contains("hide"))close()});
+  const m=$("#menu"),b=$("#burger");
+  const setMenu=o=>{m.classList.toggle("open",o);b.setAttribute("aria-expanded",o);m.setAttribute("aria-hidden",!o);document.body.style.overflow=o?"hidden":""};
+  b.onclick=()=>setMenu(true);$("#menuClose").onclick=()=>setMenu(false);
+  $$("a",m).forEach(a=>a.onclick=()=>setMenu(false));
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")setMenu(false)});
+  if(CONFIG.WHATSAPP){const w=$("#waLink");w.hidden=false;w.href="https://wa.me/"+CONFIG.WHATSAPP;w.target="_blank";w.rel="noopener"}
+})();
+
+/* ============ products ============ */
+const grid=$("#productGrid");
+PRODUCTS.forEach(p=>{
+  const ph=el("div",{class:"ph"},img(p.img,p.name),el("span",{class:"badge"},p.tag));
+  const c=el("button",{class:"card",type:"button","aria-label":`View ${p.name}, from ${inr(p.price)}`},ph,
+    el("div",{class:"meta"},el("h3",{},p.name),el("span",{class:"code"},p.code)),
+    el("p",{class:"price"},"FROM "+inr(p.price)));
+  c.onclick=()=>openProduct(p);
+  grid.append(c);
+});
+let cur=null,curSize=null,curQty=1;
+const pDlg=$("#pDlg");
+function openProduct(p){
+  cur=p;curSize=null;curQty=1;
+  $("#pTitle").textContent=p.name;$("#pCode").textContent=p.code+" · "+p.tag;
+  $("#pPrice").textContent=inr(p.price);$("#pDesc").textContent=p.desc;
+  const i=$("#pImg");i.parentElement.classList.remove("noimg");i.src=p.img;i.alt=p.name;
+  $("#pQty").textContent=1;$("#pSizeErr").textContent="";
+  const s=$("#pSizes");s.replaceChildren();
+  p.sizes.forEach(z=>{const b=el("button",{type:"button","aria-pressed":"false"},z);b.onclick=()=>{curSize=z;$$("button",s).forEach(x=>{x.classList.toggle("on",x===b);x.setAttribute("aria-pressed",x===b)});$("#pSizeErr").textContent=""};s.append(b)});
+  pDlg.showModal();
+}
+$("#pMinus").onclick=()=>{curQty=Math.max(1,curQty-1);$("#pQty").textContent=curQty};
+$("#pPlus").onclick=()=>{curQty=Math.min(10,curQty+1);$("#pQty").textContent=curQty};
+function needSize(){if(!curSize){$("#pSizeErr").textContent="— select a size";return true}return false}
+$("#pAdd").onclick=()=>{if(needSize())return;addToCart(cur.id,curSize,curQty);pDlg.close();toast(`${cur.name} (${curSize}) added to cart`)};
+$("#pBuy").onclick=()=>{if(needSize())return;addToCart(cur.id,curSize,curQty);pDlg.close();openCart()};
+
+/* ============ cart ============ */
+let cart=store.get("do-cart",[]).filter(l=>PRODUCTS.some(p=>p.id===l.id));
+const cDlg=$("#cDlg");
+function saveCart(){store.set("do-cart",cart);renderCart()}
+function addToCart(id,size,qty){const l=cart.find(x=>x.id===id&&x.size===size);if(l)l.qty=Math.min(10,l.qty+qty);else cart.push({id,size,qty});saveCart()}
+function cartTotal(){return cart.reduce((s,l)=>s+PRODUCTS.find(p=>p.id===l.id).price*l.qty,0)}
+function renderCart(){
+  const n=cart.reduce((s,l)=>s+l.qty,0);
+  const cc=$("#cartCount");cc.textContent=n||"";cc.dataset.n=n;
+  const box=$("#cLines");box.replaceChildren();
+  if(!cart.length){box.append(el("p",{class:"empty"},"Your cart is empty."));$("#cFoot").hidden=true;return}
+  cart.forEach((l,idx)=>{
+    const p=PRODUCTS.find(x=>x.id===l.id);
+    const q=el("div",{class:"qty",style:"margin-top:8px"},
+      el("button",{type:"button","aria-label":"Decrease",onclick:()=>{l.qty>1?l.qty--:cart.splice(idx,1);saveCart()}},"−"),
+      el("span",{},String(l.qty)),
+      el("button",{type:"button","aria-label":"Increase",onclick:()=>{l.qty=Math.min(10,l.qty+1);saveCart()}},"+"));
+    box.append(el("div",{class:"line"},
+      el("div",{class:"ph"},img(p.img,p.name)),
+      el("div",{},el("b",{},p.name),el("small",{},`Size ${l.size} · ${inr(p.price)}`),q),
+      el("div",{style:"text-align:right"},el("b",{},inr(p.price*l.qty)),el("br"),el("button",{class:"rm",type:"button",onclick:()=>{cart.splice(idx,1);saveCart()}},"Remove"))));
+  });
+  $("#cTotal").textContent=inr(cartTotal());$("#cFoot").hidden=false;
+}
+function openCart(){renderCart();cDlg.showModal()}
+$("#cartBtn").onclick=openCart;
+
+$("#checkoutForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const f=e.target,d=Object.fromEntries(new FormData(f));
+  if(!d.name.trim()||!validPhone(d.phone)||!/^\d{6}$/.test(d.pin.trim())||!d.address.trim()){toast("Please enter a valid name, 10-digit phone, 6-digit pincode and address.",true);return}
+  if(!cart.length)return;
+  const lines=cart.map(l=>{const p=PRODUCTS.find(x=>x.id===l.id);return `${p.code} ${p.name} · Size ${l.size} · Qty ${l.qty} · ${inr(p.price*l.qty)}`});
+  const orderId="DO"+Date.now().toString(36).toUpperCase();
+  const total=cartTotal();
+  const text=`Order ${orderId}\n\n${lines.join("\n")}\n\nTotal: ${inr(total)}\n\nName: ${d.name}\nPhone: ${d.phone}\nPincode: ${d.pin}\nAddress: ${d.address}`;
+  const order={id:orderId,date:new Date().toISOString(),lines,total};
+  deliver(`New DO order ${orderId}`,text,{type:"order",orderId,total,items:cart,customer:d}).then(r=>{
+    const o=store.get("do-orders",[]);o.unshift(order);store.set("do-orders",o);
+    cart=[];saveCart();f.reset();cDlg.close();toast(`Order ${orderId} placed. ${sentMsg[r]}`);
+  });
+});
+
+/* ============ membership ============ */
+function member(){return store.get("do-member",null)}
+function renderJoin(){
+  const box=$("#joinBox");box.replaceChildren();
+  const m=member();
+  if(m){
+    box.append(el("p",{class:"eyebrow"},"You're in"),el("h3",{style:"font-size:34px;margin:10px 0"},"WELCOME, "+m.name.split(" ")[0]),
+      el("p",{class:"lead"},"Your DO ID is "+m.id+". Unique DOs bidding is unlocked."),
+      el("div",{style:"margin-top:22px"},el("button",{class:"btn",type:"button",onclick:openAccount},"VIEW MY DO ID ↗")));
+    return;
+  }
+  const f=el("form",{novalidate:""});
+  f.innerHTML=`<div class="row2"><label>Name<input name="name" required autocomplete="name"></label><label>Phone<input name="phone" type="tel" required autocomplete="tel"></label></div>
+  <label>Email<input name="email" type="email" required autocomplete="email"></label>
+  <label style="display:flex;gap:10px;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:13px"><input type="checkbox" name="ok" style="width:auto;margin-top:3px" required>I agree to be contacted about drops, early access and Unique DOs.</label>
+  <button class="btn solid" type="submit">JOIN DO ↗</button><p class="note">Free to join. Your details are used only to run your DO membership.</p>`;
+  f.addEventListener("submit",e=>{
+    e.preventDefault();const d=Object.fromEntries(new FormData(f));
+    if(!d.name.trim()||!validEmail(d.email)||!validPhone(d.phone)||!d.ok){toast("Please complete all fields with a valid email and phone.",true);return}
+    const id="DO-"+Math.random().toString(36).slice(2,8).toUpperCase();
+    deliver(`New DO member ${id}`,`Name: ${d.name}\nEmail: ${d.email}\nPhone: ${d.phone}\nDO ID: ${id}`,{type:"member",id,...d}).then(r=>{
+      store.set("do-member",{id,name:d.name.trim(),email:d.email.trim(),phone:d.phone.trim(),since:new Date().toISOString()});
+      renderJoin();renderBid();toast("Welcome to DO. "+sentMsg[r]);
+    });
+  });
+  box.append(f);
+}
+function openAccount(){
+  const b=$("#aBody");b.replaceChildren();
+  const m=member();
+  if(!m){
+    b.append(el("p",{class:"lead"},"Join DO to get your DO ID, early access and Unique DOs bidding."),
+      el("div",{style:"margin-top:20px"},el("a",{class:"btn solid",href:"#membership",onclick:()=>$("#aDlg").close()},"BECOME A MEMBER ↗")));
+  }else{
+    b.append(el("p",{class:"eyebrow"},"Member"),el("h3",{style:"font-size:40px;margin:8px 0"},m.id),
+      el("p",{},m.name),el("p",{class:"note"},m.email+" · "+m.phone),
+      el("p",{class:"note"},"Member since "+new Date(m.since).toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"})));
+    const o=store.get("do-orders",[]);
+    b.append(el("p",{class:"eyebrow",style:"margin-top:26px"},"Purchase history"));
+    if(!o.length)b.append(el("p",{class:"note",style:"margin-top:8px"},"No orders yet."));
+    else{const ul=el("ul",{class:"orders"});o.forEach(x=>ul.append(el("li",{},el("b",{},x.id+" · "+inr(x.total)),el("br"),new Date(x.date).toLocaleDateString("en-IN"),el("br"),x.lines.join(" | "))));b.append(ul)}
+    b.append(el("button",{class:"btn",style:"margin-top:24px",type:"button",onclick:()=>{if(confirm("Sign out of this device?")){localStorage.removeItem("do-member");$("#aDlg").close();renderJoin();renderBid()}}},"SIGN OUT"));
+  }
+  $("#aDlg").showModal();
+}
+$("#acctBtn").onclick=openAccount;
+
+/* ============ unique DOs ============ */
+$("#startBid").textContent="STARTING BID "+inr(CONFIG.UNIQUE_START_BID);
+const endTime=new Date(CONFIG.UNIQUE_ENDS).getTime();
+function tick(){
+  const left=Math.max(0,endTime-Date.now());
+  const p=n=>String(n).padStart(2,"0");
+  $("#tD").textContent=p(Math.floor(left/864e5));$("#tH").textContent=p(Math.floor(left/36e5)%24);
+  $("#tM").textContent=p(Math.floor(left/6e4)%60);$("#tS").textContent=p(Math.floor(left/1e3)%60);
+  if(!left&&!tick.done){tick.done=1;renderBid()}
+}
+function renderBid(){
+  const box=$("#bidArea");box.replaceChildren();
+  if(Date.now()>=endTime){box.append(el("p",{class:"note"},"This Unique DO has closed. Join DO to hear about the next one."));return}
+  const m=member();
+  if(!m){box.append(el("p",{class:"lock"},"🔒 Members only. Join DO to place a bid."),el("a",{class:"btn solid",href:"#membership"},"JOIN TO BID ↗"));return}
+  const f=el("form",{novalidate:""});
+  f.innerHTML=`<label>Your bid (₹)<input name="bid" type="number" inputmode="numeric" min="${CONFIG.UNIQUE_START_BID}" step="100" placeholder="${CONFIG.UNIQUE_START_BID}" required></label><button class="btn solid" type="submit" style="justify-content:center">SUBMIT BID ↗</button><p class="note">Bids are submitted to the DO team. The highest valid bid at close wins and is contacted directly.</p>`;
+  f.addEventListener("submit",e=>{
+    e.preventDefault();const bid=Number(new FormData(f).get("bid"));
+    if(!bid||bid<CONFIG.UNIQUE_START_BID){toast("Minimum bid is "+inr(CONFIG.UNIQUE_START_BID),true);return}
+    deliver(`Unique DO / 001 bid from ${m.id}`,`Member: ${m.name} (${m.id})\nEmail: ${m.email}\nPhone: ${m.phone}\nBid: ${inr(bid)}`,{type:"bid",item:"UNIQUE DO / 001",bid,member:m}).then(r=>{f.reset();toast(`Bid of ${inr(bid)} submitted. ${sentMsg[r]}`)});
+  });
+  box.append(f);
+}
+setInterval(tick,1000);tick();
+
+/* ============ archive ============ */
+function renderArchive(k="all"){
+  const g=$("#archiveGrid");g.replaceChildren();
+  ARCHIVE.filter(a=>k==="all"||a.k===k).forEach(a=>g.append(el("div",{class:"aitem"},el("div",{class:"ph"},img(a.img,a.t)),el("p",{},a.t),el("small",{},a.y.toUpperCase()))));
+}
+$("#filters").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;$$("#filters button").forEach(x=>x.classList.toggle("on",x===b));renderArchive(b.dataset.f)});
+
+/* ============ contact ============ */
+$("#contactForm").addEventListener("submit",e=>{
+  e.preventDefault();const f=e.target,d=Object.fromEntries(new FormData(f));
+  if(!d.name.trim()||!validEmail(d.email)||!d.message.trim()){$("#contactNote").textContent="Please add your name, a valid email and a message.";return}
+  $("#contactNote").textContent="";
+  deliver(`DO enquiry: ${d.topic}`,`From: ${d.name} <${d.email}>\nTopic: ${d.topic}\n\n${d.message}`,{type:"contact",...d}).then(r=>{f.reset();toast(sentMsg[r])});
+});
+
+/* ============ dialogs, nav highlight, reveal ============ */
+$$("dialog").forEach(d=>{
+  d.addEventListener("click",e=>{if(e.target===d||e.target.closest("[data-close]"))d.close()});
+});
+const links=$$("nav.main a");
+$$("main section").forEach(s=>new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting)links.forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+s.id))}),{rootMargin:"-45% 0px -50% 0px"}).observe(s));
+const rv=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");rv.unobserve(en.target)}}),{threshold:.12});
+$$(".rev").forEach(r=>rv.observe(r));
+
+renderCart();renderJoin();renderBid();renderArchive();
+</script>
 </body>
-
 </html>
