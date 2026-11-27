@@ -638,44 +638,80 @@ function renderProducts(){
     grid.append(c);
   });
 }
-async function loadProducts(){
-  grid.replaceChildren(el("p",{class:"loading"},"Loading collection…"));
-  let list=null;
-  try{
-    const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),5000);
-    const r=await fetch("/api/products",{signal:ctl.signal});clearTimeout(t);
-    if(r.ok&&(r.headers.get("content-type")||"").includes("json")){const d=await r.json();if(Array.isArray(d))list=d}
-  }catch{}
-  PRODUCTS=(list||FALLBACK_PRODUCTS).map(cleanProduct).filter(Boolean);
-  cart=cart.filter(l=>{const p=prodById(l.id);return p&&p.status==="live"&&p.sizes.includes(l.size)});
-  store.set("do-cart",cart);
-  renderProducts();renderCart();renderArchive();
-}
-let cur=null,curSize=null,curQty=1;
-const pDlg=$("#pDlg");
-function openProduct(p){
-  cur=p;curSize=null;curQty=1;
-  const sold=p.status==="soldout";
-  $("#pTitle").textContent=p.name;$("#pCode").textContent=[p.code,p.tag].filter(Boolean).join(" · ");
-  $("#pPrice").textContent=inr(p.price);$("#pDesc").textContent=p.desc;
-  const frame=$("#pPh"),th=$("#pThumbs");th.replaceChildren();
-  fillPh(frame,pic(p),p.name);
-  if(p.images.length>1)p.images.forEach((u,i)=>{
-    const b=el("button",{type:"button","aria-label":`Show photo ${i+1}`,class:i===0?"on":""});
-    const bg=el("div",{class:"bd"});bg.style.backgroundImage=`url("${u}")`;b.append(bg,img(u,""));
-    b.onclick=()=>{fillPh(frame,u,p.name);$$("button",th).forEach(x=>x.classList.toggle("on",x===b))};th.append(b);
+
+async function loadProducts() {
+  grid.replaceChildren(
+    el("p", { class: "loading" }, "Loading collection…")
+  );
+
+  let list = null;
+  let timeoutId;
+
+  try {
+    const ctl = new AbortController();
+
+    timeoutId = setTimeout(() => {
+      ctl.abort();
+    }, 8000);
+
+    const r = await fetch("/api/products", {
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      },
+      signal: ctl.signal
+    });
+
+    if (r.ok) {
+      const contentType = (
+        r.headers.get("content-type") || ""
+      ).toLowerCase();
+
+      if (contentType.includes("json")) {
+        const d = await r.json();
+
+        // Support both array and object API responses.
+        if (Array.isArray(d)) {
+          list = d;
+        } else if (d && Array.isArray(d.products)) {
+          list = d.products;
+        }
+      }
+    }
+  } catch (error) {
+    console.warn(
+      "Product API unavailable. Using fallback products.",
+      error
+    );
+  } finally {
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId);
+    }
+  }
+
+  // Use fallback products only when the API did not return valid data.
+  PRODUCTS = (list ?? FALLBACK_PRODUCTS)
+    .map(cleanProduct)
+    .filter(Boolean);
+
+  // Keep only valid cart items.
+  cart = cart.filter(l => {
+    const p = prodById(l.id);
+
+    return (
+      p &&
+      p.status === "live" &&
+      p.sizes.includes(l.size)
+    );
   });
-  $("#pAdd").disabled=sold;$("#pBuy").disabled=sold;$("#pAdd").textContent=sold?"SOLD OUT":"ADD TO CART ↗";
-  $("#pQty").textContent=1;$("#pSizeErr").textContent="";
-  const s=$("#pSizes");s.replaceChildren();
-  p.sizes.forEach(z=>{const b=el("button",{type:"button","aria-pressed":"false"},z);b.onclick=()=>{curSize=z;$$("button",s).forEach(x=>{x.classList.toggle("on",x===b);x.setAttribute("aria-pressed",x===b)});$("#pSizeErr").textContent=""};s.append(b)});
-  pDlg.showModal();
+
+  store.set("do-cart", cart);
+
+  // Refresh all storefront sections.
+  renderProducts();
+  renderCart();
+  renderArchive();
 }
-$("#pMinus").onclick=()=>{curQty=Math.max(1,curQty-1);$("#pQty").textContent=curQty};
-$("#pPlus").onclick=()=>{curQty=Math.min(10,curQty+1);$("#pQty").textContent=curQty};
-function needSize(){if(!curSize){$("#pSizeErr").textContent="— select a size";return true}return false}
-$("#pAdd").onclick=()=>{if(needSize())return;addToCart(cur.id,curSize,curQty);pDlg.close();toast(`${cur.name} (${curSize}) added to cart`)};
-$("#pBuy").onclick=()=>{if(needSize())return;addToCart(cur.id,curSize,curQty);pDlg.close();openCart()};
 
 /* ============ cart ============ */
 let cart=store.get("do-cart",[]);
