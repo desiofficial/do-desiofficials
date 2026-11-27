@@ -12,7 +12,7 @@
 <meta property="og:image" content="assets/images/1.png">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Organization","name":"DO — DESI OFFICIALS","email":"desioficials@gmail.com","slogan":"Beyond Fashion."}
+{"@context":"https://schema.org","@type":"Organization","name":"DO — DESI OFFICIALS","email":"desioficials@gmail.com","slogan":"Beyond Fashion.","sameAs":["https://www.instagram.com/desi_officials","https://www.linkedin.com/company/desi-officials/","https://www.youtube.com/@desiofficials69"]}
 </script>
 <style>
 :root{--bg:#050505;--bg2:#0e0e0e;--line:#222;--fg:#f2f0eb;--mute:#8d8a84;--acc:#d7ff3a;--danger:#ff5a4f;--ease:cubic-bezier(.2,.7,.2,1)}
@@ -33,6 +33,7 @@ section{padding:90px 0;border-top:1px solid var(--line)}
 .lead{color:var(--mute);max-width:560px;font-size:17px}
 .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border:1px solid var(--fg);font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;transition:.25s var(--ease)}
 .btn:hover{background:var(--fg);color:#000}
+.btn.sm{padding:9px 14px;font-size:11px}
 .btn.solid{background:var(--acc);border-color:var(--acc);color:#000}
 .btn.solid:hover{background:var(--fg);border-color:var(--fg)}
 .btn[disabled]{opacity:.4;pointer-events:none}
@@ -74,9 +75,19 @@ nav.main a:hover,nav.main a.on{color:var(--fg)}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:44px}
 .card{cursor:pointer;display:block;width:100%;text-align:left}
 .ph{aspect-ratio:4/5;background:var(--bg2);overflow:hidden;position:relative;border:1px solid var(--line)}
-.ph img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
-.card:hover .ph img{transform:scale(1.05)}
-.ph .badge{position:absolute;left:12px;top:12px;background:var(--bg);font-size:10px;letter-spacing:.2em;padding:6px 10px}
+/* Auto-fit photos: whole picture always visible (never cropped or stretched), any ratio.
+   A blurred copy of the same photo fills the leftover space so frames look clean. */
+.ph .bd{position:absolute;inset:-14px;background-size:cover;background-position:center;filter:blur(18px) brightness(.5);transform:scale(1.1)}
+.ph img{position:relative;width:100%;height:100%;object-fit:contain;transition:transform .7s var(--ease)}
+.card:hover .ph img{transform:scale(1.04)}
+.ph .badge{position:absolute;left:12px;top:12px;background:var(--bg);font-size:10px;letter-spacing:.2em;padding:6px 10px;z-index:2}
+.ph .badge.sold{background:#ff5a4f;color:#fff}
+.thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.thumbs button{width:60px;height:75px;padding:0;border:1px solid var(--line);position:relative;overflow:hidden;background:var(--bg2)}
+.thumbs button.on{border-color:var(--acc)}
+.thumbs .bd{position:absolute;inset:-8px;background-size:cover;background-position:center;filter:blur(8px) brightness(.5)}
+.thumbs img{position:relative;width:100%;height:100%;object-fit:contain}
+.loading{color:var(--mute);grid-column:1/-1;padding:40px 0}
 .noimg{background:repeating-linear-gradient(45deg,#111,#111 10px,#151515 10px,#151515 20px)}
 .meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;gap:10px}
 .meta h3{font-size:20px}
@@ -163,6 +174,21 @@ dialog.drawer{margin:0 0 0 auto;height:100vh;max-height:100vh;max-width:460px;bo
 .rev{opacity:0;transform:translateY(26px);transition:.9s var(--ease)}
 .rev.in{opacity:1;transform:none}
 .orders li{list-style:none;border:1px solid var(--line);padding:12px 14px;margin-top:10px;font-size:13px}
+.social{display:flex;gap:10px;margin-top:18px}
+.social a{width:42px;height:42px;display:grid;place-items:center;border:1px solid var(--line);color:var(--mute);transition:.25s var(--ease)}
+.social a:hover{color:#000;background:var(--acc);border-color:var(--acc)}
+.social svg{width:20px;height:20px}
+dialog.pay{max-width:min(460px,94vw)}
+.payamt{font-size:44px;font-weight:900;letter-spacing:-.02em;margin:6px 0 18px}
+.qr{width:fit-content;margin:14px auto;line-height:0;border:6px solid #fff;background:#fff}
+.qr svg{display:block;width:min(230px,70vw);height:auto}
+.upirow{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:14px;margin-bottom:6px}
+.upirow code{background:var(--bg2);border:1px solid var(--line);padding:8px 12px;font-size:13px;word-break:break-all}
+.steps{margin:16px 0;padding-left:18px;color:var(--mute);font-size:13px;display:grid;gap:4px}
+.paybox{border-top:1px solid var(--line);margin-top:18px;padding-top:18px;display:grid;gap:12px}
+.stat{display:inline-block;font-size:10px;letter-spacing:.16em;padding:3px 8px;border:1px solid var(--line);text-transform:uppercase;margin-top:6px}
+.stat.ok{color:var(--acc);border-color:var(--acc)}.stat.wait{color:#ffb020;border-color:#ffb020}.stat.bad{color:var(--danger);border-color:var(--danger)}
+.center{text-align:center}
 @media(max-width:900px){
  nav.main{display:none}.burger{display:grid}
  .grid,.tiles,.perks,.facts{grid-template-columns:1fr}
@@ -255,7 +281,7 @@ dialog.drawer{margin:0 0 0 auto;height:100vh;max-height:100vh;max-width:460px;bo
       <a class="btn" href="#membership" id="uniqueJoin">BECOME A MEMBER ↗</a>
     </div>
     <div class="panel rev">
-      <div class="ph"><img src="assets/images/2.png" alt="Unique DO — exclusive piece"><span class="badge">EXCLUSIVE / 001</span></div>
+      <div class="ph" id="uniquePh"><span class="badge">EXCLUSIVE / 001</span></div>
       <h3 style="font-size:26px">UNIQUE DO / 001</h3>
       <p class="note" style="margin-top:6px">Closes in</p>
       <div class="timer" id="timer"><div><b id="tD">00</b><span>DAYS</span></div><div><b id="tH">00</b><span>HRS</span></div><div><b id="tM">00</b><span>MIN</span></div><div><b id="tS">00</b><span>SEC</span></div></div>
@@ -319,6 +345,11 @@ dialog.drawer{margin:0 0 0 auto;height:100vh;max-height:100vh;max-width:460px;bo
         <a class="btn" href="mailto:desioficials@gmail.com">desioficials@gmail.com</a>
         <a class="btn" id="waLink" href="#contact" hidden>WhatsApp ↗</a>
       </div>
+      <div class="links">
+        <a class="btn" href="https://www.instagram.com/desi_officials" target="_blank" rel="noopener">Instagram ↗</a>
+        <a class="btn" href="https://www.youtube.com/@desiofficials69" target="_blank" rel="noopener">YouTube ↗</a>
+        <a class="btn" href="https://www.linkedin.com/company/desi-officials/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
     </div>
     <form id="contactForm" class="rev" novalidate>
       <div class="row2">
@@ -337,7 +368,12 @@ dialog.drawer{margin:0 0 0 auto;height:100vh;max-height:100vh;max-width:460px;bo
 <footer>
   <div class="wrap">
     <div class="cols">
-      <div><img src="assets/images/do-logo.png" alt="DO — DESI OFFICIALS" style="height:40px;width:auto"><p style="margin-top:14px;letter-spacing:.2em;font-size:12px">BEYOND FASHION.</p></div>
+      <div><img src="assets/images/do-logo.png" alt="DO — DESI OFFICIALS" style="height:40px;width:auto"><p style="margin-top:14px;letter-spacing:.2em;font-size:12px">BEYOND FASHION.</p>
+        <div class="social" aria-label="Follow DO">
+          <a href="https://www.instagram.com/desi_officials" target="_blank" rel="noopener" aria-label="DO on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.youtube.com/@desiofficials69" target="_blank" rel="noopener" aria-label="DO on YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2v5.6l5-2.8z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.linkedin.com/company/desi-officials/" target="_blank" rel="noopener" aria-label="DO on LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V16M8 7.6v.1M12 16v-5.5m0 2.5c0-1.6 1-2.6 2.4-2.6S17 11.4 17 13v3"/></svg></a>
+        </div></div>
       <nav aria-label="Footer"><a href="#collection">COLLECTION</a><a href="#unique">UNIQUE DOs</a><a href="#archive">ARCHIVE</a><a href="#about">ABOUT</a><a href="#contact">CONTACT</a></nav>
     </div>
     <p>© 2026 DESI OFFICIALS. DESIGNED TO BE DISTINCT.</p>
@@ -348,7 +384,7 @@ dialog.drawer{margin:0 0 0 auto;height:100vh;max-height:100vh;max-width:460px;bo
 <dialog id="pDlg" aria-label="Product details">
   <div class="dhead"><h3 id="pTitle"></h3><button class="ibtn" data-close aria-label="Close">×</button></div>
   <div class="dbody pm">
-    <div class="ph"><img id="pImg" alt=""></div>
+    <div><div class="ph" id="pPh"></div><div class="thumbs" id="pThumbs"></div></div>
     <div>
       <p class="eyebrow" id="pCode"></p>
       <p class="price" id="pPrice" style="font-size:26px;margin:8px 0 14px"></p>
@@ -377,11 +413,17 @@ dialog.drawer{margin:0 0 0 auto;height:100vh;max-height:100vh;max-width:460px;bo
         <label>Full name<input name="name" required autocomplete="name"></label>
         <div class="row2"><label>Phone<input name="phone" type="tel" required autocomplete="tel"></label><label>Pincode<input name="pin" required inputmode="numeric" autocomplete="postal-code"></label></div>
         <label>Delivery address<textarea name="address" required style="min-height:80px" autocomplete="street-address"></textarea></label>
-        <button class="btn solid" type="submit" style="justify-content:center">PLACE ORDER ↗</button>
-        <p class="note">We'll confirm availability and share UPI / payment details on WhatsApp or email before dispatch.</p>
+        <button class="btn solid" type="submit" style="justify-content:center">CONTINUE TO PAYMENT ↗</button>
+        <p class="note">Payment is by UPI only (GPay, PhonePe, Paytm, BHIM and more). You'll see the QR on the next step.</p>
       </form>
     </div>
   </div>
+</dialog>
+
+<!-- UPI payment dialog -->
+<dialog id="payDlg" class="pay" aria-label="Pay with UPI">
+  <div class="dhead"><h3>PAY WITH UPI</h3><button class="ibtn" data-close aria-label="Close">×</button></div>
+  <div class="dbody" id="payBody"></div>
 </dialog>
 
 <!-- Account dialog -->
@@ -399,20 +441,125 @@ const CONFIG = {
   EMAIL: "desioficials@gmail.com",
   FORM_ENDPOINT: "",       // Optional: Formspree / Cloudflare Worker URL that accepts a JSON POST. Leave "" to use WhatsApp/email.
   UNIQUE_ENDS: "2026-12-31T23:59:00+05:30",
-  UNIQUE_START_BID: 24999
+  UNIQUE_START_BID: 24999,
+  /* UPI. The live site takes these from wrangler.toml (UPI_ID / PAYEE_NAME). The values here are only
+     a backup used if the orders API can't be reached. PAYEE_NAME is the brand name shown in the UPI app. */
+  UPI_ID: "mrlast1997@okhdfcbank",
+  PAYEE_NAME: "DO DESI OFFICIALS",
+  SHOW_UPI_ID: true        // false = show only the QR / pay button, hide the UPI ID text
 };
-const PRODUCTS = [
-  {id:"do-001",code:"DO / 001",name:"Full-Sleeve T-Shirt",tag:"THE ESSENTIAL",price:4999,img:"assets/images/3.png",sizes:["S","M","L","XL","XXL"],desc:"Heavyweight full-sleeve tee with a relaxed street fit. The foundation of every DO fit."},
-  {id:"do-002",code:"DO / 002",name:"Joggers",tag:"STREET CULTURE",price:9999,img:"assets/images/4.png",sizes:["S","M","L","XL","XXL"],desc:"Tapered joggers built for movement, with a clean silhouette and premium feel."},
-  {id:"do-003",code:"DO / 003",name:"Hoodie",tag:"THE SIGNATURE",price:11999,img:"assets/images/5.png",sizes:["S","M","L","XL","XXL"],desc:"The signature DO hoodie. Heavy, structured and made to be noticed."}
+/* ============ QR code generator (no external library) ============ */
+/* Minimal QR Code generator: byte mode, error correction M, versions 1-10 (up to ~213 bytes). */
+function qrMatrix(text){
+  const bytes=[...new TextEncoder().encode(text)];
+  const ECC=[10,16,26,18,24,16,18,22,22,26], BLK=[1,1,1,2,2,4,4,4,5,5]; // index = version-1 (level M)
+  const rawCw=v=>{let r=(16*v+128)*v+64;if(v>=2){const a=Math.floor(v/7)+2;r-=(25*a-10)*a-55;if(v>=7)r-=36}return r>>3};
+  let ver=0,dataCw=0;
+  for(let v=1;v<=10;v++){
+    const cap=rawCw(v)-ECC[v-1]*BLK[v-1];
+    if(4+(v<=9?8:16)+bytes.length*8<=cap*8){ver=v;dataCw=cap;break}
+  }
+  if(!ver)throw new Error("QR: text too long");
+  // --- data bits
+  const bits=[];const put=(val,n)=>{for(let i=n-1;i>=0;i--)bits.push((val>>>i)&1)};
+  put(4,4);put(bytes.length,ver<=9?8:16);bytes.forEach(b=>put(b,8));
+  put(0,Math.min(4,dataCw*8-bits.length));
+  while(bits.length%8)bits.push(0);
+  const data=[];for(let i=0;i<bits.length;i+=8){let b=0;for(let j=0;j<8;j++)b=(b<<1)|bits[i+j];data.push(b)}
+  for(let pad=0xEC;data.length<dataCw;pad^=0xEC^0x11)data.push(pad);
+  // --- Reed-Solomon
+  const mul=(x,y)=>{let z=0;for(let i=7;i>=0;i--){z=(z<<1)^((z>>>7)*0x11D);z^=((y>>>i)&1)*x}return z};
+  const divisor=n=>{const r=new Array(n-1).fill(0);r.push(1);let root=1;for(let i=0;i<n;i++){for(let j=0;j<r.length;j++){r[j]=mul(r[j],root);if(j+1<r.length)r[j]^=r[j+1]}root=mul(root,2)}return r};
+  const remainder=(d,div)=>{const r=new Array(div.length).fill(0);for(const b of d){const f=b^r.shift();r.push(0);div.forEach((c,i)=>{r[i]^=mul(c,f)})}return r};
+  const nb=BLK[ver-1],el=ECC[ver-1],raw=rawCw(ver),nShort=nb-raw%nb,shortLen=Math.floor(raw/nb);
+  const rs=divisor(el),blocks=[];
+  for(let i=0,k=0;i<nb;i++){
+    const dat=data.slice(k,k+shortLen-el+(i<nShort?0:1));k+=dat.length;
+    const ecc=remainder(dat,rs);if(i<nShort)dat.push(0);blocks.push(dat.concat(ecc));
+  }
+  const all=[];
+  for(let i=0;i<blocks[0].length;i++)blocks.forEach((b,j)=>{if(i!==shortLen-el||j>=nShort)all.push(b[i])});
+  // --- matrix
+  const size=ver*4+17;
+  const mod=Array.from({length:size},()=>new Array(size).fill(false));
+  const fn=Array.from({length:size},()=>new Array(size).fill(false));
+  const setF=(x,y,d)=>{mod[y][x]=d;fn[y][x]=true};
+  for(let i=0;i<size;i++){setF(6,i,i%2===0);setF(i,6,i%2===0)}
+  const finder=(cx,cy)=>{for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){const d=Math.max(Math.abs(dx),Math.abs(dy)),x=cx+dx,y=cy+dy;if(x>=0&&x<size&&y>=0&&y<size)setF(x,y,d!==2&&d!==4)}};
+  finder(3,3);finder(size-4,3);finder(3,size-4);
+  const na=ver===1?0:Math.floor(ver/7)+2;
+  const pos=[];if(na){const step=Math.floor((ver*8+na*3+5)/(na*4-4))*2;pos.push(6);for(let p=size-7;pos.length<na;p-=step)pos.splice(1,0,p)}
+  pos.forEach((px,i)=>pos.forEach((py,j)=>{
+    if((i===0&&j===0)||(i===0&&j===na-1)||(i===na-1&&j===0))return;
+    for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)setF(px+dx,py+dy,Math.max(Math.abs(dx),Math.abs(dy))!==1);
+  }));
+  const fmt=mask=>{
+    const d=(0<<3)|mask;let r=d;for(let i=0;i<10;i++)r=(r<<1)^((r>>>9)*0x537);
+    const b=((d<<10)|r)^0x5412,g=i=>((b>>>i)&1)!==0;
+    for(let i=0;i<=5;i++)setF(8,i,g(i));setF(8,7,g(6));setF(8,8,g(7));setF(7,8,g(8));
+    for(let i=9;i<15;i++)setF(14-i,8,g(i));
+    for(let i=0;i<8;i++)setF(size-1-i,8,g(i));
+    for(let i=8;i<15;i++)setF(8,size-15+i,g(i));
+    setF(8,size-8,true);
+  };
+  fmt(0);
+  if(ver>=7){let r=ver;for(let i=0;i<12;i++)r=(r<<1)^((r>>>11)*0x1F25);const b=(ver<<12)|r;
+    for(let i=0;i<18;i++){const c=((b>>>i)&1)!==0,a=size-11+i%3,bb=Math.floor(i/3);setF(a,bb,c);setF(bb,a,c)}}
+  // --- place data
+  let bi=0;
+  for(let right=size-1;right>=1;right-=2){
+    if(right===6)right=5;
+    for(let vert=0;vert<size;vert++)for(let j=0;j<2;j++){
+      const x=right-j,up=((right+1)&2)===0,y=up?size-1-vert:vert;
+      if(!fn[y][x]&&bi<all.length*8){mod[y][x]=((all[bi>>>3]>>>(7-(bi&7)))&1)!==0;bi++}
+    }
+  }
+  // --- mask (choose lowest penalty)
+  const inv=(m,x,y)=>{switch(m){case 0:return(x+y)%2===0;case 1:return y%2===0;case 2:return x%3===0;case 3:return(x+y)%3===0;
+    case 4:return(Math.floor(x/3)+Math.floor(y/2))%2===0;case 5:return x*y%2+x*y%3===0;case 6:return(x*y%2+x*y%3)%2===0;default:return((x+y)%2+x*y%3)%2===0}};
+  const penalty=g=>{
+    let p=0;
+    for(let t=0;t<2;t++){for(let a=0;a<size;a++){let run=1;for(let b=1;b<size;b++){const c=t?g[b][a]:g[a][b],q=t?g[b-1][a]:g[a][b-1];
+      if(c===q){run++;if(run===5)p+=3;else if(run>5)p++}else run=1}}}
+    for(let y=0;y<size-1;y++)for(let x=0;x<size-1;x++){const c=g[y][x];if(c===g[y][x+1]&&c===g[y+1][x]&&c===g[y+1][x+1])p+=3}
+    const pat=[true,false,true,true,true,false,true,false,false,false,false];
+    for(let t=0;t<2;t++)for(let a=0;a<size;a++)for(let b=0;b<=size-11;b++){
+      let m1=true,m2=true;for(let k=0;k<11;k++){const c=t?g[b+k][a]:g[a][b+k];if(c!==pat[k])m1=false;if(c!==pat[10-k])m2=false}
+      if(m1||m2)p+=40}
+    let dark=0;for(const r of g)for(const c of r)if(c)dark++;
+    p+=Math.floor(Math.abs(dark*20-size*size*10)/(size*size))*10;
+    return p;
+  };
+  let best=0,bestP=Infinity,bestG=null;
+  for(let m=0;m<8;m++){
+    const g=mod.map((row,y)=>row.map((c,x)=>fn[y][x]?c:c!==inv(m,x,y)));
+    // temporarily write format bits for this mask
+    const saved=mod.map(r=>r.slice());fmt(m);
+    for(let y=0;y<size;y++)for(let x=0;x<size;x++)if(fn[y][x])g[y][x]=mod[y][x];
+    for(let y=0;y<size;y++)mod[y]=saved[y];
+    const p=penalty(g);if(p<bestP){bestP=p;best=m;bestG=g}
+  }
+  return bestG;
+}
+/* Returns an SVG string (black modules on white, with 4-module quiet zone). */
+function qrSvg(text,px){
+  const g=qrMatrix(text),n=g.length,q=4;let d="";
+  g.forEach((row,y)=>row.forEach((c,x)=>{if(c)d+=`M${x+q} ${y+q}h1v1h-1z`}));
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n+q*2} ${n+q*2}" width="${px||240}" height="${px||240}" shape-rendering="crispEdges" role="img" aria-label="UPI payment QR code"><rect width="100%" height="100%" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
+}
+if(typeof module!=="undefined")module.exports={qrMatrix,qrSvg};
+/* Used only if the products API can't be reached (e.g. site opened without the Worker). */
+const FALLBACK_PRODUCTS = [
+  {id:"do-001",code:"DO / 001",name:"Full-Sleeve T-Shirt",tag:"THE ESSENTIAL",price:4999,images:["assets/images/3.png"],sizes:["S","M","L","XL","XXL"],desc:"Heavyweight full-sleeve tee with a relaxed street fit. The foundation of every DO fit.",status:"live"},
+  {id:"do-002",code:"DO / 002",name:"Joggers",tag:"STREET CULTURE",price:9999,images:["assets/images/4.png"],sizes:["S","M","L","XL","XXL"],desc:"Tapered joggers built for movement, with a clean silhouette and premium feel.",status:"live"},
+  {id:"do-003",code:"DO / 003",name:"Hoodie",tag:"THE SIGNATURE",price:11999,images:["assets/images/5.png"],sizes:["S","M","L","XL","XXL"],desc:"The signature DO hoodie. Heavy, structured and made to be noticed.",status:"live"}
 ];
-const ARCHIVE = [
-  {t:"DO / 001 — Full-Sleeve",y:"Drop",k:"drop",img:"assets/images/3.png"},
-  {t:"DO / 002 — Joggers",y:"Drop",k:"drop",img:"assets/images/4.png"},
-  {t:"DO / 003 — Hoodie",y:"Drop",k:"drop",img:"assets/images/5.png"},
+/* Campaign tiles in the Archive (products marked "Archived" in the admin are added automatically). */
+const CAMPAIGNS = [
   {t:"Beyond Fashion",y:"Campaign",k:"campaign",img:"assets/images/1.png"},
   {t:"Enter the Frequency",y:"Campaign",k:"campaign",img:"assets/images/2.png"}
 ];
+let PRODUCTS = [];
 
 /* ============ helpers ============ */
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -423,7 +570,17 @@ function toast(msg,err){const t=$("#toast");t.textContent=msg;t.className="toast
 function el(tag,attrs={},...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs)){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v)}kids.forEach(c=>e.append(c));return e}
 function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)}
 function validPhone(v){return v.replace(/\D/g,"").length>=10}
-function img(src,alt){const i=el("img",{src,alt,loading:"lazy"});return i}
+function img(src,alt){const i=el("img",{src,alt,loading:"lazy",decoding:"async"});return i}
+const okImg=u=>typeof u==="string"&&/^(\/api\/img\/[a-f0-9]{16}|assets\/images\/[\w.\-]{1,80})$/.test(u);
+/* Fill a frame with an auto-fitted photo (full picture + blurred backdrop). */
+function fillPh(box,src,alt){
+  box.querySelectorAll(".bd,img").forEach(n=>n.remove());box.classList.remove("noimg");
+  if(!okImg(src)){box.classList.add("noimg");return box}
+  const b=el("div",{class:"bd"});b.style.backgroundImage=`url("${src}")`;
+  box.prepend(b);box.append(img(src,alt));return box;
+}
+const ph=(src,alt)=>fillPh(el("div",{class:"ph"}),src,alt);
+const pic=p=>(p.images&&p.images[0])||"";
 document.addEventListener("error",e=>{if(e.target.tagName==="IMG"){e.target.removeAttribute("src");e.target.parentElement&&e.target.parentElement.classList.add("noimg")}},true);
 
 /* Delivery: endpoint → WhatsApp → email. Called directly from a user gesture. */
@@ -458,21 +615,57 @@ const sentMsg={sent:"Sent. We'll get back to you soon.",whatsapp:"Opening WhatsA
 
 /* ============ products ============ */
 const grid=$("#productGrid");
-PRODUCTS.forEach(p=>{
-  const ph=el("div",{class:"ph"},img(p.img,p.name),el("span",{class:"badge"},p.tag));
-  const c=el("button",{class:"card",type:"button","aria-label":`View ${p.name}, from ${inr(p.price)}`},ph,
-    el("div",{class:"meta"},el("h3",{},p.name),el("span",{class:"code"},p.code)),
-    el("p",{class:"price"},"FROM "+inr(p.price)));
-  c.onclick=()=>openProduct(p);
-  grid.append(c);
-});
+const prodById=id=>PRODUCTS.find(p=>p.id===id);
+function cleanProduct(p){
+  if(!p||typeof p.id!=="string"||typeof p.name!=="string")return null;
+  const price=Number(p.price);if(!(price>0))return null;
+  return {id:p.id,code:String(p.code||""),name:p.name,tag:String(p.tag||""),price,desc:String(p.desc||""),
+    sizes:Array.isArray(p.sizes)&&p.sizes.length?p.sizes.map(String):["One Size"],
+    images:(Array.isArray(p.images)?p.images:[]).filter(okImg),
+    status:["live","soldout","archived"].includes(p.status)?p.status:"live"};
+}
+function renderProducts(){
+  grid.replaceChildren();
+  const shown=PRODUCTS.filter(p=>p.status!=="archived");
+  if(!shown.length){grid.append(el("p",{class:"loading"},"New drop coming soon."));return}
+  shown.forEach(p=>{
+    const sold=p.status==="soldout";
+    const frame=ph(pic(p),p.name);frame.append(el("span",{class:"badge"+(sold?" sold":"")},sold?"SOLD OUT":p.tag));
+    const c=el("button",{class:"card",type:"button","aria-label":`View ${p.name}, ${sold?"sold out":"from "+inr(p.price)}`},frame,
+      el("div",{class:"meta"},el("h3",{},p.name),el("span",{class:"code"},p.code)),
+      el("p",{class:"price"},sold?"SOLD OUT":"FROM "+inr(p.price)));
+    c.onclick=()=>openProduct(p);
+    grid.append(c);
+  });
+}
+async function loadProducts(){
+  grid.replaceChildren(el("p",{class:"loading"},"Loading collection…"));
+  let list=null;
+  try{
+    const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),5000);
+    const r=await fetch("/api/products",{signal:ctl.signal});clearTimeout(t);
+    if(r.ok&&(r.headers.get("content-type")||"").includes("json")){const d=await r.json();if(Array.isArray(d))list=d}
+  }catch{}
+  PRODUCTS=(list||FALLBACK_PRODUCTS).map(cleanProduct).filter(Boolean);
+  cart=cart.filter(l=>{const p=prodById(l.id);return p&&p.status==="live"&&p.sizes.includes(l.size)});
+  store.set("do-cart",cart);
+  renderProducts();renderCart();renderArchive();
+}
 let cur=null,curSize=null,curQty=1;
 const pDlg=$("#pDlg");
 function openProduct(p){
   cur=p;curSize=null;curQty=1;
-  $("#pTitle").textContent=p.name;$("#pCode").textContent=p.code+" · "+p.tag;
+  const sold=p.status==="soldout";
+  $("#pTitle").textContent=p.name;$("#pCode").textContent=[p.code,p.tag].filter(Boolean).join(" · ");
   $("#pPrice").textContent=inr(p.price);$("#pDesc").textContent=p.desc;
-  const i=$("#pImg");i.parentElement.classList.remove("noimg");i.src=p.img;i.alt=p.name;
+  const frame=$("#pPh"),th=$("#pThumbs");th.replaceChildren();
+  fillPh(frame,pic(p),p.name);
+  if(p.images.length>1)p.images.forEach((u,i)=>{
+    const b=el("button",{type:"button","aria-label":`Show photo ${i+1}`,class:i===0?"on":""});
+    const bg=el("div",{class:"bd"});bg.style.backgroundImage=`url("${u}")`;b.append(bg,img(u,""));
+    b.onclick=()=>{fillPh(frame,u,p.name);$$("button",th).forEach(x=>x.classList.toggle("on",x===b))};th.append(b);
+  });
+  $("#pAdd").disabled=sold;$("#pBuy").disabled=sold;$("#pAdd").textContent=sold?"SOLD OUT":"ADD TO CART ↗";
   $("#pQty").textContent=1;$("#pSizeErr").textContent="";
   const s=$("#pSizes");s.replaceChildren();
   p.sizes.forEach(z=>{const b=el("button",{type:"button","aria-pressed":"false"},z);b.onclick=()=>{curSize=z;$$("button",s).forEach(x=>{x.classList.toggle("on",x===b);x.setAttribute("aria-pressed",x===b)});$("#pSizeErr").textContent=""};s.append(b)});
@@ -485,24 +678,24 @@ $("#pAdd").onclick=()=>{if(needSize())return;addToCart(cur.id,curSize,curQty);pD
 $("#pBuy").onclick=()=>{if(needSize())return;addToCart(cur.id,curSize,curQty);pDlg.close();openCart()};
 
 /* ============ cart ============ */
-let cart=store.get("do-cart",[]).filter(l=>PRODUCTS.some(p=>p.id===l.id));
+let cart=store.get("do-cart",[]);
 const cDlg=$("#cDlg");
 function saveCart(){store.set("do-cart",cart);renderCart()}
 function addToCart(id,size,qty){const l=cart.find(x=>x.id===id&&x.size===size);if(l)l.qty=Math.min(10,l.qty+qty);else cart.push({id,size,qty});saveCart()}
-function cartTotal(){return cart.reduce((s,l)=>s+PRODUCTS.find(p=>p.id===l.id).price*l.qty,0)}
+function cartTotal(){return cart.reduce((s,l)=>{const p=prodById(l.id);return s+(p?p.price*l.qty:0)},0)}
 function renderCart(){
   const n=cart.reduce((s,l)=>s+l.qty,0);
   const cc=$("#cartCount");cc.textContent=n||"";cc.dataset.n=n;
   const box=$("#cLines");box.replaceChildren();
   if(!cart.length){box.append(el("p",{class:"empty"},"Your cart is empty."));$("#cFoot").hidden=true;return}
   cart.forEach((l,idx)=>{
-    const p=PRODUCTS.find(x=>x.id===l.id);
+    const p=prodById(l.id);if(!p)return;
     const q=el("div",{class:"qty",style:"margin-top:8px"},
       el("button",{type:"button","aria-label":"Decrease",onclick:()=>{l.qty>1?l.qty--:cart.splice(idx,1);saveCart()}},"−"),
       el("span",{},String(l.qty)),
       el("button",{type:"button","aria-label":"Increase",onclick:()=>{l.qty=Math.min(10,l.qty+1);saveCart()}},"+"));
     box.append(el("div",{class:"line"},
-      el("div",{class:"ph"},img(p.img,p.name)),
+      ph(pic(p),p.name),
       el("div",{},el("b",{},p.name),el("small",{},`Size ${l.size} · ${inr(p.price)}`),q),
       el("div",{style:"text-align:right"},el("b",{},inr(p.price*l.qty)),el("br"),el("button",{class:"rm",type:"button",onclick:()=>{cart.splice(idx,1);saveCart()}},"Remove"))));
   });
@@ -511,21 +704,101 @@ function renderCart(){
 function openCart(){renderCart();cDlg.showModal()}
 $("#cartBtn").onclick=openCart;
 
-$("#checkoutForm").addEventListener("submit",e=>{
+/* ============ checkout + UPI payment ============ */
+const IS_MOBILE=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const STATUS={
+  awaiting_payment:["Awaiting payment","wait"],payment_submitted:["Payment being verified","wait"],paid:["Paid · preparing your order","ok"],
+  shipped:["Shipped","ok"],delivered:["Delivered","ok"],cancelled:["Cancelled","bad"]
+};
+const myOrders=()=>store.get("do-orders",[]);
+function putOrder(o){store.set("do-orders",[o,...myOrders().filter(x=>x.id!==o.id)].slice(0,30))}
+const upiLink=(vpa,name,amt,note)=>`upi://pay?pa=${vpa}&pn=${encodeURIComponent(name)}&am=${amt.toFixed(2)}&cu=INR&tn=${encodeURIComponent(note)}`;
+async function postJSON(url,body){
+  let r;try{r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})}catch{return{net:true}}
+  let data=null;try{data=await r.json()}catch{}
+  return{ok:r.ok,status:r.status,data,api:!!data&&typeof data==="object"&&!Array.isArray(data)};
+}
+const lineText=l=>typeof l==="string"?l:`${l.code} ${l.name} · Size ${l.size} · Qty ${l.qty} · ${inr(l.price*l.qty)}`;
+const payDlg=$("#payDlg");
+
+$("#checkoutForm").addEventListener("submit",async e=>{
   e.preventDefault();
-  const f=e.target,d=Object.fromEntries(new FormData(f));
-  if(!d.name.trim()||!validPhone(d.phone)||!/^\d{6}$/.test(d.pin.trim())||!d.address.trim()){toast("Please enter a valid name, 10-digit phone, 6-digit pincode and address.",true);return}
+  const f=e.target,d=Object.fromEntries(new FormData(f)),btn=f.querySelector("button[type=submit]");
+  if(d.name.trim().length<2||!validPhone(d.phone)||!/^\d{6}$/.test(d.pin.trim())||d.address.trim().length<10){toast("Please enter a valid name, 10-digit phone, 6-digit pincode and full address.",true);return}
   if(!cart.length)return;
-  const lines=cart.map(l=>{const p=PRODUCTS.find(x=>x.id===l.id);return `${p.code} ${p.name} · Size ${l.size} · Qty ${l.qty} · ${inr(p.price*l.qty)}`});
-  const orderId="DO"+Date.now().toString(36).toUpperCase();
-  const total=cartTotal();
-  const text=`Order ${orderId}\n\n${lines.join("\n")}\n\nTotal: ${inr(total)}\n\nName: ${d.name}\nPhone: ${d.phone}\nPincode: ${d.pin}\nAddress: ${d.address}`;
-  const order={id:orderId,date:new Date().toISOString(),lines,total};
-  deliver(`New DO order ${orderId}`,text,{type:"order",orderId,total,items:cart,customer:d}).then(r=>{
-    const o=store.get("do-orders",[]);o.unshift(order);store.set("do-orders",o);
-    cart=[];saveCart();f.reset();cDlg.close();toast(`Order ${orderId} placed. ${sentMsg[r]}`);
-  });
+  const items=cart.map(({id,size,qty})=>({id,size,qty}));
+  btn.disabled=true;
+  try{
+    const res=await postJSON("/api/order",{items,customer:d});
+    let order;
+    if(res.ok&&res.data&&res.data.id){
+      order={id:res.data.id,ts:res.data.ts,total:res.data.total,lines:res.data.lines,status:res.data.status,upi:res.data.upi};
+    }else if(res.api&&res.status!==503&&res.status!==404&&res.status!==405){
+      toast((res.data&&res.data.error)||"Could not place your order. Please try again.",true);return;
+    }else{ // orders API not reachable: still let the customer pay; details go to the owner on WhatsApp/email
+      const rnd=[...crypto.getRandomValues(new Uint8Array(5))].map(b=>b.toString(16).padStart(2,"0")).join("").toUpperCase();
+      order={id:"DO"+rnd,ts:Date.now(),total:cartTotal(),status:"awaiting_payment",offline:true,customer:d,upi:{id:CONFIG.UPI_ID,name:CONFIG.PAYEE_NAME},
+        lines:cart.map(l=>{const p=prodById(l.id);return{code:p.code,name:p.name,size:l.size,qty:l.qty,price:p.price}})};
+    }
+    putOrder(order);cart=[];saveCart();f.reset();cDlg.close();openPay(order);
+  }finally{btn.disabled=false}
 });
+
+function openPay(o){
+  const b=$("#payBody");b.replaceChildren();
+  const link=upiLink(o.upi.id,o.upi.name,o.total,"DO "+o.id);
+  b.append(el("p",{class:"eyebrow"},"Order #"+o.id),el("p",{class:"payamt"},inr(o.total)));
+  if(o.status!=="awaiting_payment"){
+    b.append(el("p",{},"Payment reference already submitted."),statusPill(o.status),
+      el("p",{class:"note",style:"margin-top:14px"},"We're verifying your payment. You can track this order any time from the ◎ icon at the top."));
+    payDlg.showModal();return;
+  }
+  if(IS_MOBILE)b.append(el("a",{class:"btn solid",href:link,style:"width:100%;justify-content:center"},"PAY IN UPI APP ↗"));
+  b.append(el("p",{class:"note center",style:"margin-top:14px"},IS_MOBILE?"Or scan this QR from another phone":"Scan with any UPI app — GPay, PhonePe, Paytm, BHIM…"));
+  const qr=el("div",{class:"qr"});qr.innerHTML=qrSvg(link,230);b.append(qr);
+  if(CONFIG.SHOW_UPI_ID){
+    const copy=el("button",{class:"btn sm",type:"button"},"Copy");
+    copy.onclick=async()=>{try{await navigator.clipboard.writeText(o.upi.id);toast("UPI ID copied")}catch{toast("Select and copy the UPI ID manually",true)}};
+    b.append(el("div",{class:"upirow"},el("span",{class:"note"},"UPI ID"),el("code",{},o.upi.id),copy));
+  }
+  b.append(el("ol",{class:"steps"},
+    el("li",{},`Pay exactly ${inr(o.total)} — the amount is filled in for you.`),
+    el("li",{},"After paying, find the 12-digit UTR / UPI Ref No. in your payment details."),
+    el("li",{},"Enter it below and confirm so we can verify your order.")));
+  const f=el("form",{class:"paybox",novalidate:""});
+  const inp=el("input",{name:"utr",inputmode:"numeric",maxlength:"14",placeholder:"12-digit UTR / reference number",autocomplete:"off","aria-label":"UTR number"});
+  const btn=el("button",{class:"btn solid",type:"submit",style:"justify-content:center"},"I'VE PAID — CONFIRM ↗");
+  f.append(el("label",{},"UTR / transaction reference",inp),btn,el("p",{class:"note"},"Not paid yet? Close this window — you can finish payment later from the ◎ icon. Orders unpaid for 24 hours may be cancelled."));
+  f.addEventListener("submit",ev=>{ev.preventDefault();confirmPay(o,inp.value.replace(/\s/g,""),btn)});
+  b.append(f);
+  payDlg.showModal();
+}
+function statusPill(s){const[t,c]=STATUS[s]||[s,""];return el("span",{class:"stat "+c},t)}
+
+async function confirmPay(o,utr,btn){
+  if(!/^\d{12}$/.test(utr)){toast("Enter the 12-digit UTR / reference number from your UPI app.",true);return}
+  let offlineRoute=null;
+  if(o.offline){ // no API: send everything to the owner (called straight from the tap so WhatsApp/email can open)
+    const c=o.customer||{};
+    const text=`Order ${o.id}\n\n${o.lines.map(lineText).join("\n")}\n\nTotal: ${inr(o.total)}\nUPI payment made. UTR: ${utr}\n\nName: ${c.name}\nPhone: ${c.phone}\nPincode: ${c.pin}\nAddress: ${c.address}`;
+    deliver(`DO order ${o.id} — UPI paid`,text,{type:"order",orderId:o.id,total:o.total,utr,customer:c});
+    offlineRoute=true;
+  }else{
+    btn.disabled=true;
+    const res=await postJSON("/api/order/pay",{id:o.id,utr});
+    btn.disabled=false;
+    if(!res.ok){toast((res.data&&res.data.error)||"Could not submit. Check your connection and try again.",true);return}
+  }
+  o.status="payment_submitted";o.utr=utr;putOrder(o);
+  const b=$("#payBody");b.replaceChildren(
+    el("div",{class:"center"},el("p",{class:"eyebrow"},"Order #"+o.id),el("h3",{style:"font-size:30px;margin:10px 0"},"PAYMENT SUBMITTED"),
+      el("p",{class:"lead",style:"margin:0 auto 18px"},"Thank you! We're verifying your payment and will confirm your order shortly. Track it any time from the ◎ icon at the top."),
+      statusPill(o.status)));
+  if(CONFIG.WHATSAPP&&!offlineRoute){
+    const msg=`Hi DO, I've paid ${inr(o.total)} for order #${o.id}. UTR: ${utr}`;
+    b.append(el("p",{class:"center",style:"margin-top:20px"},el("a",{class:"btn",href:`https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(msg)}`,target:"_blank",rel:"noopener"},"Message us on WhatsApp ↗")));
+  }
+}
 
 /* ============ membership ============ */
 function member(){return store.get("do-member",null)}
@@ -564,13 +837,37 @@ function openAccount(){
     b.append(el("p",{class:"eyebrow"},"Member"),el("h3",{style:"font-size:40px;margin:8px 0"},m.id),
       el("p",{},m.name),el("p",{class:"note"},m.email+" · "+m.phone),
       el("p",{class:"note"},"Member since "+new Date(m.since).toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"})));
-    const o=store.get("do-orders",[]);
-    b.append(el("p",{class:"eyebrow",style:"margin-top:26px"},"Purchase history"));
-    if(!o.length)b.append(el("p",{class:"note",style:"margin-top:8px"},"No orders yet."));
-    else{const ul=el("ul",{class:"orders"});o.forEach(x=>ul.append(el("li",{},el("b",{},x.id+" · "+inr(x.total)),el("br"),new Date(x.date).toLocaleDateString("en-IN"),el("br"),x.lines.join(" | "))));b.append(ul)}
-    b.append(el("button",{class:"btn",style:"margin-top:24px",type:"button",onclick:()=>{if(confirm("Sign out of this device?")){localStorage.removeItem("do-member");$("#aDlg").close();renderJoin();renderBid()}}},"SIGN OUT"));
   }
+  b.append(el("p",{class:"eyebrow",style:"margin-top:26px"},"My orders"));
+  const box=el("div",{id:"myOrders"});b.append(box);
+  if(m)b.append(el("button",{class:"btn",style:"margin-top:24px",type:"button",onclick:()=>{if(confirm("Sign out of this device?")){try{localStorage.removeItem("do-member")}catch{}$("#aDlg").close();renderJoin();renderBid()}}},"SIGN OUT"));
+  renderMyOrders(box);
   $("#aDlg").showModal();
+  refreshOrders().then(()=>{if($("#aDlg").open)renderMyOrders(box)});
+}
+function renderMyOrders(box){
+  box.replaceChildren();
+  const list=myOrders();
+  if(!list.length){box.append(el("p",{class:"note",style:"margin-top:8px"},"No orders yet."));return}
+  const ul=el("ul",{class:"orders"});
+  list.forEach(x=>{
+    const li=el("li",{},el("b",{},`#${x.id} · ${inr(x.total)}`),el("br"),new Date(x.ts||x.date).toLocaleDateString("en-IN"),el("br"),
+      (x.lines||[]).map(lineText).join(" | "));
+    if(x.status){li.append(el("br"),statusPill(x.status))}
+    if(x.note)li.append(el("p",{class:"note",style:"margin-top:6px"},"Note from DO: "+x.note));
+    if(x.status==="awaiting_payment"&&x.upi)li.append(el("div",{style:"margin-top:10px"},el("button",{class:"btn solid sm",type:"button",onclick:()=>{$("#aDlg").close();openPay(x)}},"COMPLETE PAYMENT ↗")));
+    ul.append(li);
+  });
+  box.append(ul);
+}
+/* Pull the latest status of the customer's orders from the server (only those placed through the API). */
+async function refreshOrders(){
+  const list=myOrders().filter(o=>!o.offline&&/^[A-F0-9]{12}$/.test(o.id)&&!["delivered","cancelled"].includes(o.status));
+  if(!list.length)return;
+  await Promise.all(list.map(async o=>{
+    try{const r=await fetch("/api/order/"+o.id);if(!r.ok)return;const d=await r.json();
+      if(d&&d.status)store.set("do-orders",myOrders().map(x=>x.id===o.id?{...x,status:d.status,note:d.note||""}:x))}catch{}
+  }));
 }
 $("#acctBtn").onclick=openAccount;
 
@@ -601,9 +898,13 @@ function renderBid(){
 setInterval(tick,1000);tick();
 
 /* ============ archive ============ */
-function renderArchive(k="all"){
+let archiveFilter="all";
+function renderArchive(k=archiveFilter){
+  archiveFilter=k;
   const g=$("#archiveGrid");g.replaceChildren();
-  ARCHIVE.filter(a=>k==="all"||a.k===k).forEach(a=>g.append(el("div",{class:"aitem"},el("div",{class:"ph"},img(a.img,a.t)),el("p",{},a.t),el("small",{},a.y.toUpperCase()))));
+  const drops=PRODUCTS.filter(p=>p.status==="archived").map(p=>({t:[p.code,p.name].filter(Boolean).join(" — "),y:"Drop",k:"drop",img:pic(p)}));
+  [...drops,...CAMPAIGNS].filter(a=>k==="all"||a.k===k)
+    .forEach(a=>g.append(el("div",{class:"aitem"},ph(a.img,a.t),el("p",{},a.t),el("small",{},a.y.toUpperCase()))));
 }
 $("#filters").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;$$("#filters button").forEach(x=>x.classList.toggle("on",x===b));renderArchive(b.dataset.f)});
 
@@ -624,7 +925,8 @@ $$("main section").forEach(s=>new IntersectionObserver(es=>es.forEach(en=>{if(en
 const rv=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");rv.unobserve(en.target)}}),{threshold:.12});
 $$(".rev").forEach(r=>rv.observe(r));
 
-renderCart();renderJoin();renderBid();renderArchive();
+fillPh($("#uniquePh"),"assets/images/2.png","Unique DO — exclusive piece");
+renderJoin();renderBid();loadProducts();
 </script>
 </body>
 </html>
