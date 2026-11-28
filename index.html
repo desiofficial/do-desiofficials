@@ -11,6 +11,7 @@
 <meta property="og:description" content="Wear the attitude. Live the DO. Exclusive collections, limited drops and Unique DOs.">
 <meta property="og:image" content="assets/images/1.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="membership.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Organization","name":"DO — DESI OFFICIALS","email":"desioficials@gmail.com","slogan":"Beyond Fashion.","sameAs":["https://www.instagram.com/desi_officials","https://www.linkedin.com/company/desi-officials/","https://www.youtube.com/@desiofficials69"]}
 </script>
@@ -37,7 +38,6 @@ section{padding:90px 0;border-top:1px solid var(--line)}
 .btn.solid{background:var(--acc);border-color:var(--acc);color:#000}
 .btn.solid:hover{background:var(--fg);border-color:var(--fg)}
 .btn[disabled]{opacity:.4;pointer-events:none}
-/* header */
 header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(5,5,5,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .bar{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
 .logo img{height:34px;width:auto}
@@ -56,7 +56,6 @@ nav.main a:hover,nav.main a.on{color:var(--fg)}
 .menu .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
 .menu a{font-size:clamp(28px,8vw,44px);font-weight:900;text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--line)}
 .menu a small{font-size:12px;color:var(--mute);margin-right:14px;letter-spacing:.2em}
-/* hero */
 #home{padding:0;border:0;min-height:100svh;display:flex;align-items:flex-end;position:relative;overflow:hidden}
 #home .bg{position:absolute;inset:0}
 #home .bg img{width:100%;height:100%;object-fit:cover;opacity:.55}
@@ -65,18 +64,14 @@ nav.main a:hover,nav.main a.on{color:var(--fg)}
 #home h1{font-size:clamp(52px,13vw,190px);margin:18px 0}
 #home p.tag{font-size:clamp(14px,2vw,20px);letter-spacing:.18em;margin-bottom:34px}
 .scroll{position:absolute;right:20px;bottom:24px;font-size:11px;letter-spacing:.25em;color:var(--mute)}
-/* experience */
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:40px}
 .tile{background:var(--bg);padding:34px 28px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;transition:.3s var(--ease)}
 .tile:hover{background:var(--bg2)}
 .tile b{font-size:26px;text-transform:uppercase;letter-spacing:-.01em;display:block;margin:10px 0 6px}
 .tile span{color:var(--mute)}
-/* products */
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:44px}
 .card{cursor:pointer;display:block;width:100%;text-align:left}
 .ph{aspect-ratio:4/5;background:var(--bg2);overflow:hidden;position:relative;border:1px solid var(--line)}
-/* Auto-fit photos: whole picture always visible (never cropped or stretched), any ratio.
-   A blurred copy of the same photo fills the leftover space so frames look clean. */
 .ph .bd{position:absolute;inset:-14px;background-size:cover;background-position:center;filter:blur(18px) brightness(.5);transform:scale(1.1)}
 .ph img{position:relative;width:100%;height:100%;object-fit:contain;transition:transform .7s var(--ease)}
 .card:hover .ph img{transform:scale(1.04)}
@@ -93,7 +88,6 @@ nav.main a:hover,nav.main a.on{color:var(--fg)}
 .meta h3{font-size:20px}
 .meta .code{color:var(--mute);font-size:11px;letter-spacing:.2em}
 .price{font-weight:700;margin-top:4px}
-/* unique */
 #unique{background:var(--bg2)}
 .split{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
 .chips{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 30px}
@@ -105,7 +99,6 @@ nav.main a:hover,nav.main a.on{color:var(--fg)}
 .timer div{text-align:center}
 .timer b{font-size:30px;display:block;font-variant-numeric:tabular-nums}
 .timer span{font-size:10px;letter-spacing:.2em;color:var(--mute)}
-/* forms */
 form{display:grid;gap:14px}
 label{font-size:11px;letter-spacing:.2em;color:var(--mute);text-transform:uppercase;display:grid;gap:7px}
 input,textarea,select{background:var(--bg);border:1px solid var(--line);color:var(--fg);padding:13px 14px;font:inherit;width:100%;border-radius:0}
@@ -118,7 +111,6 @@ textarea{min-height:120px;resize:vertical}
 .perks h3{font-size:22px;margin:8px 0}
 .perks p{color:var(--mute);font-size:14px}
 .joinbox{max-width:620px}
-/* archive */
 .filters{display:flex;gap:10px;margin:28px 0;flex-wrap:wrap}
 .filters button{border:1px solid var(--line);padding:9px 16px;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
 .filters button.on{background:var(--fg);color:#000}
@@ -126,7 +118,6 @@ textarea{min-height:120px;resize:vertical}
 .aitem .ph{aspect-ratio:3/4}
 .aitem p{font-size:12px;letter-spacing:.14em;margin-top:10px;text-transform:uppercase}
 .aitem small{color:var(--mute);letter-spacing:.14em;font-size:11px}
-/* about */
 .big{font-size:clamp(30px,5.5vw,70px);font-weight:900;text-transform:uppercase;line-height:1;letter-spacing:-.02em;max-width:1000px}
 .big em{font-style:normal;color:var(--acc)}
 .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:50px}
@@ -140,7 +131,6 @@ footer nav{display:flex;gap:22px;flex-wrap:wrap}
 footer nav a{font-size:12px;letter-spacing:.2em;color:var(--mute)}
 footer nav a:hover{color:var(--fg)}
 footer p{margin-top:30px;color:var(--mute);font-size:11px;letter-spacing:.2em}
-/* dialogs */
 dialog{background:var(--bg);color:var(--fg);border:1px solid var(--line);padding:0;max-width:min(960px,94vw);width:100%;max-height:92vh;overflow:auto;margin:auto}
 dialog::backdrop{background:rgba(0,0,0,.78);backdrop-filter:blur(4px)}
 .dhead{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:2}
@@ -168,7 +158,6 @@ dialog.drawer{margin:0 0 0 auto;height:100vh;max-height:100vh;max-width:460px;bo
 .toast.err{background:var(--danger);color:#fff}
 .gate{position:fixed;inset:0;z-index:300;background:var(--bg);display:grid;place-items:center;text-align:center;padding:20px;transition:opacity .6s var(--ease),visibility .6s}
 .gate.hide{opacity:0;visibility:hidden}
-.gate img{width:min(220px,50vw);margin:0 auto 30px}
 .gate button{border:1px solid var(--acc);color:var(--acc);padding:15px 28px;letter-spacing:.3em;font-size:12px;font-weight:700}
 .gate button:hover{background:var(--acc);color:#000}
 .rev{opacity:0;transform:translateY(26px);transition:.9s var(--ease)}
@@ -206,7 +195,7 @@ dialog.pay{max-width:min(460px,94vw)}
 
 <div class="gate" id="gate" role="dialog" aria-label="Welcome">
   <div>
-    <img src="assets/images/do-logo.png" alt="DO — DESI OFFICIALS">
+    <div class="dm-orbit"><img src="assets/images/do-logo.png" alt="DO — DESI OFFICIALS"></div>
     <button id="enter" type="button">ENTER THE FREQUENCY</button>
   </div>
 </div>
@@ -396,7 +385,7 @@ dialog.pay{max-width:min(460px,94vw)}
       <div style="display:flex;gap:10px;margin-top:26px;flex-wrap:wrap"><button class="btn solid" id="pAdd">ADD TO CART ↗</button><button class="btn" id="pBuy">BUY NOW</button></div>
       <details style="margin-top:24px"><summary class="eyebrow" style="cursor:pointer">Size guide (cm)</summary>
         <table class="sg"><tr><th>Size</th><th>Chest</th><th>Length</th></tr><tr><td>S</td><td>96</td><td>68</td></tr><tr><td>M</td><td>101</td><td>70</td></tr><tr><td>L</td><td>106</td><td>72</td></tr><tr><td>XL</td><td>111</td><td>74</td></tr><tr><td>XXL</td><td>116</td><td>76</td></tr></table>
-        <p class="note" style="margin-top:8px">Indicative measurements. Replace with your real size chart.</p></details>
+        <p class="note" style="margin-top:8px">Measurements are in cm and may vary by 1–2 cm.</p></details>
       <p class="note" style="margin-top:20px">Free shipping across India on orders above ₹10,000 · Exchange within 7 days of delivery.</p>
     </div>
   </div>
@@ -442,7 +431,7 @@ const CONFIG = {
   FORM_ENDPOINT: "",       // Optional: Formspree / Cloudflare Worker URL that accepts a JSON POST. Leave "" to use WhatsApp/email.
   UNIQUE_ENDS: "2026-12-31T23:59:00+05:30",
   UNIQUE_START_BID: 24999,
-  /* UPI. The live site takes these from wrangler.toml (UPI_ID / PAYEE_NAME). The values here are only
+  /* UPI. The live site takes these from wrangler.jsonc (UPI_ID / PAYEE_NAME). The values here are only
      a backup used if the orders API can't be reached. PAYEE_NAME is the brand name shown in the UPI app. */
   UPI_ID: "mrlast1997@okhdfcbank",
   PAYEE_NAME: "DO DESI OFFICIALS",
@@ -471,14 +460,14 @@ function qrMatrix(text){
   const mul=(x,y)=>{let z=0;for(let i=7;i>=0;i--){z=(z<<1)^((z>>>7)*0x11D);z^=((y>>>i)&1)*x}return z};
   const divisor=n=>{const r=new Array(n-1).fill(0);r.push(1);let root=1;for(let i=0;i<n;i++){for(let j=0;j<r.length;j++){r[j]=mul(r[j],root);if(j+1<r.length)r[j]^=r[j+1]}root=mul(root,2)}return r};
   const remainder=(d,div)=>{const r=new Array(div.length).fill(0);for(const b of d){const f=b^r.shift();r.push(0);div.forEach((c,i)=>{r[i]^=mul(c,f)})}return r};
-  const nb=BLK[ver-1],el=ECC[ver-1],raw=rawCw(ver),nShort=nb-raw%nb,shortLen=Math.floor(raw/nb);
-  const rs=divisor(el),blocks=[];
+  const nb=BLK[ver-1],elc=ECC[ver-1],raw=rawCw(ver),nShort=nb-raw%nb,shortLen=Math.floor(raw/nb);
+  const rs=divisor(elc),blocks=[];
   for(let i=0,k=0;i<nb;i++){
-    const dat=data.slice(k,k+shortLen-el+(i<nShort?0:1));k+=dat.length;
+    const dat=data.slice(k,k+shortLen-elc+(i<nShort?0:1));k+=dat.length;
     const ecc=remainder(dat,rs);if(i<nShort)dat.push(0);blocks.push(dat.concat(ecc));
   }
   const all=[];
-  for(let i=0;i<blocks[0].length;i++)blocks.forEach((b,j)=>{if(i!==shortLen-el||j>=nShort)all.push(b[i])});
+  for(let i=0;i<blocks[0].length;i++)blocks.forEach((b,j)=>{if(i!==shortLen-elc||j>=nShort)all.push(b[i])});
   // --- matrix
   const size=ver*4+17;
   const mod=Array.from({length:size},()=>new Array(size).fill(false));
@@ -533,7 +522,6 @@ function qrMatrix(text){
   let best=0,bestP=Infinity,bestG=null;
   for(let m=0;m<8;m++){
     const g=mod.map((row,y)=>row.map((c,x)=>fn[y][x]?c:c!==inv(m,x,y)));
-    // temporarily write format bits for this mask
     const saved=mod.map(r=>r.slice());fmt(m);
     for(let y=0;y<size;y++)for(let x=0;x<size;x++)if(fn[y][x])g[y][x]=mod[y][x];
     for(let y=0;y<size;y++)mod[y]=saved[y];
@@ -735,10 +723,8 @@ $("#checkoutForm").addEventListener("submit",async e=>{
       order={id:res.data.id,ts:res.data.ts,total:res.data.total,lines:res.data.lines,status:res.data.status,upi:res.data.upi};
     }else if(res.api&&res.status!==503&&res.status!==404&&res.status!==405){
       toast((res.data&&res.data.error)||"Could not place your order. Please try again.",true);return;
-    }else{ // orders API not reachable: still let the customer pay; details go to the owner on WhatsApp/email
-      const rnd=[...crypto.getRandomValues(new Uint8Array(5))].map(b=>b.toString(16).padStart(2,"0")).join("").toUpperCase();
-      order={id:"DO"+rnd,ts:Date.now(),total:cartTotal(),status:"awaiting_payment",offline:true,customer:d,upi:{id:CONFIG.UPI_ID,name:CONFIG.PAYEE_NAME},
-        lines:cart.map(l=>{const p=prodById(l.id);return{code:p.code,name:p.name,size:l.size,qty:l.qty,price:p.price}})};
+    }else{
+      toast("Orders are temporarily unavailable. Please try again in a few minutes.",true);return;
     }
     putOrder(order);cart=[];saveCart();f.reset();cDlg.close();openPay(order);
   }finally{btn.disabled=false}
@@ -778,7 +764,7 @@ function statusPill(s){const[t,c]=STATUS[s]||[s,""];return el("span",{class:"sta
 async function confirmPay(o,utr,btn){
   if(!/^\d{12}$/.test(utr)){toast("Enter the 12-digit UTR / reference number from your UPI app.",true);return}
   let offlineRoute=null;
-  if(o.offline){ // no API: send everything to the owner (called straight from the tap so WhatsApp/email can open)
+  if(o.offline){
     const c=o.customer||{};
     const text=`Order ${o.id}\n\n${o.lines.map(lineText).join("\n")}\n\nTotal: ${inr(o.total)}\nUPI payment made. UTR: ${utr}\n\nName: ${c.name}\nPhone: ${c.phone}\nPincode: ${c.pin}\nAddress: ${c.address}`;
     deliver(`DO order ${o.id} — UPI paid`,text,{type:"order",orderId:o.id,total:o.total,utr,customer:c});
@@ -800,47 +786,39 @@ async function confirmPay(o,utr,btn){
   }
 }
 
-/* ============ membership ============ */
-function member(){return store.get("do-member",null)}
+/* ============ membership (server-backed) ============ */
+function member(){const u=window.DOMember&&window.DOMember.user;return u&&u.active?{id:u.do_id,name:u.name,email:u.email,phone:"",since:new Date(u.since||Date.now()).toISOString()}:null}
 function renderJoin(){
   const box=$("#joinBox");box.replaceChildren();
-  const m=member();
-  if(m){
-    box.append(el("p",{class:"eyebrow"},"You're in"),el("h3",{style:"font-size:34px;margin:10px 0"},"WELCOME, "+m.name.split(" ")[0]),
-      el("p",{class:"lead"},"Your DO ID is "+m.id+". Unique DOs bidding is unlocked."),
+  const u=window.DOMember&&window.DOMember.user;
+  if(u){
+    box.append(el("p",{class:"eyebrow"},u.active?"You're in":"Your DO ID"),el("h3",{style:"font-size:34px;margin:10px 0"},"WELCOME, "+u.name.split(" ")[0]),
+      el("p",{class:"lead"},"Your DO ID is "+u.do_id+(u.active?". Unique DOs bidding is unlocked.":". Pick a plan below to unlock Unique DOs.")),
       el("div",{style:"margin-top:22px"},el("button",{class:"btn",type:"button",onclick:openAccount},"VIEW MY DO ID ↗")));
     return;
   }
-  const f=el("form",{novalidate:""});
-  f.innerHTML=`<div class="row2"><label>Name<input name="name" required autocomplete="name"></label><label>Phone<input name="phone" type="tel" required autocomplete="tel"></label></div>
-  <label>Email<input name="email" type="email" required autocomplete="email"></label>
-  <label style="display:flex;gap:10px;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:13px"><input type="checkbox" name="ok" style="width:auto;margin-top:3px" required>I agree to be contacted about drops, early access and Unique DOs.</label>
-  <button class="btn solid" type="submit">JOIN DO ↗</button><p class="note">Free to join. Your details are used only to run your DO membership.</p>`;
-  f.addEventListener("submit",e=>{
-    e.preventDefault();const d=Object.fromEntries(new FormData(f));
-    if(!d.name.trim()||!validEmail(d.email)||!validPhone(d.phone)||!d.ok){toast("Please complete all fields with a valid email and phone.",true);return}
-    const id="DO-"+Math.random().toString(36).slice(2,8).toUpperCase();
-    deliver(`New DO member ${id}`,`Name: ${d.name}\nEmail: ${d.email}\nPhone: ${d.phone}\nDO ID: ${id}`,{type:"member",id,...d}).then(r=>{
-      store.set("do-member",{id,name:d.name.trim(),email:d.email.trim(),phone:d.phone.trim(),since:new Date().toISOString()});
-      renderJoin();renderBid();toast("Welcome to DO. "+sentMsg[r]);
-    });
-  });
-  box.append(f);
+  box.append(el("p",{class:"lead"},"Create your DO ID, then pick a plan below."),
+    el("div",{style:"margin-top:20px;display:flex;gap:10px;flex-wrap:wrap"},
+      el("button",{class:"btn solid",type:"button",onclick:()=>DOMembership.openAuth("signup")},"CREATE MY DO ID ↗"),
+      el("button",{class:"btn",type:"button",onclick:()=>DOMembership.openAuth("login")},"LOG IN")));
 }
 function openAccount(){
+  if(!window.DOMembership){toast("Loading, try again in a moment.",true);return}
   const b=$("#aBody");b.replaceChildren();
-  const m=member();
-  if(!m){
-    b.append(el("p",{class:"lead"},"Join DO to get your DO ID, early access and Unique DOs bidding."),
-      el("div",{style:"margin-top:20px"},el("a",{class:"btn solid",href:"#membership",onclick:()=>$("#aDlg").close()},"BECOME A MEMBER ↗")));
+  const u=window.DOMember&&window.DOMember.user;
+  if(!u){
+    b.append(el("p",{class:"lead"},"Create your DO ID to get early access and Unique DOs bidding."),
+      el("div",{style:"margin-top:20px;display:flex;gap:10px;flex-wrap:wrap"},
+        el("button",{class:"btn solid",type:"button",onclick:()=>{$("#aDlg").close();DOMembership.openAuth("signup")}},"CREATE MY DO ID ↗"),
+        el("button",{class:"btn",type:"button",onclick:()=>{$("#aDlg").close();DOMembership.openAuth("login")}},"LOG IN")));
   }else{
-    b.append(el("p",{class:"eyebrow"},"Member"),el("h3",{style:"font-size:40px;margin:8px 0"},m.id),
-      el("p",{},m.name),el("p",{class:"note"},m.email+" · "+m.phone),
-      el("p",{class:"note"},"Member since "+new Date(m.since).toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"})));
+    b.append(DOMembership.cardEl(),
+      el("p",{class:"eyebrow",style:"margin-top:18px"},u.active?"Active · valid till "+new Date(u.member_until).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"Not active"),
+      el("div",{style:"margin-top:14px"},el("a",{class:"btn solid sm",href:"#membership",onclick:()=>$("#aDlg").close()},u.active?"EXTEND MEMBERSHIP ↗":"BECOME A MEMBER ↗")));
   }
   b.append(el("p",{class:"eyebrow",style:"margin-top:26px"},"My orders"));
   const box=el("div",{id:"myOrders"});b.append(box);
-  if(m)b.append(el("button",{class:"btn",style:"margin-top:24px",type:"button",onclick:()=>{if(confirm("Sign out of this device?")){try{localStorage.removeItem("do-member")}catch{}$("#aDlg").close();renderJoin();renderBid()}}},"SIGN OUT"));
+  if(u)b.append(el("button",{class:"btn",style:"margin-top:24px",type:"button",onclick:()=>{if(confirm("Sign out of this device?")){$("#aDlg").close();DOMembership.logout()}}},"SIGN OUT"));
   renderMyOrders(box);
   $("#aDlg").showModal();
   refreshOrders().then(()=>{if($("#aDlg").open)renderMyOrders(box)});
@@ -891,7 +869,9 @@ function renderBid(){
   f.addEventListener("submit",e=>{
     e.preventDefault();const bid=Number(new FormData(f).get("bid"));
     if(!bid||bid<CONFIG.UNIQUE_START_BID){toast("Minimum bid is "+inr(CONFIG.UNIQUE_START_BID),true);return}
-    deliver(`Unique DO / 001 bid from ${m.id}`,`Member: ${m.name} (${m.id})\nEmail: ${m.email}\nPhone: ${m.phone}\nBid: ${inr(bid)}`,{type:"bid",item:"UNIQUE DO / 001",bid,member:m}).then(r=>{f.reset();toast(`Bid of ${inr(bid)} submitted. ${sentMsg[r]}`)});
+    fetch("/api/m/bid",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({item:"UNIQUE DO / 001",amount:bid})})
+      .then(async r=>{if(!r.ok)throw new Error((await r.json().catch(()=>({}))).error||"Bid failed");f.reset();toast("Bid of "+inr(bid)+" submitted.")})
+      .catch(err=>toast(err.message,true));
   });
   box.append(f);
 }
@@ -926,9 +906,10 @@ const rv=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.t
 $$(".rev").forEach(r=>rv.observe(r));
 
 fillPh($("#uniquePh"),"assets/images/6.jpg","Unique DO — exclusive piece");
+document.addEventListener("do:member",()=>{renderJoin();renderBid()});
 renderJoin();renderBid();loadProducts();
 </script>
    <script src="assets/js/do-enhancements.js"></script>
-   
+   <script src="membership.js" defer></script>
 </body>
-  </html>
+</html>
