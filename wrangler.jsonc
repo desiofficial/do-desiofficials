@@ -1,18 +1,26 @@
 {
-"$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
-"name": "do-desiofficials",
-"main": "worker.js",
-"compatibility_date": "2026-11-21",
-"assets": {
-"directory": "./",
-"binding": "ASSETS",
-"run_worker_first": ["/api/*"]
-},
-"d1_databases": [
-{
-"binding": "DB",
-"database_name": "do-desiofficials-db",
-"database_id": "7b953da5-e3db-4f0a-a562-464888f1ec3b"
-}
-]
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "do-desiofficials",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-21",
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "do-desiofficials-db",
+      "database_id": "7b953da5-e3db-4f0a-a562-464888f1ec3b"
+    }
+  ],
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true
+    }
+  }
 }
