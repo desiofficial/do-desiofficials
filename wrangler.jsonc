@@ -1,3 +1,4 @@
+
 {
   "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
   "name": "do-desiofficials",
@@ -16,11 +17,21 @@
     }
   ],
   "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
     "logs": {
       "enabled": true,
       "head_sampling_rate": 1,
       "invocation_logs": true,
       "persist": true
+    },
+    "traces": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "persist": false
+    },
+    "issue_detection": {
+      "enabled": false
     }
   }
 }
