@@ -10,6 +10,14 @@ const SESSION_COOKIE = "do_session";
 const STATE_COOKIE = "do_oauth_state";
 const SESSION_DURATION = 7 * 24 * 60 * 60;
 
+/* Paid membership tiers (UPI, admin-approved). */
+const MEMBERSHIP_PLANS = {
+  m1:  { label: "1 Month",   price: 99,  days: 30 },
+  m6:  { label: "6 Months",  price: 499, days: 183 },
+  m12: { label: "12 Months", price: 999, days: 365 }
+};
+const DAY_MS = 86400000;
+
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
@@ -717,6 +725,13 @@ async function getDOMembership(request, env) {
     }, 404);
   }
 
+  const pending = await env.DB.prepare(`
+    SELECT COUNT(*) AS total
+    FROM membership_payments
+    WHERE customer_id = ?
+      AND status = 'pending'
+  `).bind(customerId).first();
+
   return json({
     success: true,
 
@@ -736,8 +751,14 @@ async function getDOMembership(request, env) {
       level: result.membership_level,
       status: result.membership_status,
       joined_at: result.joined_at,
-      expires_at: result.expires_at
-    } : null
+      expires_at: result.expires_at,
+      active_paid: !!(
+        result.expires_at &&
+        new Date(result.expires_at).getTime() > Date.now()
+      )
+    } : null,
+
+    pending_payments: Number(pending?.total || 0)
   });
 }
 
@@ -904,6 +925,205 @@ async function joinDO(request, env) {
       expires_at: membership.expires_at
     }
   }, 201);
+}
+
+/* =========================================
+   DO MEMBERSHIP PAYMENTS (UPI, admin-approved)
+   Plans: ₹99 / 1 month, ₹499 / 6 months, ₹999 / 12 months
+========================================= */
+
+function getMembershipPlans(env) {
+  return json({
+    plans: MEMBERSHIP_PLANS,
+    upi_id: env.UPI_ID || "",
+    payee: env.PAYEE_NAME || "DESI OFFICIALS"
+  });
+}
+
+async function submitMembershipPayment(request, env) {
+  const auth = await requireCustomer(request, env);
+
+  if (auth.error) return auth.error;
+
+  const body = await readJSON(request);
+
+  const planKey = String(body.plan || "");
+  const plan = MEMBERSHIP_PLANS[planKey];
+  const utr = String(body.utr || "").trim().toUpperCase();
+
+  if (!plan) {
+    return json({
+      error: "Please choose a valid membership plan."
+    }, 400);
+  }
+
+  if (!/^[A-Z0-9]{10,22}$/.test(utr)) {
+    return json({
+      error: "Enter the UPI transaction / UTR number (10–22 letters or digits)."
+    }, 400);
+  }
+
+  const open = await env.DB.prepare(`
+    SELECT COUNT(*) AS total
+    FROM membership_payments
+    WHERE customer_id = ?
+      AND status = 'pending'
+  `).bind(auth.user.customerId).first();
+
+  if (Number(open?.total || 0) >= 3) {
+    return json({
+      error: "You already have payments awaiting approval."
+    }, 429);
+  }
+
+  try {
+    await env.DB.prepare(`
+      INSERT INTO membership_payments (
+        id, customer_id, plan, amount, utr, status, created_at
+      )
+      VALUES (?, ?, ?, ?, ?, 'pending', CURRENT_TIMESTAMP)
+    `).bind(
+      randomString(18),
+      auth.user.customerId,
+      planKey,
+      plan.price,
+      utr
+    ).run();
+
+  } catch (error) {
+    if (String(error.message || "").includes("UNIQUE")) {
+      return json({
+        error: "This transaction number was already submitted."
+      }, 409);
+    }
+    return databaseError(error);
+  }
+
+  return json({
+    success: true,
+    message: "Payment submitted. We'll confirm it shortly."
+  }, 201);
+}
+
+async function adminMembershipPayments(env) {
+  const result = await env.DB.prepare(`
+    SELECT
+      mp.id,
+      mp.plan,
+      mp.amount,
+      mp.utr,
+      mp.status,
+      mp.created_at,
+      mp.decided_at,
+      c.id AS customer_id,
+      c.full_name,
+      c.email,
+      c.phone,
+      c.member_id
+    FROM membership_payments mp
+    JOIN customers c ON c.id = mp.customer_id
+    ORDER BY (mp.status = 'pending') DESC, mp.created_at DESC
+    LIMIT 200
+  `).all();
+
+  return json({
+    payments: result.results || []
+  });
+}
+
+async function decideMembershipPayment(request, env, id) {
+  if (!isValidId(id)) {
+    return json({ error: "Invalid payment ID." }, 400);
+  }
+
+  const body = await readJSON(request);
+  const action = body.action;
+
+  const payment = await env.DB.prepare(`
+    SELECT * FROM membership_payments
+    WHERE id = ? AND status = 'pending'
+  `).bind(id).first();
+
+  if (!payment) {
+    return json({
+      error: "Payment not found or already decided."
+    }, 404);
+  }
+
+  if (action === "reject") {
+    await env.DB.prepare(`
+      UPDATE membership_payments
+      SET status = 'rejected', decided_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(id).run();
+
+    return json({ success: true });
+  }
+
+  if (action !== "approve") {
+    return json({ error: "Invalid action." }, 400);
+  }
+
+  const plan = MEMBERSHIP_PLANS[payment.plan];
+
+  if (!plan) {
+    return json({ error: "Unknown plan on this payment." }, 400);
+  }
+
+  const existing = await env.DB.prepare(`
+    SELECT * FROM memberships
+    WHERE customer_id = ?
+      AND membership_status = 'ACTIVE'
+    LIMIT 1
+  `).bind(payment.customer_id).first();
+
+  const base = Math.max(
+    Date.now(),
+    existing?.expires_at ? new Date(existing.expires_at).getTime() : 0
+  );
+
+  const expiresAt = new Date(base + plan.days * DAY_MS).toISOString();
+
+  try {
+    if (existing) {
+      await env.DB.batch([
+        env.DB.prepare(`
+          UPDATE memberships
+          SET membership_level = ?,
+              membership_status = 'ACTIVE',
+              expires_at = ?,
+              updated_at = CURRENT_TIMESTAMP
+          WHERE id = ?
+        `).bind(payment.plan, expiresAt, existing.id),
+
+        env.DB.prepare(`
+          UPDATE membership_payments
+          SET status = 'approved', decided_at = CURRENT_TIMESTAMP
+          WHERE id = ?
+        `).bind(id)
+      ]);
+    } else {
+      await env.DB.batch([
+        env.DB.prepare(`
+          INSERT INTO memberships (
+            id, customer_id, membership_level, membership_status,
+            joined_at, expires_at, created_at, updated_at
+          )
+          VALUES (?, ?, ?, 'ACTIVE', CURRENT_TIMESTAMP, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        `).bind(crypto.randomUUID(), payment.customer_id, payment.plan, expiresAt),
+
+        env.DB.prepare(`
+          UPDATE membership_payments
+          SET status = 'approved', decided_at = CURRENT_TIMESTAMP
+          WHERE id = ?
+        `).bind(id)
+      ]);
+    }
+  } catch (error) {
+    return databaseError(error);
+  }
+
+  return json({ success: true, expires_at: expiresAt });
 }
 
 /* =========================================
@@ -1674,7 +1894,8 @@ async function adminOverview(env) {
     products,
     liveProducts,
     bids,
-    articles
+    articles,
+    pendingPayments
   ] = await Promise.all([
     env.DB.prepare(
       "SELECT COUNT(*) AS total FROM customers"
@@ -1694,6 +1915,10 @@ async function adminOverview(env) {
 
     env.DB.prepare(
       "SELECT COUNT(*) AS total FROM articles"
+    ).first(),
+
+    env.DB.prepare(
+      "SELECT COUNT(*) AS total FROM membership_payments WHERE status = 'pending'"
     ).first()
   ]);
 
@@ -1702,7 +1927,8 @@ async function adminOverview(env) {
     products: products.total,
     live_products: liveProducts.total,
     bids: bids.total,
-    articles: articles.total
+    articles: articles.total,
+    pending_membership_payments: pendingPayments.total
   });
 }
 
@@ -1902,6 +2128,28 @@ async function handleRequest(request, env) {
     return joinDO(request, env);
   }
 
+  /* DO MEMBERSHIP PAID PLANS (UPI) */
+
+  if (
+    path === "/api/membership/plans" &&
+    method === "GET"
+  ) {
+    return getMembershipPlans(env);
+  }
+
+  if (
+    path === "/api/membership/pay" &&
+    method === "POST"
+  ) {
+    if (!checkOrigin(request)) {
+      return json({
+        error: "Invalid request origin."
+      }, 403);
+    }
+
+    return submitMembershipPayment(request, env);
+  }
+
   /* PUBLIC PRODUCTS */
 
   if (path === "/api/products" && method === "GET") {
@@ -2098,6 +2346,33 @@ async function handleRequest(request, env) {
       if (method === "DELETE") {
         return deleteArticle(env, id);
       }
+    }
+
+    /* MEMBERSHIP PAYMENT APPROVAL */
+
+    if (
+      path === "/api/admin/membership-payments" &&
+      method === "GET"
+    ) {
+      return adminMembershipPayments(env);
+    }
+
+    const paymentMatch = path.match(
+      /^\/api\/admin\/membership-payments\/([^/]+)$/
+    );
+
+    if (paymentMatch && method === "POST") {
+      let id;
+
+      try {
+        id = decodeURIComponent(paymentMatch[1]);
+      } catch {
+        return json({
+          error: "Invalid payment ID."
+        }, 400);
+      }
+
+      return decideMembershipPayment(request, env, id);
     }
 
     return json({
